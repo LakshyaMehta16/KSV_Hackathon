@@ -503,9 +503,7 @@
         <span class="material-symbols-outlined">history</span>
         Activity
       </a>
-      <a href="user_management.html" class="nav-item">
-        <span class="material-symbols-outlined">manage_accounts</span>
-        User Management
+
       </a>
     </nav>
     <div style="padding:16px;margin-top:auto;border-top:1px solid var(--border-subtle);">
@@ -535,79 +533,6 @@
       </div>
 
       <div class="topbar-right" style="position:relative;">
-        <!-- Notification Bell -->
-        <div class="notif-bell-wrapper icon-btn" id="notif-bell-wrapper" role="button" aria-label="Notifications" tabindex="0" onclick="toggleNotifDropdown()" onkeydown="if(event.key==='Enter')toggleNotifDropdown()">
-          <button class="icon-btn" style="pointer-events:none;" aria-label="Notifications">
-            <span class="material-symbols-outlined" style="font-size:22px;">notifications</span>
-          </button>
-          <div class="notif-badge" id="notif-badge" aria-label="Unread notifications"></div>
-        </div>
-
-        <!-- Notification Dropdown -->
-        <div class="notif-dropdown" id="notif-dropdown" role="dialog" aria-label="Notifications panel">
-          <div class="notif-dropdown-header">
-            <h3 class="notif-dropdown-title">Notifications</h3>
-            <button class="mark-all-read" onclick="markAllRead()" id="mark-all-btn">Mark all as read</button>
-          </div>
-          <ul class="notif-list" id="notif-list">
-            <li class="notif-row unread" onclick="markRead(this)">
-              <div class="notif-icon-circle icon-created" style="width:30px;height:30px;">
-                <span class="material-symbols-outlined" style="font-size:15px;color:#0154CC;font-variation-settings:'FILL' 1;">add_circle</span>
-              </div>
-              <div class="notif-row-body">
-                <p class="notif-row-text"><span class="actor">John Doe</span> created new RFQ <span class="target-id">#RFQ-2023-881</span></p>
-                <span class="notif-row-time">1 min ago</span>
-              </div>
-              <div style="width:6px;height:6px;border-radius:50%;background:#0154CC;flex-shrink:0;margin-top:6px;"></div>
-            </li>
-            <li class="notif-row unread" onclick="markRead(this)">
-              <div class="notif-icon-circle icon-approved" style="width:30px;height:30px;">
-                <span class="material-symbols-outlined" style="font-size:15px;color:#10B981;font-variation-settings:'FILL' 1;">check_circle</span>
-              </div>
-              <div class="notif-row-body">
-                <p class="notif-row-text"><span class="actor">Jane Smith</span> approved Quotation <span class="target-id" style="color:#10B981;">#QT-992-B</span></p>
-                <span class="notif-row-time">5 mins ago</span>
-              </div>
-              <div style="width:6px;height:6px;border-radius:50%;background:#0154CC;flex-shrink:0;margin-top:6px;"></div>
-            </li>
-            <li class="notif-row" onclick="markRead(this)">
-              <div class="notif-icon-circle icon-auto" style="width:30px;height:30px;">
-                <span class="material-symbols-outlined" style="font-size:15px;color:#534EC3;font-variation-settings:'FILL' 1;">auto_awesome</span>
-              </div>
-              <div class="notif-row-body">
-                <p class="notif-row-text"><span class="actor">System</span> generated PO <span class="target-id" style="color:#534EC3;">#PO-5501-XT</span></p>
-                <span class="notif-row-time">12 mins ago</span>
-              </div>
-            </li>
-            <li class="notif-row" onclick="markRead(this)">
-              <div class="notif-icon-circle icon-updated" style="width:30px;height:30px;">
-                <span class="material-symbols-outlined" style="font-size:15px;color:#B45309;font-variation-settings:'FILL' 1;">edit_document</span>
-              </div>
-              <div class="notif-row-body">
-                <p class="notif-row-text"><span class="actor">Michael Chen</span> updated <span class="target-id" style="color:#B45309;">Apex Manufacturing</span></p>
-                <span class="notif-row-time">1 hour ago</span>
-              </div>
-            </li>
-            <li class="notif-row" onclick="markRead(this)">
-              <div class="notif-icon-circle icon-uploaded" style="width:30px;height:30px;">
-                <span class="material-symbols-outlined" style="font-size:15px;color:#4F46E5;font-variation-settings:'FILL' 1;">upload_file</span>
-              </div>
-              <div class="notif-row-body">
-                <p class="notif-row-text"><span class="actor">Sarah Jenkins</span> uploaded <span class="target-id" style="color:#4F46E5;">#INV-2023-08-11</span></p>
-                <span class="notif-row-time">3 hours ago</span>
-              </div>
-            </li>
-          </ul>
-          <div class="notif-dropdown-footer">
-            <a href="activity_logs.html" class="notif-view-all">
-              View all activity
-              <span class="material-symbols-outlined" style="font-size:15px;">arrow_forward</span>
-            </a>
-          </div>
-        </div>
-
-        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size:22px;">help_outline</span></button>
-        <button class="icon-btn" aria-label="Settings"><span class="material-symbols-outlined" style="font-size:22px;">settings</span></button>
         <div class="avatar-jd">JD</div>
       </div>
     </header>
@@ -871,7 +796,7 @@
                 <span class="material-symbols-outlined expand-chevron" aria-hidden="true">expand_more</span>
               </div>
             </div>
-            <p class="entry-subdetail">Reason: Budget exceeded Q4 departmental allocation. Requested amount $18,500 exceeded approved limit of $15,000 by 23.3%.</p>
+            <p class="entry-subdetail">Reason: Budget exceeded Q4 departmental allocation. Requested amount ₹18,500 exceeded approved limit of ₹15,000 by 23.3%.</p>
           </div>
         </div>
 

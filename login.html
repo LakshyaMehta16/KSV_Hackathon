@@ -96,18 +96,18 @@
     </div>
 
     <!-- Login/Reset Form -->
-    <form onsubmit="event.preventDefault(); window.location.href=\'dashboard.html\';">
+    <form onsubmit="handleFormSubmit(event);">
       
-      <!-- Field 1: Corporate ID or Email -->
+      <!-- Field 1: Email -->
       <div class="form-group">
-        <label class="label-caps" for="corporateId" style="color: #334155;">Corporate ID or Email</label>
+        <label class="label-caps" for="corporateId" style="color: #334155;">Email</label>
         <div class="input-container has-left-icon">
-          <span class="material-symbols-outlined left-icon">person</span>
+          <span class="material-symbols-outlined left-icon">mail</span>
           <input 
-            type="text" 
+            type="email" 
             id="corporateId" 
             class="input-field login-input" 
-            placeholder="Enter your credentials" 
+            placeholder="you@example.com" 
             style="padding-top: 10px; padding-bottom: 10px; border-radius: 2px;"
             required
           />
@@ -115,7 +115,7 @@
       </div>
 
       <!-- Field 2: Secure Password (Hidden in Forgot Password mode) -->
-      <div class="form-group hide-on-forgot">
+      <div class="form-group hide-on-forgot" style="margin-bottom: 16px;">
         <label class="label-caps" for="password" style="color: #334155;">Secure Password</label>
         <div class="input-container has-left-icon has-right-icon">
           <span class="material-symbols-outlined left-icon">lock</span>
@@ -257,14 +257,20 @@
     function handleFormSubmit(event) {
       event.preventDefault();
       const card = document.getElementById('loginCard');
-      const emailOrId = document.getElementById('corporateId').value;
+      const email = document.getElementById('corporateId').value;
+      const password = document.getElementById('password').value;
 
       if (card.classList.contains('forgot-password-active')) {
-        alert('Reset password link has been sent to ' + emailOrId);
+        alert('Reset password link has been sent to ' + email);
         deactivateForgotPassword(event);
-      } else {
-        // Redirect directly to dashboard.html on successful login
+        return;
+      }
+
+      // Hardcoded credential check (frontend-only, no backend connected)
+      if (email === 'admin@vendorbridge.com' && password === 'password123') {
         window.location.href = 'dashboard.html';
+      } else {
+        alert('Invalid email or password. Please try again.');
       }
     }
   </script>

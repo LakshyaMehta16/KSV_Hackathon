@@ -134,7 +134,7 @@
         </div>
 
         <!-- Onboarding Form -->
-        <form onsubmit="event.preventDefault(); window.location.href=\'dashboard.html\';">
+        <form onsubmit="event.preventDefault(); const p = document.getElementById('regPassword').value; const c = document.getElementById('regPasswordConfirm').value; if(p !== c){ alert('Passwords do not match.'); return; } window.location.href='dashboard.html';">
           
           <!-- Company Logo Upload -->
           <div class="logo-upload-container">
@@ -171,7 +171,7 @@
           <!-- Phone Number -->
           <div class="form-group">
             <label class="label-caps" for="phone">Phone Number</label>
-            <input type="tel" id="phone" class="input-field register-input" placeholder="+1 (555) 000-0000" style="height: 40px; padding: 0 16px; border-radius: 2px;" required>
+            <input type="tel" id="phone" class="input-field register-input" placeholder="+91 98765 00000" style="height: 40px; padding: 0 16px; border-radius: 2px;" required>
           </div>
 
           <!-- Company Website -->
@@ -186,6 +186,7 @@
             <div class="select-container">
               <select id="country" class="select-field register-input" style="height: 40px; padding-left: 16px; border-radius: 2px;" required>
                 <option value="" disabled selected>Select a country</option>
+                <option value="IN">India</option>
                 <option value="US">United States</option>
                 <option value="GB">United Kingdom</option>
                 <option value="CA">Canada</option>
@@ -198,18 +199,34 @@
             </div>
           </div>
 
+          <!-- Password -->
+          <div class="form-group">
+            <label class="label-caps" for="regPassword">Password</label>
+            <div class="input-container has-left-icon has-right-icon">
+              <span class="material-symbols-outlined left-icon">lock</span>
+              <input type="password" id="regPassword" class="input-field register-input" placeholder="••••••••" style="height: 40px; border-radius: 2px;" required>
+              <button type="button" class="right-icon-btn" onclick="toggleRegPassword('regPassword', 'regPassIcon')" aria-label="Toggle password visibility">
+                <span class="material-symbols-outlined" id="regPassIcon">visibility_off</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label class="label-caps" for="regPasswordConfirm">Confirm Password</label>
+            <div class="input-container has-left-icon has-right-icon">
+              <span class="material-symbols-outlined left-icon">lock</span>
+              <input type="password" id="regPasswordConfirm" class="input-field register-input" placeholder="••••••••" style="height: 40px; border-radius: 2px;" required>
+              <button type="button" class="right-icon-btn" onclick="toggleRegPassword('regPasswordConfirm', 'regConfirmIcon')" aria-label="Toggle confirm password visibility">
+                <span class="material-symbols-outlined" id="regConfirmIcon">visibility_off</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Additional Information -->
           <div class="form-group">
             <label class="label-caps" for="additionalInfo">Additional Information</label>
             <textarea id="additionalInfo" class="textarea-field register-input" rows="4" placeholder="Briefly describe your core services, certifications, or any special requirements..." style="padding: 12px 16px; border-radius: 2px;"></textarea>
-          </div>
-
-          <!-- Terms Checkbox -->
-          <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 8px;">
-            <input type="checkbox" id="terms" class="checkbox-input" required style="margin-top: 3px;">
-            <label for="terms" class="body-sm" style="color: #434654; cursor: pointer;">
-              I agree to the <a href="#" style="color: #0154CC; text-decoration: none; font-weight: 500;">Terms of Service</a> and <a href="#" style="color: #0154CC; text-decoration: none; font-weight: 500;">Privacy Policy</a>.
-            </label>
           </div>
 
           <!-- CTA Button -->
@@ -236,6 +253,19 @@
   </div>
 
   <script>
+    // Toggle password visibility for register fields
+    function toggleRegPassword(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.textContent = 'visibility';
+      } else {
+        input.type = 'password';
+        icon.textContent = 'visibility_off';
+      }
+    }
+
     // Trigger hidden file input
     function triggerLogoUpload() {
       document.getElementById('logoFile').click();

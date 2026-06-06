@@ -491,9 +491,7 @@
         <span class="material-symbols-outlined">history</span>
         Activity
       </a>
-      <a href="user_management.html" class="nav-item">
-        <span class="material-symbols-outlined">manage_accounts</span>
-        User Management
+
       </a>
     </nav>
     <div style="padding:16px;margin-top:auto;border-top:1px solid var(--border-subtle);">
@@ -518,12 +516,9 @@
       </div>
       <div style="background-color:#F0EDEC;border-radius:9999px;display:flex;align-items:center;padding:6px 16px;width:380px;gap:8px;">
         <span class="material-symbols-outlined" style="color:var(--outline);font-size:20px;">search</span>
-        <input type="text" style="background:none;border:none;outline:none;font-family:var(--font-body);font-size:14px;color:var(--on-surface);width:100%;" placeholder="Search purchase orders…"/>
+        <input type="text" style="background:none;border:none;outline:none;font-family:var(--font-body);font-size:14px;color:var(--on-surface);width:100%;" id="invoiceSearchInput" placeholder="Search invoices…" oninput="filterLineItems('invoiceSearchInput', 'invoiceItemsTable')"/>
       </div>
       <div class="topbar-right">
-        <button class="icon-btn" aria-label="Notifications"><span class="material-symbols-outlined" style="font-size:22px;">notifications</span></button>
-        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size:22px;">help_outline</span></button>
-        <button class="icon-btn" aria-label="Settings"><span class="material-symbols-outlined" style="font-size:22px;">settings</span></button>
         <div class="avatar-jd">JD</div>
       </div>
     </header>
@@ -594,7 +589,7 @@
               </div>
               <div class="contact-row">
                 <span class="material-symbols-outlined">call</span>
-                <span>+1 (555) 123-4567</span>
+                <span>+91 91234 56789</span>
               </div>
               <p class="vendor-id">Vendor ID: VEN-88492-XT</p>
             </div>
@@ -618,7 +613,7 @@
               </div>
               <div class="contact-row">
                 <span class="material-symbols-outlined">call</span>
-                <span>+1 (212) 555-9100</span>
+                <span>+91 98100 59100</span>
               </div>
             </div>
           </div>
@@ -648,7 +643,7 @@
 
       <!-- 8.3 — Line Items Table -->
       <div class="card line-items-card" role="region" aria-label="Purchase order line items">
-        <table class="line-items-tbl" aria-label="Line items">
+        <table class="line-items-tbl" id="invoiceItemsTable" aria-label="Line items">
           <thead>
             <tr>
               <th>#</th>
@@ -666,8 +661,8 @@
                 <p class="item-detail">Intel Core i7, 32GB RAM, 1TB SSD &nbsp;·&nbsp; Part# 21CB000GUS</p>
               </td>
               <td class="cell-right">15</td>
-              <td class="cell-right">$1,850.00</td>
-              <td class="cell-total">$27,750.00</td>
+              <td class="cell-right">₹1,850.00</td>
+              <td class="cell-total">₹27,750.00</td>
             </tr>
             <tr>
               <td class="cell-num">02</td>
@@ -676,8 +671,8 @@
                 <p class="item-detail">U2723QE &nbsp;·&nbsp; Dual Setup Configuration</p>
               </td>
               <td class="cell-right">30</td>
-              <td class="cell-right">$620.00</td>
-              <td class="cell-total">$18,600.00</td>
+              <td class="cell-right">₹620.00</td>
+              <td class="cell-total">₹18,600.00</td>
             </tr>
             <tr>
               <td class="cell-num">03</td>
@@ -686,8 +681,8 @@
                 <p class="item-detail">Graphite &nbsp;·&nbsp; Enterprise Edition</p>
               </td>
               <td class="cell-right">15</td>
-              <td class="cell-right">$99.00</td>
-              <td class="cell-total">$1,485.00</td>
+              <td class="cell-right">₹99.00</td>
+              <td class="cell-total">₹1,485.00</td>
             </tr>
           </tbody>
         </table>
@@ -731,19 +726,19 @@
           <span class="financial-label">Financial Summary</span>
           <div class="fin-row">
             <span class="fin-row-label">Subtotal</span>
-            <span class="fin-row-value">$47,835.00</span>
+            <span class="fin-row-value">₹47,835.00</span>
           </div>
           <div class="fin-row">
             <span class="fin-row-label">Tax (8.875%)</span>
-            <span class="fin-row-value">$4,245.36</span>
+            <span class="fin-row-value">₹4,245.36</span>
           </div>
           <div class="fin-row">
             <span class="fin-row-label">Shipping &amp; Freight</span>
-            <span class="fin-row-value">$150.00</span>
+            <span class="fin-row-value">₹150.00</span>
           </div>
           <div class="fin-row" style="border-top: 2px solid var(--border-subtle);margin-top:4px;padding-top:12px;">
             <span class="fin-row-label bold">Total Amount</span>
-            <span class="fin-row-value total">$52,230.36</span>
+            <span class="fin-row-value total">₹52,230.36</span>
           </div>
 
           <!-- Due date chip -->
@@ -849,7 +844,7 @@
 
 Please find attached Invoice INV-2023-2329 for Purchase Order PO-2023-2329 (Office Furniture Procurement).
 
-Total Amount Due: $52,230.36 — Payment due by Nov 23, 2023 (Net 30).
+Total Amount Due: ₹52,230.36 — Payment due by Nov 23, 2023 (Net 30).
 
 Please reference the invoice number on all correspondence and payment remittances. Contact ap@vendorbridge.com with any questions.
 
@@ -968,6 +963,16 @@ VendorBridge Procurement Team</textarea>
 
     /* ── Update all PO links across app ── */
     // Update other sidebars' Purchase Orders link on first visit (no-op if already done)
+
+    // Topbar search — filters line items by item name
+    function filterLineItems(inputId, tableId) {
+      const query = document.getElementById(inputId).value.toLowerCase();
+      const rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = (!query || text.includes(query)) ? '' : 'none';
+      });
+    }
   </script>
   <script src="js/global-ui.js"></script>
 </body>

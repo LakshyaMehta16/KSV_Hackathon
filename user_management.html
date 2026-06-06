@@ -315,9 +315,7 @@
         <span class="material-symbols-outlined">history</span>
         Activity
       </a>
-      <a href="user_management.html" class="nav-item active">
-        <span class="material-symbols-outlined">manage_accounts</span>
-        User Management
+
       </a>
     </nav>
 
@@ -356,8 +354,6 @@
           <span class="label-bold">Invite User</span>
         </button>
         <div style="width: 1px; height: 24px; background-color: var(--border-subtle); margin: 0 8px;"></div>
-        <button class="icon-btn" aria-label="Notifications"><span class="material-symbols-outlined" style="font-size: 22px;">notifications</span></button>
-        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size: 22px;">help_outline</span></button>
         <div class="avatar-jd">JD</div>
       </div>
     </header>
@@ -461,9 +457,9 @@
         <div style="display: flex; gap: 16px; align-items: center;">
           <div style="position: relative;">
             <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; font-size: 20px; color: var(--outline);">search</span>
-            <input type="text" class="search-input" placeholder="Search by name or email...">
+            <input type="text" id="userSearchInput" class="search-input" placeholder="Search by name or email..." oninput="filterUsers()">
           </div>
-          <button style="background: none; border: none; color: var(--error); font-size: 13px; cursor: pointer;">Clear</button>
+          <button style="background: none; border: none; color: var(--error); font-size: 13px; cursor: pointer;" onclick="clearUserSearch()">Clear</button>
           <button class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 4px; background: var(--primary); color: white; border: none;">
             <span class="material-symbols-outlined" style="font-size: 18px;">filter_list</span>
             <span class="label-bold">Apply Filters</span>
@@ -889,6 +885,20 @@
       `;
       container.appendChild(toast);
       setTimeout(() => { if (toast.parentElement) toast.remove(); }, 5000);
+    }
+
+    // Search filter
+    function filterUsers() {
+      const query = document.getElementById('userSearchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('#userTable tbody tr');
+      rows.forEach(row => {
+        const name = row.querySelector('td:nth-child(2)')?.textContent.toLowerCase() || '';
+        row.style.display = (!query || name.includes(query)) ? '' : 'none';
+      });
+    }
+    function clearUserSearch() {
+      const inp = document.getElementById('userSearchInput');
+      if (inp) { inp.value = ''; filterUsers(); }
     }
   </script>
   <script src="js/global-ui.js"></script>

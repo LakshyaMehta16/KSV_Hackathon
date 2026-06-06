@@ -585,9 +585,7 @@
         <span class="material-symbols-outlined">history</span>
         Activity
       </a>
-      <a href="user_management.html" class="nav-item">
-        <span class="material-symbols-outlined">manage_accounts</span>
-        User Management
+
       </a>
     </nav>
 
@@ -616,20 +614,11 @@
       <!-- Search Box (Hidden on Mobile) -->
       <div class="search-bar-container">
         <span class="material-symbols-outlined" style="color: var(--outline); font-size: 20px;">search</span>
-        <input type="text" class="search-bar-input" placeholder="Search POs, RFQs, or Vendors..."/>
+        <input type="text" class="search-bar-input" id="globalSearchInput" placeholder="Search POs, RFQs, or Vendors..." oninput="globalSearch(this.value)"/>
       </div>
 
       <!-- User controls -->
       <div class="topbar-right">
-        <button class="icon-btn" aria-label="Notifications">
-          <span class="material-symbols-outlined" style="font-size: 22px;">notifications</span>
-        </button>
-        <button class="icon-btn" aria-label="Help">
-          <span class="material-symbols-outlined" style="font-size: 22px;">help_outline</span>
-        </button>
-        <button class="icon-btn" aria-label="Settings">
-          <span class="material-symbols-outlined" style="font-size: 22px;">settings</span>
-        </button>
         <div class="avatar-jd" aria-label="User Avatar">JD</div>
       </div>
     </header>
@@ -644,9 +633,9 @@
           <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;">Here's what's happening in procurement today.</p>
         </div>
         <div class="welcome-actions">
-          <a href="#" class="btn btn-secondary" style="height: 38px; padding: 0 16px; font-size: 13px; font-weight: 500; border-radius: 4px;">View recent invoices</a>
-          <a href="#" class="btn btn-secondary" style="height: 38px; padding: 0 16px; font-size: 13px; font-weight: 500; border-radius: 4px;">View open POs</a>
-          <button class="btn btn-primary" style="height: 38px; padding: 0 16px; font-size: 13px; font-weight: 500; border-radius: 4px; background-color: var(--primary);">
+          <a href="invoices.html" class="btn btn-secondary" style="height: 38px; padding: 0 16px; font-size: 13px; font-weight: 500; border-radius: 4px;">View recent invoices</a>
+          <a href="purchase_order.html" class="btn btn-secondary" style="height: 38px; padding: 0 16px; font-size: 13px; font-weight: 500; border-radius: 4px;">View open POs</a>
+          <button class="btn btn-primary" onclick="window.location.href='create_rfq.html'" style="height: 38px; padding: 0 16px; font-size: 13px; font-weight: 500; border-radius: 4px; background-color: var(--primary);">
             <span class="material-symbols-outlined" style="font-size: 18px;">add</span>
             Create new RFQ
           </button>
@@ -694,7 +683,7 @@
           <div class="kpi-metric-group">
             <span class="label-caps" style="color: var(--data-ink);">Open Purchase Orders</span>
             <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 4px;">
-              <span class="display-lg" style="font-size: 28px; line-height: 1.2; font-family: var(--font-headlines); font-weight: 600;">$2,300</span>
+              <span class="display-lg" style="font-size: 28px; line-height: 1.2; font-family: var(--font-headlines); font-weight: 600;">₹2,300</span>
             </div>
             <span class="body-sm" style="color: var(--outline); margin-top: 4px;">total value</span>
           </div>
@@ -744,12 +733,12 @@
               </thead>
               <tbody>
                 <!-- Row 1 -->
-                <tr>
+                <tr class="searchable">
                   <td style="display: flex; align-items: center; border-bottom: none; height: 56px;">
                     <div class="vendor-avatar" style="background-color: #38BDF8;">AT</div>
                     <span style="font-weight: 500; color: var(--on-surface);">Apex Technologies</span>
                   </td>
-                  <td class="data-mono" style="text-align: right; font-weight: 600;">$124,500</td>
+                  <td class="data-mono" style="text-align: right; font-weight: 600;">₹124,500</td>
                   <td style="text-align: center;">
                     <span class="badge-pill badge-active">Active</span>
                   </td>
@@ -764,12 +753,12 @@
                   </td>
                 </tr>
                 <!-- Row 2 -->
-                <tr>
+                <tr class="searchable">
                   <td style="display: flex; align-items: center; border-bottom: none; height: 56px;">
                     <div class="vendor-avatar" style="background-color: #D97706;">GL</div>
                     <span style="font-weight: 500; color: var(--on-surface);">Global Logistics Inc.</span>
                   </td>
-                  <td class="data-mono" style="text-align: right; font-weight: 600;">$89,200</td>
+                  <td class="data-mono" style="text-align: right; font-weight: 600;">₹89,200</td>
                   <td style="text-align: center;">
                     <span class="badge-pill badge-pending">Pending</span>
                   </td>
@@ -784,12 +773,12 @@
                   </td>
                 </tr>
                 <!-- Row 3 -->
-                <tr>
+                <tr class="searchable">
                   <td style="display: flex; align-items: center; border-bottom: none; height: 56px;">
                     <div class="vendor-avatar" style="background-color: #2563EB;">SM</div>
                     <span style="font-weight: 500; color: var(--on-surface);">Steel & Machinery Co.</span>
                   </td>
-                  <td class="data-mono" style="text-align: right; font-weight: 600;">$45,000</td>
+                  <td class="data-mono" style="text-align: right; font-weight: 600;">₹45,000</td>
                   <td style="text-align: center;">
                     <span class="badge-pill badge-active">Active</span>
                   </td>
@@ -804,12 +793,12 @@
                   </td>
                 </tr>
                 <!-- Row 4 -->
-                <tr>
+                <tr class="searchable">
                   <td style="display: flex; align-items: center; border-bottom: none; height: 56px;">
                     <div class="vendor-avatar" style="background-color: #6B7280;">OE</div>
                     <span style="font-weight: 500; color: var(--on-surface);">Office Essentials</span>
                   </td>
-                  <td class="data-mono" style="text-align: right; font-weight: 600;">$12,400</td>
+                  <td class="data-mono" style="text-align: right; font-weight: 600;">₹12,400</td>
                   <td style="text-align: center;">
                     <span class="badge-pill badge-closed">Closed</span>
                   </td>

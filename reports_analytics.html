@@ -490,9 +490,7 @@
         <span class="material-symbols-outlined">history</span>
         Activity
       </a>
-      <a href="user_management.html" class="nav-item">
-        <span class="material-symbols-outlined">manage_accounts</span>
-        User Management
+
       </a>
     </nav>
 
@@ -706,7 +704,7 @@
           <div style="display: flex; gap: 12px;">
             <div style="position: relative;">
               <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; font-size: 20px; color: var(--outline);">search</span>
-              <input type="text" placeholder="Search vendors..." style="width: 220px; padding: 10px 10px 10px 36px; border: 1px solid var(--border-subtle); border-radius: 2px; font-size: 14px;">
+              <input type="text" id="reportVendorSearch" placeholder="Search vendors..." style="width: 220px; padding: 10px 10px 10px 36px; border: 1px solid var(--border-subtle); border-radius: 2px; font-size: 14px;" oninput="filterReportVendors()">
             </div>
             <select style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 2px; font-size: 14px; background: white; color: var(--data-ink);">
               <option>Performance Score</option>
@@ -715,7 +713,7 @@
           </div>
         </div>
         <div style="overflow-x: auto;">
-          <table class="data-table">
+          <table class="data-table" id="reportVendorTable">
             <thead>
               <tr>
                 <th class="label-caps">RANK</th>
@@ -1078,6 +1076,18 @@
   </div>
 
   <script>
+    
+    function filterReportVendors() {
+      const inp = document.getElementById('reportVendorSearch');
+      if (!inp) return;
+      const val = inp.value.toLowerCase();
+      const rows = document.querySelectorAll('#reportVendorTable tbody tr');
+      rows.forEach(function(row) {
+        const text = row.textContent.toLowerCase();
+        row.style.display = (!val || text.includes(val)) ? '' : 'none';
+      });
+    }
+
     function toggleMobileSidebar() { document.body.classList.toggle('sidebar-open'); }
     function openExportModal() { document.getElementById('exportModal').classList.add('active'); }
     function closeExportModal() { document.getElementById('exportModal').classList.remove('active'); }

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>VendorBridge ERP – Module Functionality Documentation</title>
+<style>
+  body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #1C1B1B; margin: 60px 80px; line-height: 1.6; }
+  h1 { font-size: 20pt; color: #003FB1; border-bottom: 2px solid #003FB1; padding-bottom: 8px; margin-bottom: 4px; }
+  h2 { font-size: 15pt; color: #003FB1; margin-top: 32px; margin-bottom: 4px; border-left: 4px solid #003FB1; padding-left: 10px; }
+  h3 { font-size: 12pt; color: #334155; margin-top: 16px; margin-bottom: 4px; }
+  p { margin: 6px 0; }
+  ul { margin: 6px 0 6px 24px; }
+  li { margin-bottom: 4px; }
+  .subtitle { color: #737686; font-size: 10pt; margin-bottom: 32px; }
+  .module-number { background-color: #003FB1; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10pt; margin-right: 8px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10pt; }
+  th { background-color: #EFF6FF; color: #003FB1; padding: 8px 12px; border: 1px solid #BFDBFE; text-align: left; }
+  td { padding: 7px 12px; border: 1px solid #E2E8F0; }
+  tr:nth-child(even) td { background-color: #F8FAFC; }
+  .divider { border: none; border-top: 1px solid #E2E8F0; margin: 28px 0; }
+</style>
+</head>
+<body>
+
+<h1>VendorBridge ERP — Module Functionality Documentation</h1>
+<p class="subtitle">Detailed breakdown of all 10 side panel modules &nbsp;|&nbsp; VendorBridge Enterprise Resource Planning System v3.1</p>
+
+<hr class="divider"/>
+
+<!-- 1. DASHBOARD -->
+<h2><span class="module-number">1</span> Dashboard</h2>
+<p>The Dashboard is the central landing screen after sign-in. It gives a real-time overview of the entire procurement operation in one view.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>Welcome Banner:</strong> Displays a personalised greeting with the logged-in user's name and today's procurement status. Provides quick-action buttons to view recent invoices, view open purchase orders, and create a new RFQ directly.</li>
+  <li><strong>KPI Summary Cards (4 cards):</strong>
+    <ul>
+      <li>Pending Approvals – count with percentage trend indicator.</li>
+      <li>Active RFQs – count with an "in progress" status badge.</li>
+      <li>Open Purchase Orders – total monetary value in INR.</li>
+      <li>Invoices Sent – count with a clearance status indicator.</li>
+    </ul>
+  </li>
+  <li><strong>Top Vendors by Spending Table:</strong> Lists the highest-spend vendors with their spending amount, activity status (Active / Pending / Closed), and star rating (1–5).</li>
+  <li><strong>Analytics Bar Chart:</strong> Quarterly comparison chart (Q1–Q3) with two bar series — Services (grey) and Goods (purple/teal) — with a colour-coded legend.</li>
+  <li><strong>Recent Activity Feed:</strong> Live feed of the latest procurement events (RFQ created, PO issued, invoice approved etc.) with timestamps.</li>
+  <li><strong>Global Search:</strong> Top-bar search that filters searchable elements across the page in real time.</li>
+  <li><strong>Add New Button:</strong> Sidebar shortcut button that navigates directly to the Add Vendor flow.</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 2. VENDORS -->
+<h2><span class="module-number">2</span> Vendors</h2>
+<p>The Vendors module is the central directory for all supplier profiles registered in the system.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>Vendor Table:</strong> Displays all registered vendors with columns for Vendor ID, Vendor Name, Category, Contact (email + phone), Location, Status, and Actions.</li>
+  <li><strong>Status Badges:</strong> Each vendor row shows a colour-coded status — Active (green), Pending (amber), or Inactive (grey).</li>
+  <li><strong>Filter Toolbar:</strong>
+    <ul>
+      <li>Filter by Status (All / Active / Pending / Inactive).</li>
+      <li>Filter by Category (Hardware Components, Software Licenses, Professional Services, Logistics &amp; Shipping).</li>
+      <li>Live search box to find vendors by name.</li>
+    </ul>
+  </li>
+  <li><strong>View &amp; Edit Actions:</strong> Each vendor row has a View (eye) icon to see full details and an Edit (pencil) icon to modify the record. Both trigger toast notifications.</li>
+  <li><strong>Register New Vendor Modal:</strong> Clicking "Add Vendor" opens a modal form with fields for Vendor Name, Category, GST Number, Contact Person, Email, Phone, Website URL, and Address. Submitting registers the vendor and adds them to the table.</li>
+  <li><strong>Vendor Registered Confirmation:</strong> On successful registration, a success toast appears with the new vendor's name and their auto-generated Vendor ID.</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 3. RFQs -->
+<h2><span class="module-number">3</span> RFQs (Request for Quotation)</h2>
+<p>The RFQ module allows procurement managers to create and send structured requests for quotation to one or more vendors through a guided multi-step form.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>4-Step Stepper Wizard:</strong> The form is split into four sequential steps with a visual progress rail on the left:
+    <ol>
+      <li><strong>Basic Information</strong> – RFQ Name, Project/Cost Centre, Description &amp; Requirements (with rich-text toolbar for bold, italic, underline, lists, links), and a Line Items table.</li>
+      <li><strong>Attachments</strong> – Drag-and-drop file upload zone for supporting documents. Supports multiple file types with file chip previews and remove buttons.</li>
+      <li><strong>Assign Vendors</strong> – Select which registered vendors should receive the RFQ.</li>
+      <li><strong>Deadline Selection</strong> – Set response deadline, priority level (Low / Medium / High via pill radio buttons), and submission type toggle (Open / Sealed).</li>
+    </ol>
+  </li>
+  <li><strong>Line Items Table:</strong> Add/remove line items with fields for Product/Service name, Description, Quantity, Estimated Unit Price, and auto-calculated Estimated Total per row.</li>
+  <li><strong>Priority Radio Pills:</strong> Colour-coded priority selection — Low (neutral), Medium (amber), High (red).</li>
+  <li><strong>Save Draft:</strong> Saves the current state without submitting. Shows a success toast.</li>
+  <li><strong>Save &amp; Continue / Submit RFQ:</strong> Navigates through steps; on the final step submits and sends the RFQ to assigned vendors.</li>
+  <li><strong>Cancel:</strong> Discards the form with a confirmation prompt.</li>
+  <li><strong>Breadcrumb Navigation:</strong> Shows current path (RFQs > Create New).</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 4. QUOTATIONS -->
+<h2><span class="module-number">4</span> Quotations (Submit Quote)</h2>
+<p>The Quotations module is used by vendors (or on behalf of vendors) to submit pricing responses against an active RFQ.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>RFQ Identity Strip:</strong> A persistent banner showing the RFQ name, a live countdown timer to the closing deadline (shown in red), and quick-access Save as Draft and Submit Quote buttons.</li>
+  <li><strong>Line Items &amp; Pricing Table (Left Column):</strong>
+    <ul>
+      <li>Displays each item requirement from the original RFQ with Quantity, Unit of Measure (UOM), and the buyer's Expected Price.</li>
+      <li>Vendors enter their Submitted Unit Price in an editable blue input field per row.</li>
+      <li>Total Line Price is auto-calculated as quantity × submitted unit price.</li>
+      <li>Rows can be deleted individually.</li>
+    </ul>
+  </li>
+  <li><strong>Terms &amp; Conditions Section:</strong>
+    <ul>
+      <li>Delivery Date picker.</li>
+      <li>Quote Validity toggle (30 / 60 / 90 days).</li>
+      <li>Notes / Special Conditions free-text area.</li>
+    </ul>
+  </li>
+  <li><strong>Quote Summary Card (Right Column, sticky):</strong> Auto-updating breakdown showing Subtotal, Estimated Tax, and Grand Total (in INR). Contains the primary "Submit Quote" CTA button and a secondary "Save as Draft" button.</li>
+  <li><strong>Submit Confirmation Modal:</strong> Before final submission, a modal asks for confirmation showing the vendor name, total quote value, and a binding notice.</li>
+  <li><strong>Live Countdown Timer:</strong> JavaScript-driven timer that counts down to the RFQ closing date and updates in real time.</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 5. COMPARISON -->
+<h2><span class="module-number">5</span> Comparison</h2>
+<p>The Comparison module provides a side-by-side evaluation of all vendor quotations received for a specific RFQ, enabling data-driven supplier selection.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>Summary Statistics Bar:</strong> Shows at a glance — number of Quotations Received, Lowest Bid (vendor + amount), Price Range (spread between min and max bids), Average Delivery time, and the System-Recommended vendor.</li>
+  <li><strong>Side-by-Side Comparison Table:</strong> Vendors are displayed as columns, criteria as rows:
+    <ul>
+      <li>Total Price – lowest bid highlighted in green with a "Lowest" badge; higher bids shown in grey.</li>
+      <li>Delivery Timeline – fastest shown in normal weight; slowest shown in amber with a "Slowest" warning tag.</li>
+      <li>Vendor Rating – star rating display with numeric score.</li>
+      <li>Expandable Sub-rows – clicking "Show details" expands per-item pricing breakdown.</li>
+    </ul>
+  </li>
+  <li><strong>Recommended Vendor Highlight:</strong> The system-recommended vendor column is visually highlighted in a light blue tint with a "Recommended" pill badge.</li>
+  <li><strong>Filter &amp; Sort Panel:</strong> Collapsible panel with Sort By (Price, Timeline, Rating, Name), Filter Vendors checkboxes, and Expand All toggle.</li>
+  <li><strong>Award Vendor Action:</strong> Button to officially award the contract to the selected vendor, triggering a confirmation modal.</li>
+  <li><strong>Export Report:</strong> Downloads the comparison data as a report.</li>
+  <li><strong>View Documents Modal:</strong> Opens a modal to preview supporting documents submitted by a vendor.</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 6. APPROVALS -->
+<h2><span class="module-number">6</span> Approvals</h2>
+<p>The Approvals module manages the internal sign-off workflow for procurement requests before a Purchase Order is issued.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>Request Identity Banner:</strong> Displays the Request ID, current status (e.g. "Pending Manager Approval" in amber), the request title, and the total value of the procurement request in INR.</li>
+  <li><strong>Request Details Card (Left):</strong> Full metadata grid showing Vendor, Requested By (with user avatar), Department, Date Submitted, Cost Centre, Budget Code, and Priority pill (High/Medium/Low).</li>
+  <li><strong>Line Items Sub-table:</strong> Itemised list of what is being procured with SKU codes, quantities, unit prices, and row totals, plus a grand total footer row.</li>
+  <li><strong>Approval Timeline Stepper (Centre):</strong> Visual vertical stepper showing the full approval chain — completed steps (green checkmark), the current active step (blue dot), and future pending steps (grey circle).</li>
+  <li><strong>Action Panel with Tabs (Right):</strong>
+    <ul>
+      <li><strong>Decision Tab:</strong> Remarks textarea (required), and three action buttons — Approve (green), Reject (red), Request Clarification (neutral).</li>
+      <li><strong>Notes Tab:</strong> Threaded notes between approvers with user avatars, timestamps, and an input field to add new notes.</li>
+      <li><strong>History Tab:</strong> Log of all previous actions taken on this request with status pills (Approved, Submitted etc.).</li>
+    </ul>
+  </li>
+  <li><strong>Confirmation Modal:</strong> Any approval/rejection action triggers a confirmation modal before the decision is committed.</li>
+  <li><strong>Decision Banner:</strong> After actioning, a colour-coded decision banner (green for approved, red for rejected, blue for clarification) appears above the action panel.</li>
+  <li><strong>Search:</strong> Top-bar search to find approval requests by keyword.</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 7. PURCHASE ORDERS -->
+<h2><span class="module-number">7</span> Purchase Orders</h2>
+<p>The Purchase Orders module generates, displays, and manages official PO documents issued to vendors after approval.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>PO Document View:</strong> A formal, print-ready Purchase Order document with a branded header (gradient blue VendorBridge stamp with PO number).</li>
+  <li><strong>Vendor &amp; Buyer Details:</strong> Two-column layout showing full company name, address, email, and phone for both the Vendor and the Buyer (Bill To / Ship To).</li>
+  <li><strong>PO Metadata Strip:</strong> PO Number, Issue Date, Expected Delivery Date, and Payment Terms displayed in a 4-column grid below the address block.</li>
+  <li><strong>Line Items Table:</strong> Numbered rows with Item Description (name + part/spec detail), Quantity, Unit Price, and Total per line.</li>
+  <li><strong>Special Instructions Block:</strong> A read-only text area displaying any special instructions attached to the PO (e.g. delivery preferences, compliance requirements).</li>
+  <li><strong>Financial Summary:</strong> Subtotal, Tax (GST), Shipping, and Grand Total in a structured summary block.</li>
+  <li><strong>Signature Block:</strong> Authorised signatory line with name, title, and date fields.</li>
+  <li><strong>Action Buttons:</strong> Print PO, Download PDF, Print Invoice, and Send Email (opens a compose modal with recipient, subject, message body, and attach PO toggle).</li>
+  <li><strong>Search:</strong> Inline search to filter line items on large POs.</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 8. INVOICES -->
+<h2><span class="module-number">8</span> Invoices</h2>
+<p>The Invoices module mirrors the Purchase Order view but is oriented toward invoice management and payment processing.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>Invoice Document View:</strong> Displays the same PO document structure re-branded as an Invoice, with all line items, vendor and buyer details, and financial summary.</li>
+  <li><strong>Status Badge:</strong> Shows current invoice status — "Approved &amp; Issued" in green.</li>
+  <li><strong>Action Buttons:</strong> Print PO, Download PDF, Print Invoice, and Send Email (identical to Purchase Orders module with full email compose modal).</li>
+  <li><strong>Send Email Modal:</strong> Compose window with To address, Subject line, Message body, and a checkbox to attach the PO/Invoice document as a file chip.</li>
+  <li><strong>Line Item Search:</strong> Inline search to filter invoice line items.</li>
+  <li><strong>Financial Summary:</strong> Subtotal, Tax, Shipping/Handling, and Grand Total breakdown.</li>
+  <li><strong>Signature Block:</strong> Authorised signatory fields for name, title, and date.</li>
+  <li><strong>Print Styles:</strong> Sidebar, topbar, and action buttons are hidden when printing, producing a clean invoice document.</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 9. REPORTS & ANALYTICS -->
+<h2><span class="module-number">9</span> Reports &amp; Analytics</h2>
+<p>The Reports &amp; Analytics module provides a comprehensive data intelligence layer for procurement performance monitoring and auditing.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>5 KPI Summary Cards:</strong>
+    <ul>
+      <li>Total Spend (Month-to-Date) with percentage trend vs. last month.</li>
+      <li>Active RFQs count with weekly closing count.</li>
+      <li>PO Fulfilment Rate (%) with trend indicator.</li>
+      <li>Registered Vendors count with pending verification badge.</li>
+      <li>Average Approval Time (days) with improvement trend.</li>
+    </ul>
+  </li>
+  <li><strong>Monthly Procurement Spending Chart:</strong> Side-by-side bar chart (Jan–Jun) comparing Purchase Orders vs. Invoices Paid per month. Supports Bar / Line / Area toggle views.</li>
+  <li><strong>Spending by Category Donut Chart:</strong> Visual donut chart breaking spend into Hardware (34%), Services (28%), Logistics (22%), Software (16%) with a legend.</li>
+  <li><strong>Vendor Performance Rankings Table:</strong> Ranked table of vendors with columns for Rank, Vendor Name, Category badge, Total Spend, Number of Orders, Star Rating, and Performance label (Excellent / Good / Needs Improvement). Searchable and sortable by Performance Score or Spend.</li>
+  <li><strong>Procurement Funnel Chart:</strong> Horizontal funnel showing the procurement pipeline stages — RFQs Sent → Quotes Received → Shortlisted → Approved → PO Issued — with stage-by-stage counts and colour graduation.</li>
+  <li><strong>Compliance Score Gauge:</strong> Semi-circular gauge chart showing overall compliance health score (e.g. 73%).</li>
+  <li><strong>Date Range Filter:</strong> "Last 30 Days" selector in the topbar to adjust the reporting period.</li>
+  <li><strong>Export Report:</strong> Button to trigger an export modal with options for format (PDF, Excel, CSV) and report scope selection.</li>
+</ul>
+
+<hr class="divider"/>
+
+<!-- 10. ACTIVITY LOGS -->
+<h2><span class="module-number">10</span> Activity (Audit Logs)</h2>
+<p>The Activity module is a full system audit trail that records every procurement action, state change, and user interaction across all modules.</p>
+
+<h3>Key Functionalities</h3>
+<ul>
+  <li><strong>Activity Stats Strip (5 chips):</strong> At-a-glance count of today's events by type — Created, Approved, Rejected, Updated, and Auto-Generated — each with a colour-coded icon.</li>
+  <li><strong>Filter &amp; Search Toolbar:</strong>
+    <ul>
+      <li>Filter by Action Type (Created, Approved, Rejected, Updated, Deleted, Uploaded, Auto-Generated).</li>
+      <li>Search by User name.</li>
+      <li>Date Range filter (From and To date pickers).</li>
+      <li>Apply Filters and Clear buttons.</li>
+    </ul>
+  </li>
+  <li><strong>Chronological Log Feed:</strong> Scrollable list of all system events grouped by date (Today, Yesterday, etc.) with date-divider labels. Each log entry shows:
+    <ul>
+      <li>Colour-coded event icon (blue = created, green = approved, red = rejected/deleted, amber = updated, purple = auto-generated, indigo = uploaded).</li>
+      <li>Human-readable action description with the actor's name highlighted, action verb, and the target entity ID (e.g. RFQ-2023-045, PO-2023-2329).</li>
+      <li>Action Type tag pill (colour-coded label).</li>
+      <li>Timestamp.</li>
+      <li>Expandable sub-detail on click (shows additional context such as previous value, new value, or comment).</li>
+    </ul>
+  </li>
+  <li><strong>Load More:</strong> A "Load More" button at the bottom of the feed to paginate additional log entries.</li>
+  <li><strong>Export:</strong> Export the audit log as CSV or PDF for compliance and audit purposes.</li>
+  <li><strong>Notification Bell (Topbar):</strong> Bell icon with a red unread badge. Clicking opens a dropdown notification panel showing the latest system notifications with mark-all-as-read and view-all links.</li>
+  <li><strong>Global Search:</strong> Searches logs by event description, user name, or event ID in real time.</li>
+</ul>
+
+<hr class="divider"/>
+<p style="color: #737686; font-size: 9pt; text-align: center;">VendorBridge ERP v3.1 &nbsp;·&nbsp; © 2025 Nexus Systems Ltd. &nbsp;·&nbsp; Internal Documentation</p>
+
+</body>
+</html>

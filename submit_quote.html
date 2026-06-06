@@ -800,9 +800,7 @@
         <span class="material-symbols-outlined">history</span>
         Activity
       </a>
-      <a href="user_management.html" class="nav-item">
-        <span class="material-symbols-outlined">manage_accounts</span>
-        User Management
+
       </a>
     </nav>
 
@@ -837,15 +835,6 @@
 
       <!-- User controls -->
       <div class="topbar-right">
-        <button class="icon-btn" aria-label="Notifications">
-          <span class="material-symbols-outlined" style="font-size: 22px;">notifications</span>
-        </button>
-        <button class="icon-btn" aria-label="Help">
-          <span class="material-symbols-outlined" style="font-size: 22px;">help_outline</span>
-        </button>
-        <button class="icon-btn" aria-label="Settings">
-          <span class="material-symbols-outlined" style="font-size: 22px;">settings</span>
-        </button>
         <div class="avatar-jd" aria-label="User Avatar">JD</div>
       </div>
     </header>
@@ -911,7 +900,7 @@
             <!-- Card Title Row -->
             <div class="card-title-row">
               <h3 class="headline-sm" style="color: var(--on-surface); margin: 0;">Line Items &amp; Pricing</h3>
-              <span class="currency-chip">Currency: USD</span>
+              <span class="currency-chip">Currency: INR</span>
             </div>
 
             <!-- Pricing Table -->
@@ -1112,11 +1101,11 @@
             <div>
               <div class="summary-row">
                 <span class="summary-row-label" id="subtotal-label">Subtotal (1 item quoted)</span>
-                <span class="summary-row-value" id="subtotal-value">$11,775.00</span>
+                <span class="summary-row-value" id="subtotal-value">₹11,775.00</span>
               </div>
               <div class="summary-row">
                 <span class="summary-row-label variant">Estimated Tax (8%)</span>
-                <span class="summary-row-value outline" id="tax-value">$942.00</span>
+                <span class="summary-row-value outline" id="tax-value">₹942.00</span>
               </div>
               <div class="summary-row">
                 <span class="summary-row-label variant">Shipping / Freight</span>
@@ -1128,7 +1117,7 @@
             <hr class="summary-total-separator"/>
             <div class="summary-row" style="padding: 4px 0;">
               <span class="summary-total-label">Total Price</span>
-              <span class="summary-total-value" id="total-price-value">$12,717.00</span>
+              <span class="summary-total-value" id="total-price-value">₹12,717.00</span>
             </div>
 
             <!-- CTA Block -->
@@ -1172,15 +1161,15 @@
       <div style="background-color: var(--surface-muted); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 14px 16px; margin-top: 16px; display: flex; gap: 20px; flex-wrap: wrap;">
         <div>
           <p class="label-caps" style="color: var(--outline); margin-bottom: 2px;">Subtotal</p>
-          <p class="data-mono" id="modal-subtotal" style="color: var(--on-surface); margin: 0;">$11,775.00</p>
+          <p class="data-mono" id="modal-subtotal" style="color: var(--on-surface); margin: 0;">₹11,775.00</p>
         </div>
         <div>
           <p class="label-caps" style="color: var(--outline); margin-bottom: 2px;">Tax (8%)</p>
-          <p class="data-mono" id="modal-tax" style="color: var(--on-surface); margin: 0;">$942.00</p>
+          <p class="data-mono" id="modal-tax" style="color: var(--on-surface); margin: 0;">₹942.00</p>
         </div>
         <div>
           <p class="label-caps" style="color: var(--outline); margin-bottom: 2px;">Total</p>
-          <p class="data-mono" id="modal-total" style="color: var(--primary); font-weight: 600; margin: 0;">$12,717.00</p>
+          <p class="data-mono" id="modal-total" style="color: var(--primary); font-weight: 600; margin: 0;">₹12,717.00</p>
         </div>
       </div>
       <div class="modal-actions">
@@ -1251,14 +1240,14 @@
 
       document.getElementById('quoted-items-label').textContent = labelText;
       document.getElementById('subtotal-label').textContent = `Subtotal (${quotedCount} ${itemWord} quoted)`;
-      document.getElementById('subtotal-value').textContent = '$' + fmt(subtotal);
-      document.getElementById('tax-value').textContent = '$' + fmt(tax);
-      document.getElementById('total-price-value').textContent = '$' + fmt(total);
+      document.getElementById('subtotal-value').textContent = '₹' + fmt(subtotal);
+      document.getElementById('tax-value').textContent = '₹' + fmt(tax);
+      document.getElementById('total-price-value').textContent = '₹' + fmt(total);
 
       // Sync modal values
-      document.getElementById('modal-subtotal').textContent = '$' + fmt(subtotal);
-      document.getElementById('modal-tax').textContent = '$' + fmt(tax);
-      document.getElementById('modal-total').textContent = '$' + fmt(total);
+      document.getElementById('modal-subtotal').textContent = '₹' + fmt(subtotal);
+      document.getElementById('modal-tax').textContent = '₹' + fmt(tax);
+      document.getElementById('modal-total').textContent = '₹' + fmt(total);
     }
 
     /* ── Row deletion ── */

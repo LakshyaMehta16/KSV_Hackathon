@@ -94,5 +94,17 @@ window.showGlobalToast = function(message, type = '', iconName = '') {
     }, 3500);
 };
 
+// Global search function to filter elements with class 'searchable'
+window.globalSearch = function(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('.searchable').forEach(el => {
+    if (el.textContent.toLowerCase().includes(q)) {
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+};
+
 // Also patch any existing showToast function to use our global one
 window.showToast = window.showGlobalToast;

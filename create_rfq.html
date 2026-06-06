@@ -677,9 +677,7 @@
         <span class="material-symbols-outlined">history</span>
         Activity
       </a>
-      <a href="user_management.html" class="nav-item">
-        <span class="material-symbols-outlined">manage_accounts</span>
-        User Management
+
       </a>
     </nav>
 
@@ -707,20 +705,11 @@
       <!-- Search Box -->
       <div class="search-bar-container" style="background-color: #F0EDEC; border-radius: 9999px; display: flex; align-items: center; padding: 6px 16px; width: 380px; gap: 8px;">
         <span class="material-symbols-outlined" style="color: var(--outline); font-size: 20px;">search</span>
-        <input type="text" class="search-bar-input" placeholder="Search POs, RFQs, or Vendors..."/>
+        <input type="text" class="search-bar-input" id="globalSearchInput" placeholder="Search POs, RFQs, or Vendors..." oninput="globalSearch(this.value)"/>
       </div>
 
       <!-- User controls -->
       <div class="topbar-right">
-        <button class="icon-btn" aria-label="Notifications">
-          <span class="material-symbols-outlined" style="font-size: 22px;">notifications</span>
-        </button>
-        <button class="icon-btn" aria-label="Help">
-          <span class="material-symbols-outlined" style="font-size: 22px;">help_outline</span>
-        </button>
-        <button class="icon-btn" aria-label="Settings">
-          <span class="material-symbols-outlined" style="font-size: 22px;">settings</span>
-        </button>
         <div class="avatar-jd" aria-label="User Avatar">JD</div>
       </div>
     </header>
