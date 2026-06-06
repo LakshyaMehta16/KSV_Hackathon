@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quotation Comparison - VendorBridge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-secondary-container": "#006078",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed": "#001f29",
+                "primary-container": "#346ee6",
+                "secondary-fixed": "#b8eaff",
+                "tertiary-container": "#b45d00",
+                "surface-container-high": "#eae7e7",
+                "on-error-container": "#93000a",
+                "inverse-surface": "#313030",
+                "on-primary": "#ffffff",
+                "on-surface-variant": "#424654",
+                "surface-variant": "#e5e2e1",
+                "surface-tint": "#0a56ce",
+                "error": "#ba1a1a",
+                "on-error": "#ffffff",
+                "surface-dim": "#dcd9d9",
+                "surface-container-highest": "#e5e2e1",
+                "on-tertiary-fixed": "#301400",
+                "primary-fixed": "#dae2ff",
+                "error-container": "#ffdad6",
+                "secondary-fixed-dim": "#72d3f6",
+                "outline": "#737785",
+                "tertiary": "#904900",
+                "primary": "#0154cc",
+                "background": "#fcf9f8",
+                "on-background": "#1b1b1b",
+                "outline-variant": "#c3c6d6",
+                "tertiary-fixed": "#ffdcc5",
+                "surface": "#fcf9f8",
+                "on-tertiary": "#ffffff",
+                "secondary-container": "#7bdbff",
+                "on-primary-fixed-variant": "#0040a0",
+                "on-primary-fixed": "#001847",
+                "on-secondary": "#ffffff",
+                "on-primary-container": "#fefcff",
+                "surface-bright": "#fcf9f8",
+                "surface-container-low": "#f6f3f2",
+                "surface-container": "#f0eded",
+                "on-tertiary-fixed-variant": "#703800",
+                "inverse-on-surface": "#f3f0ef",
+                "on-surface": "#1b1b1b",
+                "inverse-primary": "#b2c5ff",
+                "secondary": "#006780",
+                "on-tertiary-container": "#fffbff",
+                "tertiary-fixed-dim": "#ffb782",
+                "primary-fixed-dim": "#b2c5ff",
+                "on-secondary-fixed-variant": "#004d61"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "sidebar-width": "260px",
+                "container-max": "1440px",
+                "lg": "24px",
+                "gutter": "16px",
+                "md": "16px",
+                "container-margin": "24px",
+                "xl": "32px",
+                "sm": "8px",
+                "base": "4px",
+                "xs": "4px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Hanken Grotesk"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "body-sm": [
+                        "Inter"
+                ],
+                "headline-xl": [
+                        "Hanken Grotesk"
+                ],
+                "headline-md": [
+                        "Hanken Grotesk"
+                ],
+                "headline-lg": [
+                        "Hanken Grotesk"
+                ],
+                "headline-lg-mobile": [
+                        "Hanken Grotesk"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "14px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { background-color: theme('colors.surface-container'); color: theme('colors.on-background'); font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface-container antialiased min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface-bright fixed top-0 right-0 w-[calc(100%-260px)] h-16 border-b border-outline-variant flex items-center justify-between px-lg z-40 hidden md:flex font-body-sm text-body-sm">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-on-surface">VendorBridge</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<div class="relative focus-within:ring-2 focus-within:ring-primary/20 rounded-lg">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="pl-8 pr-4 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg focus:outline-none text-body-sm text-on-surface w-64" placeholder="Search quotations..." type="text"/>
+</div>
+<button class="hover:text-primary transition-all p-1"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary transition-all p-1"><span class="material-symbols-outlined">help_outline</span></button>
+<button class="hover:text-primary transition-all p-1"><span class="material-symbols-outlined">settings</span></button>
+<img alt="User profile" class="w-8 h-8 rounded-full ml-2 border border-outline-variant" data-alt="A small, circular headshot of a professional individual against a neutral corporate background. The person looks approachable and competent. This acts as a user profile avatar in a minimalist enterprise software interface." src="https://lh3.googleusercontent.com/aida/AP1WRLstPCVv3WmqQ5D7lsPQV2jj6ajwBspJ3CwYdeWky2kq4bHfPxA6zxrBadcUFt88_4tSD0EwGCJUsBEgez0aRc4gl-hbzxYKzfGqt4HSVWhQgndBX7FpTdvJd-UJ8VwJucsiHcPPRIdiMGG3Fq79TJJVmNiPq5g26gYjFKzx75xFy_w-4LnB777EshqxW5b5OfbNkcSGs_6eGgAhVCKLnd12rJTInqZL3OHn2MkZnneRp6eJpnpROUVUBSI"/>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest fixed left-0 top-0 h-screen w-sidebar-width border-r border-outline-variant flex flex-col py-base font-body-md text-body-md hidden md:flex z-50">
+<div class="px-6 py-4 flex items-center gap-3 mb-4">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary font-bold">V</div>
+<div>
+<div class="font-headline-lg text-headline-lg text-primary leading-none">VendorBridge</div>
+<div class="text-[10px] text-outline font-label-sm uppercase tracking-wider mt-1">Enterprise ERP</div>
+</div>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full bg-primary text-on-primary py-2 px-4 rounded-lg flex items-center justify-center gap-2 font-label-md transition-transform active:scale-[0.99] hover:opacity-90 shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span> Add New
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span>Vendors</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">request_quote</span>
+<span>RFQs</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 bg-surface-container border-l-4 border-primary text-primary font-bold opacity-90 scale-[0.99]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span>Quotations</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span>Approvals</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span>Purchase Orders</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Invoices</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span>Reports</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">history</span>
+<span>Activity</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="md:ml-sidebar-width pt-16 min-h-screen">
+<div class="max-w-container-max mx-auto px-xl py-lg">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-lg gap-4">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-background mb-2">Quotation Comparison</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">RFQ-2023-089: Industrial HVAC Systems</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant py-1.5 px-3 rounded-lg flex items-center gap-2 font-label-md hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                    </button>
+<button class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant py-1.5 px-3 rounded-lg flex items-center gap-2 font-label-md hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">sort</span> Sort
+                    </button>
+<button class="bg-primary text-on-primary py-1.5 px-4 rounded-lg font-label-md hover:bg-primary-container transition-colors shadow-sm">
+                        Export Report
+                    </button>
+</div>
+</div>
+<!-- Comparison Matrix Container -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant">
+<th class="p-md font-label-sm text-label-sm text-on-surface-variant w-1/4">Criteria</th>
+<th class="p-md font-label-sm text-label-sm text-on-surface-variant w-1/4 border-l border-outline-variant text-center">
+<div class="font-headline-md text-headline-md text-on-surface mb-1">Vendor A</div>
+<span class="font-body-sm text-body-sm text-outline font-normal">TechFlow Solutions</span>
+</th>
+<th class="p-md font-label-sm text-label-sm text-on-surface-variant w-1/4 border-l border-outline-variant text-center">
+<div class="font-headline-md text-headline-md text-on-surface mb-1">Vendor B</div>
+<span class="font-body-sm text-body-sm text-outline font-normal">Global Industries</span>
+</th>
+<th class="p-md font-label-sm text-label-sm text-on-surface-variant w-1/4 border-l border-outline-variant text-center bg-primary/5 relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="font-headline-md text-headline-md text-on-surface mb-1">Vendor C</div>
+<span class="font-body-sm text-body-sm text-outline font-normal">Apex Manufacturing</span>
+</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-background">
+<!-- Pricing Row -->
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors">
+<td class="p-md font-label-md text-on-surface-variant">Total Pricing</td>
+<td class="p-md border-l border-outline-variant text-center font-body-md text-on-surface-variant">$12,000.00</td>
+<td class="p-md border-l border-outline-variant text-center font-body-md text-on-surface-variant">$13,500.00</td>
+<td class="p-md border-l border-outline-variant text-center font-body-md text-on-surface-variant font-bold text-primary bg-primary/5">
+                                $11,800.00
+                                <div class="text-[10px] text-primary font-label-sm mt-1 tracking-wider uppercase">Lowest Bid</div>
+</td>
+</tr>
+<!-- Timeline Row -->
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors">
+<td class="p-md font-label-md text-on-surface-variant">Delivery Timeline</td>
+<td class="p-md border-l border-outline-variant text-center">2 weeks</td>
+<td class="p-md border-l border-outline-variant text-center">3 weeks</td>
+<td class="p-md border-l border-outline-variant text-center bg-primary/5">2.5 weeks</td>
+</tr>
+<!-- Rating Row -->
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors">
+<td class="p-md font-label-md text-on-surface-variant">Vendor Rating</td>
+<td class="p-md border-l border-outline-variant text-center">
+<div class="flex items-center justify-center gap-1 text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-on-surface ml-1">4.5</span>
+</div>
+</td>
+<td class="p-md border-l border-outline-variant text-center">
+<div class="flex items-center justify-center gap-1 text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star_half</span>
+<span class="font-label-md text-on-surface ml-1">3.8</span>
+</div>
+</td>
+<td class="p-md border-l border-outline-variant text-center bg-primary/5">
+<div class="flex items-center justify-center gap-1 text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-on-surface ml-1">4.0</span>
+</div>
+</td>
+</tr>
+<!-- Actions Row -->
+<tr>
+<td class="p-md font-label-md text-on-surface-variant">Recommendation</td>
+<td class="p-md border-l border-outline-variant text-center">
+<button class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant py-2 px-4 rounded-lg font-label-md hover:bg-surface-container transition-colors">Review Docs</button>
+</td>
+<td class="p-md border-l border-outline-variant text-center">
+<button class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant py-2 px-4 rounded-lg font-label-md hover:bg-surface-container transition-colors">Review Docs</button>
+</td>
+<td class="p-md border-l border-outline-variant text-center bg-primary/5">
+<button class="w-full bg-primary text-on-primary py-2 px-4 rounded-lg font-label-md hover:opacity-90 transition-opacity shadow-sm">Award Contract</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</body></html>

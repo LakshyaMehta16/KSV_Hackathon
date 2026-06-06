@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>VendorBridge ERP - Submit Quotation</title>
+  <meta name="description" content="Submit vendor quotation for RFQ #OFP-2023-089 — Office Furniture Procurement. Enter line-item pricing, delivery terms, and conditions."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+
+  <style>
+    /* ============================================================
+       Screen 5 — Vendor Quotation Submission
+       Executive Precision Design System
+    ============================================================ */
+
+    body {
+      background-color: var(--surface-background);
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* ── Sidebar nav item states ── */
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 24px 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--data-ink);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover {
+      background-color: #F0EDEC;
+      color: var(--on-surface);
+    }
+    .nav-item.active {
+      border-left-color: var(--primary) !important;
+      background-color: var(--surface-muted) !important;
+      color: var(--primary) !important;
+      font-weight: 600;
+    }
+    .nav-item.active .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1;
+      color: var(--primary);
+    }
+    .nav-item .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--outline);
+    }
+
+    /* ── Layout shell ── */
+    .main-container {
+      margin-left: 260px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--surface-background);
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      background-color: var(--surface-container-lowest);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--data-ink);
+      padding: 0;
+      margin-right: 12px;
+    }
+    .avatar-jd {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #003FB1;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Page Content ── */
+    .page-content {
+      padding: 0 32px 48px 32px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--outline);
+      margin-bottom: 6px;
+    }
+    .breadcrumb a {
+      color: var(--outline);
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.15s;
+    }
+    .breadcrumb a:hover { color: var(--primary); }
+
+    /* ── Page Header Row ── */
+    .page-header-row {
+      padding: 24px 0 0 0;
+    }
+
+    /* ── RFQ Identity Strip ── */
+    .rfq-identity-strip {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .rfq-strip-left {}
+    .rfq-strip-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rfq-strip-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* ── Countdown Timer ── */
+    .countdown-timer {
+      font-family: var(--font-headlines);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--error);
+      letter-spacing: -0.01em;
+      min-width: 88px;
+    }
+
+    /* ── Two-Column Main Layout ── */
+    .quote-layout {
+      display: grid;
+      grid-template-columns: 65fr 35fr;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    /* ── Card base ── */
+    .card {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 24px;
+    }
+
+    /* ── Card title row ── */
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    /* ── Currency chip ── */
+    .currency-chip {
+      background-color: var(--surface-muted);
+      color: var(--primary);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    /* ── Line Items Pricing Table (Screen 5 specific) ── */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .pricing-table thead th {
+      background-color: var(--surface-muted);
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--data-ink);
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+    .pricing-table thead th:not(:first-child) {
+      text-align: right;
+    }
+    .pricing-table thead th:last-child {
+      /* remove column — hidden header */
+      width: 36px;
+      text-align: center;
+    }
+    .pricing-table tbody tr {
+      transition: background-color 0.15s ease;
+      position: relative;
+    }
+    .pricing-table tbody tr:hover {
+      background-color: #F8FAFC;
+    }
+    .pricing-table tbody td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: middle;
+    }
+    .pricing-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Item name + description stacked */
+    .item-name {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--on-surface);
+      line-height: 1.4;
+      margin-bottom: 2px;
+    }
+    .item-desc {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--outline);
+      line-height: 1.4;
+    }
+
+    /* Numeric cells */
+    .cell-right {
+      text-align: right;
+    }
+    .cell-qty {
+      font-family: var(--font-headlines);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--data-ink);
+      text-align: right;
+    }
+    .cell-uom {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--outline);
+      text-align: right;
+    }
+    .cell-expected-price {
+      font-family: var(--font-headlines);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--outline);
+      text-align: right;
+      white-space: nowrap;
+    }
+    .cell-total {
+      font-family: var(--font-headlines);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--on-surface);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Submitted Unit Price editable input cell */
+    .price-input-cell {
+      text-align: right;
+    }
+    .price-input-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .price-input {
+      width: 110px;
+      background-color: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 2px;
+      padding: 7px 10px;
+      font-family: var(--font-headlines);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      text-align: right;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .price-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(1, 84, 204, 0.18);
+      background-color: #DBEAFE;
+    }
+    .price-input::placeholder {
+      color: #93C5FD;
+    }
+
+    /* Delete icon column */
+    .btn-delete-row {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--error);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      border-radius: 2px;
+      margin: 0 auto;
+    }
+    .pricing-table tbody tr:hover .btn-delete-row {
+      opacity: 1;
+    }
+    .btn-delete-row:hover {
+      background-color: #FEE2E2;
+    }
+
+    /* ── Horizontal divider ── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border-subtle);
+      margin: 24px 0 20px 0;
+    }
+
+    /* ── Terms & Conditions section ── */
+    .terms-section {}
+    .terms-section-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--data-ink);
+      margin-bottom: 16px;
+    }
+    .terms-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .field-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--data-ink);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* Date input with icon */
+    .date-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .date-input-wrapper .material-symbols-outlined {
+      position: absolute;
+      left: 12px;
+      color: var(--outline);
+      font-size: 20px;
+      pointer-events: none;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .date-input {
+      width: 100%;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      padding: 10px 12px 10px 40px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--on-surface);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .date-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    /* Validity segmented toggle */
+    .segmented-control {
+      display: flex;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      overflow: hidden;
+      width: fit-content;
+    }
+    .segment-btn {
+      background-color: #FFFFFF;
+      border: none;
+      border-right: 1px solid var(--border-subtle);
+      padding: 9px 18px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--data-ink);
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .segment-btn:last-child { border-right: none; }
+    .segment-btn:hover { background-color: var(--surface-muted); }
+    .segment-btn.active {
+      background-color: var(--primary);
+      color: #FFFFFF;
+    }
+
+    /* Notes textarea */
+    .notes-textarea {
+      width: 100%;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--on-surface);
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      line-height: 1.5;
+    }
+    .notes-textarea::placeholder { color: var(--outline); }
+    .notes-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    /* ── Right: Summary Card (sticky) ── */
+    .summary-card {
+      position: sticky;
+      top: 90px; /* below topbar */
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 0;
+    }
+    .summary-row-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--data-ink);
+      white-space: nowrap;
+    }
+    .summary-row-label.variant {
+      color: var(--on-surface-variant);
+    }
+    .summary-row-value {
+      font-family: var(--font-headlines);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--on-surface);
+      white-space: nowrap;
+      text-align: right;
+    }
+    .summary-row-value.outline {
+      color: var(--outline);
+    }
+    .summary-row-value.italic {
+      font-style: italic;
+      font-family: var(--font-body);
+      font-weight: 400;
+    }
+
+    .summary-total-separator {
+      border: none;
+      border-top: 1px solid var(--border-subtle);
+      margin: 8px 0;
+    }
+    .summary-total-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--on-surface);
+    }
+    .summary-total-value {
+      font-family: var(--font-headlines);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+    }
+
+    /* CTA block in summary card */
+    .summary-cta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .btn-submit-quote {
+      width: 100%;
+      height: 48px;
+      background-color: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.2s;
+    }
+    .btn-submit-quote:hover { background-color: var(--primary-container); }
+    .btn-submit-quote:active { background-color: #003DAB; }
+
+    .btn-save-draft-full {
+      width: 100%;
+      height: 40px;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      color: var(--data-ink);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.15s, border-color 0.15s;
+    }
+    .btn-save-draft-full:hover {
+      background-color: var(--surface-background);
+      border-color: var(--outline-variant);
+    }
+
+    /* Binding notice */
+    .binding-notice {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      color: var(--outline);
+    }
+    .binding-notice .material-symbols-outlined {
+      font-size: 16px;
+    }
+
+    /* Sub-label below summary title */
+    .summary-sublabel {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--outline);
+      margin-top: 2px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Toast notification ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background-color: var(--on-surface);
+      color: #FFFFFF;
+      border-radius: 4px;
+      padding: 12px 20px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      z-index: 999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .toast.success { background-color: var(--success); }
+    .toast.error   { background-color: var(--error); }
+
+    /* ── Submit Confirm Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.45);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-overlay.open .modal-box {
+      transform: translateY(0) scale(1);
+    }
+    .modal-icon-ring {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: #DBEAFE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .modal-icon-ring .material-symbols-outlined {
+      font-size: 28px;
+      color: var(--primary);
+      font-variation-settings: 'FILL' 1;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      justify-content: flex-end;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .quote-layout {
+        grid-template-columns: 1fr;
+      }
+      .summary-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .main-container { margin-left: 0; }
+      .sidebar { display: none !important; }
+      .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+    }
+
+    @media (max-width: 768px) {
+      .rfq-identity-strip {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px 20px;
+        gap: 12px;
+      }
+      .rfq-strip-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .page-content { padding: 0 16px 48px 16px; }
+      .topbar { padding: 16px 20px; }
+
+      /* Mobile sidebar */
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        bottom: 0;
+        width: 260px;
+        z-index: 100;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .sidebar-open .sidebar { left: 0; }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 90;
+      }
+      .sidebar-open .sidebar-overlay { display: block; }
+    }
+  </style>
+</head>
+<body class="sidebar-closed">
+
+  <!-- Mobile Sidebar Overlay Backdrop -->
+  <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
+  <!-- ══════════════════════════════════════
+       Navigation Sidebar
+  ══════════════════════════════════════ -->
+  <aside class="sidebar" style="width: 260px; background-color: var(--surface-muted); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; height: 100vh; position: fixed; left: 0; top: 0; z-index: 50;">
+
+    <!-- Brand Lockup -->
+    <div style="padding: 24px 16px 16px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-subtle);">
+      <div style="width: 36px; height: 36px; border-radius: 4px; background-color: #003FB1; display: flex; align-items: center; justify-content: center; color: #FFFFFF; flex-shrink: 0;">
+        <span class="material-symbols-outlined" style="font-size: 20px; font-variation-settings: 'FILL' 1;">account_tree</span>
+      </div>
+      <div>
+        <h2 class="headline-sm" style="color: var(--data-ink); font-weight: 700; margin: 0; line-height: 1.1; font-size: 15px;">VendorBridge</h2>
+        <span class="label-caps" style="color: var(--outline); font-size: 9px; margin-top: 2px; display: block; font-weight: 700;">Enterprise ERP</span>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <a href="vendors.html" class="nav-item">
+        <span class="material-symbols-outlined">storefront</span>
+        Vendors
+      </a>
+      <a href="create_rfq.html" class="nav-item">
+        <span class="material-symbols-outlined">request_quote</span>
+        RFQs
+      </a>
+      <a href="submit_quote.html" class="nav-item active">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Quotations
+      </a>
+      <a href="compare_quotes.html" class="nav-item">
+        <span class="material-symbols-outlined">compare_arrows</span>
+        Comparison
+      </a>
+      <a href="approval.html" class="nav-item">
+        <span class="material-symbols-outlined">fact_check</span>
+        Approvals
+      </a>
+      <a href="purchase_order.html" class="nav-item">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        Purchase Orders
+      </a>
+      <a href="invoices.html" class="nav-item">
+        <span class="material-symbols-outlined">description</span>
+        Invoices
+      </a>
+      <a href="reports_analytics.html" class="nav-item">
+        <span class="material-symbols-outlined">assessment</span>
+        Reports
+      </a>
+      <a href="activity_logs.html" class="nav-item">
+        <span class="material-symbols-outlined">history</span>
+        Activity
+      </a>
+      <a href="user_management.html" class="nav-item">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        User Management
+      </a>
+    </nav>
+
+    <!-- Sidebar Bottom CTA -->
+    <div style="padding: 16px; margin-top: auto; border-top: 1px solid var(--border-subtle);">
+      <button class="btn btn-success" onclick="window.location.href='vendors.html#add-vendor'" style="width: 100%; height: 40px; border-radius: 4px; font-weight: 600; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;">
+        <span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+        Add New
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════
+       Main View Container
+  ══════════════════════════════════════ -->
+  <div class="main-container">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div style="display: flex; align-items: center;">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle navigation menu">
+          <span class="material-symbols-outlined" style="font-size: 24px;">menu</span>
+        </button>
+        <h1 class="headline-md" style="color: var(--on-surface);">Quotations</h1>
+      </div>
+
+      <!-- Search -->
+      <div style="background-color: #F0EDEC; border-radius: 9999px; display: flex; align-items: center; padding: 6px 16px; width: 380px; gap: 8px;">
+        <span class="material-symbols-outlined" style="color: var(--outline); font-size: 20px;">search</span>
+        <input type="text" style="background: none; border: none; outline: none; font-family: var(--font-body); font-size: 14px; color: var(--on-surface); width: 100%;" placeholder="Search quotations, RFQs, or vendors..."/>
+      </div>
+
+      <!-- User controls -->
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Notifications">
+          <span class="material-symbols-outlined" style="font-size: 22px;">notifications</span>
+        </button>
+        <button class="icon-btn" aria-label="Help">
+          <span class="material-symbols-outlined" style="font-size: 22px;">help_outline</span>
+        </button>
+        <button class="icon-btn" aria-label="Settings">
+          <span class="material-symbols-outlined" style="font-size: 22px;">settings</span>
+        </button>
+        <div class="avatar-jd" aria-label="User Avatar">JD</div>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════
+         Page Content Area
+    ══════════════════════════════════════ -->
+    <main class="page-content">
+
+      <!-- 5.1 — Page Header Row -->
+      <section class="page-header-row">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb body-md">
+          <a href="#">Quotations</a>
+          <span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span>
+          <span style="color: var(--on-surface);">Submit Quote</span>
+        </div>
+        <!-- Page Title -->
+        <h2 class="headline-md" style="color: var(--on-surface); margin: 4px 0 2px 0;">RFQ #OFP-2023-089</h2>
+        <p class="body-sm" style="color: var(--outline); margin: 0;">Submit Quotations</p>
+      </section>
+
+      <!-- RFQ Identity Strip -->
+      <div class="rfq-identity-strip" role="region" aria-label="RFQ context banner">
+
+        <!-- Left: RFQ title -->
+        <div class="rfq-strip-left">
+          <p class="headline-sm" style="color: var(--on-surface); margin: 0;">RFQ: Office Furniture Procurement</p>
+        </div>
+
+        <!-- Center: Countdown -->
+        <div class="rfq-strip-center">
+          <span class="material-symbols-outlined" style="font-size: 20px; color: var(--outline);">schedule</span>
+          <span class="label-caps" style="color: var(--outline); margin-right: 4px;">Closing in:</span>
+          <span class="countdown-timer" id="countdown-display" aria-live="polite">2d 14h 30m</span>
+        </div>
+
+        <!-- Right: Action buttons -->
+        <div class="rfq-strip-right">
+          <button class="btn btn-secondary" onclick="handleSaveDraft()" id="strip-draft-btn" style="height: 36px; padding: 0 14px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
+            Save as Draft
+          </button>
+          <button class="btn btn-primary" onclick="openSubmitModal()" id="strip-submit-btn" style="height: 36px; padding: 0 14px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">send</span>
+            Submit Quote
+          </button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           5.2 — Two-Column Layout
+      ══════════════════════════════════════ -->
+      <div class="quote-layout">
+
+        <!-- ╔════════════════════════════╗
+             ║  LEFT COLUMN (65%)        ║
+             ║  Line Items & Pricing     ║
+             ╚════════════════════════════╝ -->
+        <div>
+          <div class="card">
+
+            <!-- Card Title Row -->
+            <div class="card-title-row">
+              <h3 class="headline-sm" style="color: var(--on-surface); margin: 0;">Line Items &amp; Pricing</h3>
+              <span class="currency-chip">Currency: USD</span>
+            </div>
+
+            <!-- Pricing Table -->
+            <div style="overflow-x: auto;">
+              <table class="pricing-table" id="pricing-table" aria-label="Line items pricing table">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; min-width: 200px;">Item Requirement</th>
+                    <th>Qty</th>
+                    <th>UOM</th>
+                    <th>Expected Price</th>
+                    <th>Submitted Unit Price *</th>
+                    <th>Total Line Price</th>
+                    <th style="text-align: center;"></th>
+                  </tr>
+                </thead>
+                <tbody id="line-items-body">
+
+                  <!-- Row 1: Ergonomic Task Chair (pre-filled) -->
+                  <tr data-row-id="row-1">
+                    <td>
+                      <p class="item-name">Ergonomic Task Chair</p>
+                      <p class="item-desc">Mesh back, adjustable lumbar, 3D armrests.</p>
+                    </td>
+                    <td class="cell-qty">50</td>
+                    <td class="cell-uom">EA</td>
+                    <td class="cell-expected-price">250.00</td>
+                    <td class="price-input-cell">
+                      <div class="price-input-wrapper">
+                        <input
+                          type="number"
+                          class="price-input"
+                          id="price-row-1"
+                          data-qty="50"
+                          value="235.50"
+                          min="0"
+                          step="0.01"
+                          aria-label="Submitted unit price for Ergonomic Task Chair"
+                          oninput="recalcRow(this)"
+                        />
+                      </div>
+                    </td>
+                    <td class="cell-total cell-right" id="total-row-1">11,775.00</td>
+                    <td style="text-align: center;">
+                      <button class="btn-delete-row" onclick="deleteRow('row-1')" aria-label="Remove Ergonomic Task Chair row" title="Remove row">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Row 2: Height-Adjustable Desk -->
+                  <tr data-row-id="row-2">
+                    <td>
+                      <p class="item-name">Height-Adjustable Desk</p>
+                      <p class="item-desc">Electric sit-stand, 60×30 inch, dual motor.</p>
+                    </td>
+                    <td class="cell-qty">25</td>
+                    <td class="cell-uom">EA</td>
+                    <td class="cell-expected-price">450.00</td>
+                    <td class="price-input-cell">
+                      <div class="price-input-wrapper">
+                        <input
+                          type="number"
+                          class="price-input"
+                          id="price-row-2"
+                          data-qty="25"
+                          value=""
+                          min="0"
+                          step="0.01"
+                          placeholder="0.00"
+                          aria-label="Submitted unit price for Height-Adjustable Desk"
+                          oninput="recalcRow(this)"
+                        />
+                      </div>
+                    </td>
+                    <td class="cell-total cell-right" id="total-row-2" style="color: var(--outline);">0.00</td>
+                    <td style="text-align: center;">
+                      <button class="btn-delete-row" onclick="deleteRow('row-2')" aria-label="Remove Height-Adjustable Desk row" title="Remove row">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Row 3: Mobile File Pedestal -->
+                  <tr data-row-id="row-3">
+                    <td>
+                      <p class="item-name">Mobile File Pedestal</p>
+                      <p class="item-desc">3-drawer, locking, metal construction, casters.</p>
+                    </td>
+                    <td class="cell-qty">30</td>
+                    <td class="cell-uom">EA</td>
+                    <td class="cell-expected-price">120.00</td>
+                    <td class="price-input-cell">
+                      <div class="price-input-wrapper">
+                        <input
+                          type="number"
+                          class="price-input"
+                          id="price-row-3"
+                          data-qty="30"
+                          value=""
+                          min="0"
+                          step="0.01"
+                          placeholder="0.00"
+                          aria-label="Submitted unit price for Mobile File Pedestal"
+                          oninput="recalcRow(this)"
+                        />
+                      </div>
+                    </td>
+                    <td class="cell-total cell-right" id="total-row-3" style="color: var(--outline);">0.00</td>
+                    <td style="text-align: center;">
+                      <button class="btn-delete-row" onclick="deleteRow('row-3')" aria-label="Remove Mobile File Pedestal row" title="Remove row">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+                      </button>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Terms & Conditions divider -->
+            <hr class="section-divider"/>
+
+            <!-- Terms & Conditions Section -->
+            <div class="terms-section">
+              <p class="terms-section-label">Terms &amp; Conditions</p>
+
+              <div class="terms-fields">
+
+                <!-- Field 1: Deliver by Date -->
+                <div class="form-group">
+                  <label for="deliver-by-date" class="field-label">Deliver by Date</label>
+                  <div class="date-input-wrapper">
+                    <span class="material-symbols-outlined">calendar_today</span>
+                    <input
+                      type="date"
+                      id="deliver-by-date"
+                      class="date-input"
+                      placeholder="Select delivery date"
+                      aria-label="Delivery date"
+                    />
+                  </div>
+                </div>
+
+                <!-- Field 2: Quote Validity Period -->
+                <div class="form-group">
+                  <label class="field-label">Quote Validity Period</label>
+                  <div class="segmented-control" role="group" aria-label="Quote validity period selection" id="validity-control">
+                    <button class="segment-btn active" id="validity-30" onclick="selectValidity(this, '30')" aria-pressed="true">30 Days</button>
+                    <button class="segment-btn" id="validity-60" onclick="selectValidity(this, '60')" aria-pressed="false">60 Days</button>
+                    <button class="segment-btn" id="validity-90" onclick="selectValidity(this, '90')" aria-pressed="false">90 Days</button>
+                    <button class="segment-btn" id="validity-custom" onclick="selectValidity(this, 'custom')" aria-pressed="false">Custom</button>
+                  </div>
+                  <!-- Custom validity input (hidden by default) -->
+                  <div id="custom-validity-wrapper" style="display: none; margin-top: 8px;">
+                    <input
+                      type="number"
+                      id="custom-validity-days"
+                      class="date-input"
+                      style="padding: 10px 12px;"
+                      placeholder="Enter number of days"
+                      min="1"
+                      max="365"
+                      aria-label="Custom validity period in days"
+                    />
+                  </div>
+                </div>
+
+                <!-- Field 3: Delivery Conditions & Notes -->
+                <div class="form-group">
+                  <label for="delivery-notes" class="field-label">Delivery Conditions &amp; Notes</label>
+                  <textarea
+                    id="delivery-notes"
+                    class="notes-textarea"
+                    rows="3"
+                    placeholder="Specify shipping terms, lead time, acceptance criteria, or any special conditions…"
+                    aria-label="Delivery conditions and notes"
+                  ></textarea>
+                </div>
+
+              </div><!-- /terms-fields -->
+            </div><!-- /terms-section -->
+
+          </div><!-- /card -->
+        </div><!-- /left column -->
+
+        <!-- ╔════════════════════════════╗
+             ║  RIGHT COLUMN (35%)       ║
+             ║  Quotation Summary Card   ║
+             ╚════════════════════════════╝ -->
+        <div>
+          <div class="card summary-card" role="region" aria-label="Quotation summary">
+
+            <h3 class="headline-sm" style="color: var(--on-surface); margin: 0 0 2px 0;">Quotation Summary</h3>
+            <p class="summary-sublabel" id="quoted-items-label">1 item quoted</p>
+
+            <!-- Summary Rows -->
+            <div>
+              <div class="summary-row">
+                <span class="summary-row-label" id="subtotal-label">Subtotal (1 item quoted)</span>
+                <span class="summary-row-value" id="subtotal-value">$11,775.00</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-row-label variant">Estimated Tax (8%)</span>
+                <span class="summary-row-value outline" id="tax-value">$942.00</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-row-label variant">Shipping / Freight</span>
+                <span class="summary-row-value outline italic">TBD</span>
+              </div>
+            </div>
+
+            <!-- Total -->
+            <hr class="summary-total-separator"/>
+            <div class="summary-row" style="padding: 4px 0;">
+              <span class="summary-total-label">Total Price</span>
+              <span class="summary-total-value" id="total-price-value">$12,717.00</span>
+            </div>
+
+            <!-- CTA Block -->
+            <div class="summary-cta">
+              <button class="btn-submit-quote" onclick="openSubmitModal()" id="summary-submit-btn" aria-label="Submit quotation">
+                <span class="material-symbols-outlined" style="font-size: 20px;">send</span>
+                Submit Quote
+              </button>
+              <button class="btn-save-draft-full" onclick="handleSaveDraft()" id="summary-draft-btn" aria-label="Save quotation as draft">
+                <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
+                Save as Draft
+              </button>
+            </div>
+
+            <!-- Binding notice -->
+            <div class="binding-notice">
+              <span class="material-symbols-outlined" style="color: var(--outline);">lock</span>
+              <p class="body-sm" style="color: var(--outline); margin: 0;">This quotation is binding upon submission.</p>
+            </div>
+
+          </div><!-- /summary-card -->
+        </div><!-- /right column -->
+
+      </div><!-- /quote-layout -->
+
+    </main>
+  </div><!-- /main-container -->
+
+  <!-- ══════════════════════════════════════
+       Submit Confirm Modal
+  ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="submit-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <div class="modal-icon-ring">
+        <span class="material-symbols-outlined">send</span>
+      </div>
+      <h3 id="modal-title" class="headline-sm" style="margin: 0 0 8px 0; color: var(--on-surface);">Submit Quotation?</h3>
+      <p class="body-md" style="color: var(--on-surface-variant); margin: 0;">
+        You are about to submit your quotation for <strong>RFQ #OFP-2023-089 — Office Furniture Procurement</strong>. This action is binding and cannot be undone after submission.
+      </p>
+      <div style="background-color: var(--surface-muted); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 14px 16px; margin-top: 16px; display: flex; gap: 20px; flex-wrap: wrap;">
+        <div>
+          <p class="label-caps" style="color: var(--outline); margin-bottom: 2px;">Subtotal</p>
+          <p class="data-mono" id="modal-subtotal" style="color: var(--on-surface); margin: 0;">$11,775.00</p>
+        </div>
+        <div>
+          <p class="label-caps" style="color: var(--outline); margin-bottom: 2px;">Tax (8%)</p>
+          <p class="data-mono" id="modal-tax" style="color: var(--on-surface); margin: 0;">$942.00</p>
+        </div>
+        <div>
+          <p class="label-caps" style="color: var(--outline); margin-bottom: 2px;">Total</p>
+          <p class="data-mono" id="modal-total" style="color: var(--primary); font-weight: 600; margin: 0;">$12,717.00</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeSubmitModal()" style="height: 38px; padding: 0 18px; font-size: 13px;">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmSubmit()" id="modal-confirm-btn" style="height: 38px; padding: 0 18px; font-size: 13px; font-weight: 600; background-color: var(--primary); display: inline-flex; align-items: center; gap: 6px;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">send</span>
+          Confirm Submit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast-notification" role="alert" aria-live="assertive">
+    <span class="material-symbols-outlined" id="toast-icon" style="font-size: 20px;">check_circle</span>
+    <span id="toast-message">Quotation submitted successfully.</span>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       JavaScript — Interactivity
+  ══════════════════════════════════════ -->
+  <script>
+    /* ── Helpers ── */
+    const TAX_RATE = 0.08;
+
+    function fmt(num) {
+      return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    /* ── Row-level recalculation ── */
+    function recalcRow(input) {
+      const rowId = input.closest('tr').dataset.rowId;
+      const qty   = parseFloat(input.dataset.qty) || 0;
+      const price = parseFloat(input.value) || 0;
+      const total = qty * price;
+
+      const totalCell = document.getElementById('total-' + rowId);
+      totalCell.textContent = fmt(total);
+      // Dim zero totals
+      totalCell.style.color = total > 0 ? 'var(--on-surface)' : 'var(--outline)';
+
+      recalcSummary();
+    }
+
+    /* ── Global recalculation for summary card ── */
+    function recalcSummary() {
+      const inputs = document.querySelectorAll('.price-input');
+      let subtotal = 0;
+      let quotedCount = 0;
+
+      inputs.forEach(input => {
+        const qty   = parseFloat(input.dataset.qty) || 0;
+        const price = parseFloat(input.value) || 0;
+        if (price > 0) {
+          subtotal += qty * price;
+          quotedCount++;
+        }
+      });
+
+      const tax   = subtotal * TAX_RATE;
+      const total = subtotal + tax;
+
+      // Update summary card
+      const itemWord = quotedCount === 1 ? 'item' : 'items';
+      const labelText = quotedCount === 0
+        ? 'No items quoted yet'
+        : `${quotedCount} ${itemWord} quoted`;
+
+      document.getElementById('quoted-items-label').textContent = labelText;
+      document.getElementById('subtotal-label').textContent = `Subtotal (${quotedCount} ${itemWord} quoted)`;
+      document.getElementById('subtotal-value').textContent = '$' + fmt(subtotal);
+      document.getElementById('tax-value').textContent = '$' + fmt(tax);
+      document.getElementById('total-price-value').textContent = '$' + fmt(total);
+
+      // Sync modal values
+      document.getElementById('modal-subtotal').textContent = '$' + fmt(subtotal);
+      document.getElementById('modal-tax').textContent = '$' + fmt(tax);
+      document.getElementById('modal-total').textContent = '$' + fmt(total);
+    }
+
+    /* ── Row deletion ── */
+    function deleteRow(rowId) {
+      const row = document.querySelector(`tr[data-row-id="${rowId}"]`);
+      if (!row) return;
+      row.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+      row.style.opacity = '0';
+      row.style.transform = 'translateX(-8px)';
+      setTimeout(() => {
+        row.remove();
+        recalcSummary();
+      }, 250);
+    }
+
+    /* ── Validity segmented control ── */
+    function selectValidity(btn, value) {
+      document.querySelectorAll('#validity-control .segment-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+
+      const customWrapper = document.getElementById('custom-validity-wrapper');
+      customWrapper.style.display = value === 'custom' ? 'block' : 'none';
+    }
+
+    /* ── Submit Modal ── */
+    function openSubmitModal() {
+      const modal = document.getElementById('submit-modal');
+      modal.classList.add('open');
+      document.getElementById('modal-confirm-btn').focus();
+    }
+
+    function closeSubmitModal() {
+      document.getElementById('submit-modal').classList.remove('open');
+    }
+
+    function confirmSubmit() {
+      closeSubmitModal();
+      showToast('Quotation submitted successfully!', 'success', 'check_circle');
+      // Disable submit buttons after submission
+      setTimeout(() => {
+        ['strip-submit-btn', 'summary-submit-btn', 'modal-confirm-btn'].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+          }
+        });
+      }, 400);
+    }
+
+    /* ── Save as Draft ── */
+    function handleSaveDraft() {
+      showToast('Draft saved successfully.', '', 'save');
+    }
+
+    /* ── Toast ── */
+    function showToast(message, type = '', icon = 'info') {
+      const toast   = document.getElementById('toast-notification');
+      const msgEl   = document.getElementById('toast-message');
+      const iconEl  = document.getElementById('toast-icon');
+
+      toast.className = 'toast' + (type ? ' ' + type : '');
+      msgEl.textContent = message;
+      iconEl.textContent = icon;
+
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    /* ── Countdown Timer ── */
+    (function initCountdown() {
+      // Target: 2 days 14 hours 30 minutes from now
+      const target = new Date();
+      target.setDate(target.getDate() + 2);
+      target.setHours(target.getHours() + 14);
+      target.setMinutes(target.getMinutes() + 30);
+
+      function tick() {
+        const now  = new Date();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          document.getElementById('countdown-display').textContent = 'Closed';
+          return;
+        }
+
+        const totalSeconds = Math.floor(diff / 1000);
+        const days         = Math.floor(totalSeconds / 86400);
+        const hours        = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes      = Math.floor((totalSeconds % 3600) / 60);
+
+        let display = '';
+        if (days > 0)   display += `${days}d `;
+        if (hours > 0 || days > 0) display += `${hours}h `;
+        display += `${minutes}m`;
+
+        document.getElementById('countdown-display').textContent = display.trim();
+      }
+
+      tick();
+      setInterval(tick, 60000); // update every minute
+    })();
+
+    /* ── Mobile Sidebar ── */
+    function toggleMobileSidebar() {
+      document.body.classList.toggle('sidebar-open');
+    }
+
+    /* ── Close modal on overlay click ── */
+    document.getElementById('submit-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeSubmitModal();
+    });
+
+    /* ── Close modal on Escape ── */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSubmitModal();
+    });
+
+    /* ── Initial calculation on page load ── */
+    document.addEventListener('DOMContentLoaded', recalcSummary);
+  </script>
+</body>
+</html>

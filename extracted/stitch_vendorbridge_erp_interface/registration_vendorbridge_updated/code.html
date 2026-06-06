@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VendorBridge - Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-bright": "#fcf9f8",
+                "on-secondary": "#ffffff",
+                "on-error": "#ffffff",
+                "tertiary-fixed": "#ffdbcf",
+                "surface-dim": "#dcd9d9",
+                "border-subtle": "#E2E8F0",
+                "surface-container-low": "#f6f3f2",
+                "on-surface": "#1c1b1b",
+                "surface-container-high": "#ebe7e7",
+                "surface-tint": "#1353d8",
+                "primary-fixed-dim": "#b5c4ff",
+                "on-tertiary-container": "#ffd4c5",
+                "data-ink": "#334155",
+                "secondary": "#534ec3",
+                "on-tertiary-fixed-variant": "#802a00",
+                "secondary-fixed": "#e2dfff",
+                "on-primary-container": "#d4dcff",
+                "primary": "#003fb1",
+                "secondary-fixed-dim": "#c3c0ff",
+                "surface-muted": "#F4F7FF",
+                "surface-container-lowest": "#ffffff",
+                "tertiary-container": "#ad3b00",
+                "on-primary-fixed": "#00174d",
+                "surface-container": "#f0edec",
+                "on-tertiary-fixed": "#380d00",
+                "primary-container": "#1a56db",
+                "on-secondary-fixed-variant": "#3a33ab",
+                "inverse-on-surface": "#f3f0ef",
+                "surface-container-highest": "#e5e2e1",
+                "on-secondary-fixed": "#0f0069",
+                "secondary-container": "#8985fd",
+                "success-accent": "#10B981",
+                "inverse-surface": "#313030",
+                "on-secondary-container": "#1d0a91",
+                "on-primary-fixed-variant": "#003dab",
+                "surface-variant": "#e5e2e1",
+                "on-primary": "#ffffff",
+                "error": "#ba1a1a",
+                "on-error-container": "#93000a",
+                "outline": "#737686",
+                "tertiary-fixed-dim": "#ffb59a",
+                "on-background": "#1c1b1b",
+                "tertiary": "#852b00",
+                "inverse-primary": "#b5c4ff",
+                "primary-fixed": "#dbe1ff",
+                "error-container": "#ffdad6",
+                "background": "#fcf9f8",
+                "outline-variant": "#c3c5d7",
+                "surface": "#fcf9f8",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#434654"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "container-max": "1440px",
+                "gutter": "24px",
+                "baseline": "4px",
+                "margin-page": "32px",
+                "sidebar-width": "260px",
+                "density-compact": "8px",
+                "density-comfortable": "16px"
+        },
+        "fontFamily": {
+                "headline-sm": [
+                        "Hanken Grotesk"
+                ],
+                "label-bold": [
+                        "Hanken Grotesk"
+                ],
+                "body-md": [
+                        "Hanken Grotesk"
+                ],
+                "display-lg": [
+                        "Hanken Grotesk"
+                ],
+                "data-mono": [
+                        "Hanken Grotesk"
+                ],
+                "headline-md": [
+                        "Hanken Grotesk"
+                ],
+                "body-sm": [
+                        "Hanken Grotesk"
+                ],
+                "label-caps": [
+                        "Hanken Grotesk"
+                ],
+                "body-lg": [
+                        "Hanken Grotesk"
+                ]
+        },
+        "fontSize": {
+                "headline-sm": [
+                        "18px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-bold": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "36px",
+                        {
+                                "lineHeight": "44px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "data-mono": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-sm": [
+                        "13px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "11px",
+                        {
+                                "lineHeight": "14px",
+                                "letterSpacing": "0.08em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface-bright text-on-surface antialiased min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Left Branding Panel (Hidden on Mobile) -->
+<div class="hidden lg:flex lg:w-5/12 bg-primary flex-col justify-between p-12 relative overflow-hidden">
+<!-- Abstract Background Pattern / Image -->
+<div class="absolute inset-0 z-0 opacity-20 bg-cover bg-center mix-blend-overlay" data-alt="A modern, high-tech corporate office interior featuring clean architectural lines and expansive glass windows. The space is illuminated by bright, cool-toned daylight, creating a pristine, light-mode aesthetic. A sophisticated color palette of subtle blues and crisp whites dominates the scene, reflecting a sense of enterprise-grade precision, meticulous organization, and institutional authority." style="background-image: url('https://lh3.googleusercontent.com/aida/AP1WRLvvh4i5Y2SPXz3h8ySYOGSDraynhKIT4-mDwG0rk1KhZx2kNLbkUdfTbw1pcDj0Zms0RSreTHzGd07V1nHNV2IBwayeU5EClm0H-p7zCTcgXHOighFptnY8y3Cv23CuaoQiFIWva1j7WyYl1e7e6iYo8_ug_9qlP-rhiXlg-BqoK4TumbJOOTL96Gmwf9EWzwUVc1Jwub5phurcO8JFnvblK130qSagbr6oFxDQCADBepsqGeguQWmlFqs');"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-16">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-primary tracking-tight">VendorBridge</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-primary mb-6 max-w-md">Connect with the global supply chain network.</h1>
+<p class="font-body-lg text-body-lg text-primary-fixed mb-12 max-w-md">Join thousands of verified vendors managing RFQs, purchase orders, and global logistics with enterprise-grade precision.</p>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-primary">Verified Network</h3>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim mt-1">Access secure, vetted procurement channels.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-primary">Streamlined Operations</h3>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim mt-1">Manage everything from quotes to invoices in one place.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="relative z-10 flex items-center gap-4 mt-12">
+<div class="flex -space-x-3">
+<img alt="User avatar" class="w-10 h-10 rounded-full border-2 border-primary object-cover" data-alt="A professional headshot of a corporate executive wearing formal business attire, set against a clean, bright minimalist background." src="https://lh3.googleusercontent.com/aida/AP1WRLusONmLwtnR_K5XzOISXCLFKwtoEinsG3Y51jUwpqhKwmUmaiBhjv0Y8vAHrexJVwrR07jYGL9fnH00na1TMdbHEDzubGJsqsdj0srNO7ye8CdmoeNnh6DATTXpm2wCuxoMgifkACCrd6BwWlRWpSBFWz_fsiJHtyDpu_4qMblZFbOb26kWZu7aJE4SwaZcmnMwA0RdGCCQUoCfTwsEXuxWKwL-KDBSJ7QCzSVvUURgxRsOxyviOgDJgw"/>
+<img alt="User avatar" class="w-10 h-10 rounded-full border-2 border-primary object-cover" data-alt="A professional headshot of a corporate executive wearing formal business attire, set against a clean, bright minimalist background." src="https://lh3.googleusercontent.com/aida/AP1WRLsrwsD81hN-m7TV49IusqCiVLSk6L_B5q0PeKpRnP6yAYrqSFx2jfembTdVRmSG_fmSf0VstlSLSYIqQYCs_B_NpNh9VuNG6xEZ-Kt7dPlsKVrv4X0-HD9pmjc8H93erlq_84KQUv16P3OlQuB27rKEYdGnVc-6iKX2SnddwB5SybstQbXMOYsm80dg9s1W9ZHCShDbzT078Qym4c7WGhREgtINwVGPzDcpl-VEKOC5BHCZvxPRbkWKlg"/>
+<img alt="User avatar" class="w-10 h-10 rounded-full border-2 border-primary object-cover" data-alt="A professional headshot of a corporate executive wearing formal business attire, set against a clean, bright minimalist background." src="https://lh3.googleusercontent.com/aida/AP1WRLukzJUB6LN9oDuH9zE6GJ77e34iovT-9NjtoIrdvLjDIjLwYnU-CLXXch77vSYR9PBnFmjEA-1GVoazmMYCZygbg6G5MANkeLUuvr80AVUVM4axoBV5tvTYDNnRgL-7l6tBO0SxGFf4FP_4OMyKZHU-yGTaeSDqIBu7q1lsWZoniXtu9Be0Z41uLpOVm2WtfIzd0nnjEe4qR2ZeoSNCyCFyi1eWhCqNqz84rLlKMV7TDnwjiWDraAimGg"/>
+</div>
+<div class="font-body-sm text-body-sm text-primary-fixed">
+                Join 10,000+ top-tier suppliers
+            </div>
+</div>
+</div>
+<!-- Right Registration Form Panel -->
+<div class="w-full lg:w-7/12 flex items-center justify-center p-6 md:p-12 overflow-y-auto bg-surface-bright">
+<div class="w-full max-w-xl">
+<!-- Mobile Header (Visible only on small screens) -->
+<div class="lg:hidden flex items-center gap-3 mb-8">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface tracking-tight">VendorBridge</span>
+</div>
+<div class="mb-8">
+<h2 class="font-display-lg text-display-lg text-on-surface mb-2">Create an Account</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Enter your details below to register as a new vendor.</p>
+</div>
+<form class="space-y-6">
+<!-- Profile Image Upload Placeholder -->
+<div class="flex items-center gap-4 mb-6">
+<div class="w-20 h-20 rounded-[12px] bg-surface-muted border border-border-subtle flex flex-col items-center justify-center text-outline cursor-pointer hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">add_a_photo</span>
+</div>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">Company Logo</p>
+<p class="font-body-sm text-body-sm text-outline mt-1">Recommended: 256x256px, PNG or JPG.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- First Name -->
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-data-ink uppercase" for="firstName">First Name</label>
+<input class="w-full h-10 px-3 bg-surface-container-lowest border border-border-subtle rounded-[12px] font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" id="firstName" name="firstName" placeholder="Jane" type="text"/>
+</div>
+<!-- Last Name -->
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-data-ink uppercase" for="lastName">Last Name</label>
+<input class="w-full h-10 px-3 bg-surface-container-lowest border border-border-subtle rounded-[12px] font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" id="lastName" name="lastName" placeholder="Doe" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Email -->
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-data-ink uppercase" for="email">Corporate Email</label>
+<input class="w-full h-10 px-3 bg-surface-container-lowest border border-border-subtle rounded-[12px] font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" id="email" name="email" placeholder="jane.doe@company.com" type="email"/>
+</div>
+<!-- Phone -->
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-data-ink uppercase" for="phone">Phone Number</label>
+<input class="w-full h-10 px-3 bg-surface-container-lowest border border-border-subtle rounded-[12px] font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" id="phone" name="phone" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Website -->
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-data-ink uppercase" for="website">Company Website</label>
+<input class="w-full h-10 px-3 bg-surface-container-lowest border border-border-subtle rounded-[12px] font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" id="website" name="website" placeholder="https://www.example.com" type="url"/>
+</div>
+<!-- Country -->
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-data-ink uppercase" for="country">Country of Registration</label>
+<div class="relative">
+<select class="w-full h-10 pl-3 pr-10 bg-surface-container-lowest border border-border-subtle rounded-[12px] font-body-md text-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow appearance-none cursor-pointer" id="country" name="country">
+<option disabled="" selected="" value="">Select a country</option>
+<option value="us">United States</option>
+<option value="uk">United Kingdom</option>
+<option value="ca">Canada</option>
+<option value="au">Australia</option>
+<option value="de">Germany</option>
+<option value="jp">Japan</option>
+<option value="sg">Singapore</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-outline">
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Additional Information -->
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-data-ink uppercase" for="additionalInfo">Additional Information</label>
+<textarea class="w-full p-3 bg-surface-container-lowest border border-border-subtle rounded-[12px] font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow resize-y min-h-[100px]" id="additionalInfo" name="additionalInfo" placeholder="Briefly describe your core services, certifications, or any special requirements..." rows="4"></textarea>
+</div>
+<!-- Terms -->
+<div class="flex items-start gap-3 mt-4">
+<div class="flex items-center h-5">
+<input class="w-4 h-4 rounded border-border-subtle text-primary focus:ring-primary bg-surface-container-lowest cursor-pointer" id="terms" name="terms" type="checkbox"/>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                        I agree to the <a class="text-primary hover:underline font-medium" href="#">Terms of Service</a> and <a class="text-primary hover:underline font-medium" href="#">Privacy Policy</a>.
+                    </div>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-12 bg-primary hover:bg-primary/90 text-on-primary font-label-bold text-label-bold uppercase tracking-wider rounded-[12px] transition-colors duration-200 mt-6 flex items-center justify-center gap-2" type="submit">
+                    Register Vendor Account
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Already have an account? <a class="text-primary font-medium hover:underline" href="#">Sign in to Vendor Dashboard</a>
+</p>
+</div>
+</div>
+</div>
+</body></html>

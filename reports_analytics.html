@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>VendorBridge ERP - Reports & Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+  
+  <style>
+    /* Specific styles for Reports & Analytics */
+    body {
+      background-color: var(--surface-background);
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Sidebar Navigation Styles */
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 24px 0;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--data-ink);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover {
+      background-color: #F0EDEC;
+      color: var(--on-surface);
+    }
+    .nav-item.active {
+      border-left-color: var(--primary) !important;
+      background-color: var(--surface-muted) !important;
+      color: var(--primary) !important;
+      font-weight: 600;
+    }
+    .nav-item.active .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1;
+      color: var(--primary);
+    }
+    .nav-item .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--outline);
+    }
+
+    /* Main Area layout */
+    .main-container {
+      margin-left: 260px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--surface-background);
+    }
+
+    /* Top Navigation bar */
+    .topbar {
+      background-color: var(--surface-container-lowest);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--data-ink);
+      padding: 0;
+      margin-right: 12px;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--outline);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .icon-btn:hover {
+      background-color: var(--surface-muted);
+      color: var(--on-surface);
+    }
+    .avatar-jd {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #003FB1;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Main Content */
+    .dashboard-content {
+      padding: 32px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* KPI Grid - 5 Cards */
+    .kpi-grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+    }
+    .kpi-card {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      align-items: center;
+    }
+    .kpi-icon-container {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--surface-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+    .kpi-icon-container.success { color: var(--success); }
+    .kpi-icon-container.amber { color: #D97706; }
+    
+    .kpi-trend-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .kpi-trend-badge.success { color: var(--success); }
+    .kpi-trend-badge.error { color: var(--error); }
+
+    /* Layout Grids */
+    .grid-65-35 {
+      display: grid;
+      grid-template-columns: 6.5fr 3.5fr;
+      gap: 24px;
+    }
+    .grid-50-50 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .grid-4-cols {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    
+    .card {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 24px;
+    }
+    .card-nopad {
+      padding: 0;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    /* Toggle Button Group */
+    .toggle-group {
+      display: inline-flex;
+      background: #FFFFFF;
+    }
+    .toggle-btn {
+      height: 32px;
+      padding: 0 16px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border-subtle);
+      background: #FFFFFF;
+      color: var(--data-ink);
+      cursor: pointer;
+    }
+    .toggle-btn:first-child { border-radius: 4px 0 0 4px; }
+    .toggle-btn:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+    .toggle-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    /* Charts CSS Overrides */
+    .bar-chart-bg {
+      background-image: linear-gradient(to bottom, transparent 99%, #E2E8F0 100%);
+      background-size: 100% 40px;
+    }
+    .chart-group {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 100%;
+      width: 60%;
+      margin: 0 auto;
+    }
+    .chart-bar-primary { background-color: #0154CC; width: 100%; border-radius: 2px 2px 0 0; transition: opacity 0.2s; }
+    .chart-bar-secondary { background-color: #534EC3; width: 100%; border-radius: 2px 2px 0 0; transition: opacity 0.2s; }
+    .chart-month-col:hover .chart-bar-primary, .chart-month-col:hover .chart-bar-secondary { opacity: 1; }
+    
+    /* Donut Chart */
+    .donut-chart {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #0154CC 0% 34%, 
+        #534EC3 34% 62%, 
+        #B45309 62% 84%, 
+        #10B981 84% 100%
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px auto;
+      transition: transform 0.3s ease;
+    }
+    .donut-inner {
+      width: 100px;
+      height: 100px;
+      background: #FFFFFF;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .data-table th {
+      background-color: var(--surface-muted);
+      padding: 10px 16px;
+      color: var(--data-ink);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--on-surface);
+      font-size: 14px;
+      height: 52px;
+    }
+    .data-table tbody tr:hover { background-color: #F8FAFC; }
+
+    /* Progress Bar */
+    .perf-bar-bg {
+      width: 80px;
+      height: 6px;
+      background-color: var(--surface-muted);
+      border-radius: 3px;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0 8px;
+      overflow: hidden;
+    }
+    .perf-bar-fill {
+      height: 100%;
+      background-color: var(--primary);
+    }
+
+    /* Funnel Chart */
+    .funnel-stage {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .funnel-label {
+      width: 200px;
+      flex-shrink: 0;
+    }
+    .funnel-bar-wrapper {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+    .funnel-bar {
+      height: 48px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-family: var(--font-headlines);
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .funnel-1 { width: 100%; background-color: #0154CC; }
+    .funnel-2 { width: 86%; background-color: #1A56DB; }
+    .funnel-3 { width: 72%; background-color: #534EC3; }
+    .funnel-4 { width: 61%; background-color: #B45309; }
+    .funnel-5 { width: 54%; background-color: #10B981; }
+
+    /* Gauge Chart */
+    .gauge-wrapper {
+      position: relative;
+      width: 320px;
+      height: 160px;
+      margin: 0 auto 24px auto;
+      overflow: hidden;
+    }
+    .gauge-bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 30px solid var(--surface-muted);
+      box-sizing: border-box;
+    }
+    .gauge-fill {
+      position: absolute;
+      top: 0; left: 0;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 30px solid transparent;
+      border-top-color: #10B981;
+      border-right-color: #B45309;
+      box-sizing: border-box;
+      transform: rotate(45deg); /* roughly 73% */
+    }
+    .gauge-center {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 8px;
+      box-shadow: 0px 20px 25px -5px rgba(0,0,0,0.1);
+      padding: 24px;
+    }
+    .ios-toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background-color: var(--surface-muted);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .ios-toggle.on { background-color: var(--primary); }
+    .ios-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 20px; height: 20px;
+      background: #FFFFFF;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .ios-toggle.on::after { transform: translateX(20px); }
+
+  </style>
+</head>
+<body class="sidebar-closed">
+
+  <!-- Mobile Sidebar Overlay Backdrop -->
+  <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
+  <!-- Navigation Sidebar (Executive Precision System) -->
+  <aside class="sidebar" style="width: 260px; background-color: var(--surface-muted); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; height: 100vh; position: fixed; left: 0; top: 0; z-index: 50;">
+    <div style="padding: 24px 16px 16px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-subtle);">
+      <div style="width: 36px; height: 36px; border-radius: 4px; background-color: #003FB1; display: flex; align-items: center; justify-content: center; color: #FFFFFF; flex-shrink: 0;">
+        <span class="material-symbols-outlined" style="font-size: 20px; font-variation-settings: 'FILL' 1;">account_tree</span>
+      </div>
+      <div>
+        <h2 class="headline-sm" style="color: var(--data-ink); font-weight: 700; margin: 0; line-height: 1.1; font-size: 15px;">VendorBridge</h2>
+        <span class="label-caps" style="color: var(--outline); font-size: 9px; margin-top: 2px; display: block; font-weight: 700;">Enterprise ERP</span>
+      </div>
+    </div>
+
+    <!-- Navigation List -->
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <a href="vendors.html" class="nav-item">
+        <span class="material-symbols-outlined">storefront</span>
+        Vendors
+      </a>
+      <a href="create_rfq.html" class="nav-item">
+        <span class="material-symbols-outlined">request_quote</span>
+        RFQs
+      </a>
+      <a href="submit_quote.html" class="nav-item">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Quotations
+      </a>
+      <a href="compare_quotes.html" class="nav-item">
+        <span class="material-symbols-outlined">compare_arrows</span>
+        Comparison
+      </a>
+      <a href="approval.html" class="nav-item">
+        <span class="material-symbols-outlined">fact_check</span>
+        Approvals
+      </a>
+      <a href="purchase_order.html" class="nav-item">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        Purchase Orders
+      </a>
+      <a href="invoices.html" class="nav-item">
+        <span class="material-symbols-outlined">description</span>
+        Invoices
+      </a>
+      <a href="reports_analytics.html" class="nav-item active">
+        <span class="material-symbols-outlined">assessment</span>
+        Reports
+      </a>
+      <a href="activity_logs.html" class="nav-item">
+        <span class="material-symbols-outlined">history</span>
+        Activity
+      </a>
+      <a href="user_management.html" class="nav-item">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        User Management
+      </a>
+    </nav>
+
+    <!-- Sidebar Bottom -->
+    <div style="padding: 16px; margin-top: auto; border-top: 1px solid var(--border-subtle);">
+      <button class="btn btn-success" onclick="window.location.href='vendors.html#add-vendor'" style="width: 100%; height: 40px; border-radius: 4px; font-weight: 600; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;">
+        <span class="material-symbols-outlined" style="font-size: 18px;">add</span> Add New
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main View Container -->
+  <div class="main-container">
+    
+    <!-- Topbar -->
+    <header class="topbar" style="height: auto; min-height: 70px;">
+      <div style="display: flex; align-items: flex-start;">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle navigation menu" style="margin-top: 4px;">
+          <span class="material-symbols-outlined" style="font-size: 24px;">menu</span>
+        </button>
+        <div>
+          <h1 class="headline-md" style="color: var(--on-surface); margin: 0;">Reports & Analytics</h1>
+          <p class="body-sm" style="color: var(--outline); margin: 2px 0 0 0;">Procurement intelligence, vendor benchmarks, and exportable audit reports.</p>
+        </div>
+      </div>
+      
+      <!-- Right Cluster -->
+      <div class="topbar-right">
+        <button class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 4px; height: 38px;">
+          <span class="material-symbols-outlined" style="font-size: 18px; color: var(--data-ink);">event_note</span>
+          <span class="label-bold" style="color: var(--data-ink);">Last 30 Days</span>
+        </button>
+        <button class="btn btn-success" onclick="openExportModal()" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 4px; height: 38px; background-color: var(--success); color: white; border: none;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">download</span>
+          <span class="label-bold">Export Report</span>
+        </button>
+        <div style="width: 1px; height: 24px; background-color: var(--border-subtle); margin: 0 8px;"></div>
+        <button class="icon-btn" aria-label="Notifications"><span class="material-symbols-outlined" style="font-size: 22px;">notifications</span></button>
+        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size: 22px;">help_outline</span></button>
+        <button class="icon-btn" aria-label="Settings"><span class="material-symbols-outlined" style="font-size: 22px;">settings</span></button>
+        <div class="avatar-jd" aria-label="User Avatar">JD</div>
+      </div>
+    </header>
+
+    <!-- Page Body Contents -->
+    <main class="dashboard-content">
+      
+      <!-- 10.2 KPI Summary Cards Row -->
+      <section class="kpi-grid-5">
+        <!-- Card 1 -->
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-icon-container"><span class="material-symbols-outlined">payments</span></div>
+            <span class="kpi-trend-badge success"><span class="material-symbols-outlined" style="font-size: 16px;">trending_up</span> +8.3%</span>
+          </div>
+          <div>
+            <div class="display-lg" style="font-size: 24px; line-height: 1.2;">₹84,23,400</div>
+            <div class="label-caps" style="color: var(--data-ink); margin-top: 4px;">TOTAL SPEND (MTD)</div>
+            <div class="body-sm" style="color: var(--outline); margin-top: 2px;">vs last month</div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-icon-container"><span class="material-symbols-outlined">request_quote</span></div>
+          </div>
+          <div>
+            <div class="display-lg" style="font-size: 24px; line-height: 1.2;">47</div>
+            <div class="label-caps" style="color: var(--data-ink); margin-top: 4px;">ACTIVE RFQS</div>
+            <div class="body-sm" style="color: var(--outline); margin-top: 2px;">12 closing this week</div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-icon-container success"><span class="material-symbols-outlined">check_circle</span></div>
+            <span class="kpi-trend-badge success"><span class="material-symbols-outlined" style="font-size: 16px;">trending_up</span> +2.1%</span>
+          </div>
+          <div>
+            <div class="display-lg" style="font-size: 24px; line-height: 1.2;">89%</div>
+            <div class="label-caps" style="color: var(--data-ink); margin-top: 4px;">PO FULFILLMENT RATE</div>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-icon-container"><span class="material-symbols-outlined">storefront</span></div>
+            <span class="badge-pill" style="background-color: #FEF3C7; color: #B45309;">14 pending</span>
+          </div>
+          <div>
+            <div class="display-lg" style="font-size: 24px; line-height: 1.2;">128</div>
+            <div class="label-caps" style="color: var(--data-ink); margin-top: 4px;">REGISTERED VENDORS</div>
+          </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-icon-container amber"><span class="material-symbols-outlined">schedule</span></div>
+            <span class="kpi-trend-badge success"><span class="material-symbols-outlined" style="font-size: 16px;">trending_down</span> −0.8d</span>
+          </div>
+          <div>
+            <div class="display-lg" style="font-size: 24px; line-height: 1.2;">4.2 days</div>
+            <div class="label-caps" style="color: var(--data-ink); margin-top: 4px;">AVG. APPROVAL TIME</div>
+            <div class="body-sm" style="color: var(--outline); margin-top: 2px;">improvement</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10.3 Primary Charts Row -->
+      <section class="grid-65-35">
+        <!-- Left: Monthly Spending -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="headline-sm">Monthly Procurement Spending</h3>
+            <div class="toggle-group">
+              <button class="toggle-btn active">Bar</button>
+              <button class="toggle-btn">Line</button>
+              <button class="toggle-btn">Area</button>
+            </div>
+          </div>
+          
+          <div style="height: 240px; display: flex; align-items: flex-end; padding-top: 20px; position: relative;" class="bar-chart-bg">
+            <div style="position: absolute; left: 0; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; color: var(--outline); font-size: 11px; font-weight: 700; width: 40px;">
+              <span>₹20L</span><span>₹15L</span><span>₹10L</span><span>₹5L</span><span>₹0</span>
+            </div>
+            
+            <div style="margin-left: 40px; display: flex; justify-content: space-between; width: 100%; height: 100%;">
+              <!-- Month columns -->
+              <div class="chart-month-col" style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-group">
+                  <div class="chart-bar-primary" style="height: 45%;"></div><div class="chart-bar-secondary" style="height: 30%;"></div>
+                </div>
+                <div class="label-caps" style="color: var(--outline); margin-top: 8px;">JAN</div>
+              </div>
+              <div class="chart-month-col" style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-group">
+                  <div class="chart-bar-primary" style="height: 60%;"></div><div class="chart-bar-secondary" style="height: 55%;"></div>
+                </div>
+                <div class="label-caps" style="color: var(--outline); margin-top: 8px;">FEB</div>
+              </div>
+              <div class="chart-month-col" style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-group">
+                  <div class="chart-bar-primary" style="height: 40%;"></div><div class="chart-bar-secondary" style="height: 45%;"></div>
+                </div>
+                <div class="label-caps" style="color: var(--outline); margin-top: 8px;">MAR</div>
+              </div>
+              <div class="chart-month-col" style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-group">
+                  <div class="chart-bar-primary" style="height: 75%;"></div><div class="chart-bar-secondary" style="height: 65%;"></div>
+                </div>
+                <div class="label-caps" style="color: var(--outline); margin-top: 8px;">APR</div>
+              </div>
+              <div class="chart-month-col" style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-group">
+                  <div class="chart-bar-primary" style="height: 85%;"></div><div class="chart-bar-secondary" style="height: 80%;"></div>
+                </div>
+                <div class="label-caps" style="color: var(--outline); margin-top: 8px;">MAY</div>
+              </div>
+              <div class="chart-month-col" style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="chart-group">
+                  <div class="chart-bar-primary" style="height: 55%;"></div><div class="chart-bar-secondary" style="height: 40%;"></div>
+                </div>
+                <div class="label-caps" style="color: var(--outline); margin-top: 8px;">JUN</div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 16px; margin-top: 24px; margin-left: 40px;">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600;"><div style="width: 8px; height: 8px; background: #0154CC;"></div> Purchase Orders</div>
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600;"><div style="width: 8px; height: 8px; background: #534EC3;"></div> Invoices Paid</div>
+          </div>
+        </div>
+
+        <!-- Right: Spending by Category -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="headline-sm">Spending by Category</h3>
+            <a href="#" class="body-sm" style="color: var(--primary); font-weight: 600; text-decoration: none;">View all &rarr;</a>
+          </div>
+          <div class="donut-chart">
+            <div class="donut-inner">
+              <span class="headline-sm" style="color: #0154CC;">₹84.2L</span>
+              <span class="label-caps" style="color: var(--outline);">TOTAL SPEND</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 10px; height: 10px; background: #0154CC;"></div><span class="body-md" style="color: var(--data-ink);">Hardware</span></div>
+              <div class="data-mono" style="color: var(--outline);">34%</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 10px; height: 10px; background: #534EC3;"></div><span class="body-md" style="color: var(--data-ink);">Services</span></div>
+              <div class="data-mono" style="color: var(--outline);">28%</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 10px; height: 10px; background: #B45309;"></div><span class="body-md" style="color: var(--data-ink);">Logistics</span></div>
+              <div class="data-mono" style="color: var(--outline);">22%</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 10px; height: 10px; background: #10B981;"></div><span class="body-md" style="color: var(--data-ink);">Software</span></div>
+              <div class="data-mono" style="color: var(--outline);">16%</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10.4 Vendor Performance Table -->
+      <section class="card card-nopad">
+        <div class="card-header" style="padding: 24px; margin-bottom: 0;">
+          <h3 class="headline-sm">Vendor Performance Rankings</h3>
+          <div style="display: flex; gap: 12px;">
+            <div style="position: relative;">
+              <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; font-size: 20px; color: var(--outline);">search</span>
+              <input type="text" placeholder="Search vendors..." style="width: 220px; padding: 10px 10px 10px 36px; border: 1px solid var(--border-subtle); border-radius: 2px; font-size: 14px;">
+            </div>
+            <select style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 2px; font-size: 14px; background: white; color: var(--data-ink);">
+              <option>Performance Score</option>
+              <option>Spend</option>
+            </select>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="label-caps">RANK</th>
+                <th class="label-caps">VENDOR NAME</th>
+                <th class="label-caps">CATEGORY</th>
+                <th class="label-caps" style="text-align: right;">TOTAL SPEND</th>
+                <th class="label-caps" style="text-align: center;">ORDERS</th>
+                <th class="label-caps">RATING</th>
+                <th class="label-caps">PERFORMANCE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="data-mono" style="color: #0154CC;">#1</td>
+                <td style="font-weight: 600;">Apex Technologies Ltd.</td>
+                <td><span class="badge-pill" style="background: var(--surface-muted); color: var(--on-surface-variant); padding: 4px 8px; font-size: 12px;">Hardware</span></td>
+                <td class="data-mono" style="text-align: right;">₹28,50,000</td>
+                <td style="text-align: center; color: var(--on-surface-variant);">47 POs</td>
+                <td>
+                  <span style="color: #D97706; font-size: 14px;">★★★★★</span> <span class="data-mono" style="color: #D97706;">4.9</span>
+                </td>
+                <td style="white-space: nowrap;">
+                  <span class="label-bold" style="color: var(--success);">EXCELLENT</span>
+                  <div class="perf-bar-bg"><div class="perf-bar-fill" style="width: 96%;"></div></div>
+                  <span class="data-mono">96%</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="data-mono" style="color: #0154CC;">#2</td>
+                <td style="font-weight: 600;">Global Logistics Inc.</td>
+                <td><span class="badge-pill" style="background: var(--surface-muted); color: var(--on-surface-variant); padding: 4px 8px; font-size: 12px;">Logistics</span></td>
+                <td class="data-mono" style="text-align: right;">₹19,20,000</td>
+                <td style="text-align: center; color: var(--on-surface-variant);">38 POs</td>
+                <td>
+                  <span style="color: #D97706; font-size: 14px;">★★★★<span style="opacity: 0.3;">★</span></span> <span class="data-mono" style="color: #D97706;">4.5</span>
+                </td>
+                <td style="white-space: nowrap;">
+                  <span class="label-bold" style="color: var(--success);">GOOD</span>
+                  <div class="perf-bar-bg"><div class="perf-bar-fill" style="width: 82%;"></div></div>
+                  <span class="data-mono">82%</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="data-mono" style="color: #0154CC;">#3</td>
+                <td style="font-weight: 600;">SteelForge Co.</td>
+                <td><span class="badge-pill" style="background: var(--surface-muted); color: var(--on-surface-variant); padding: 4px 8px; font-size: 12px;">Manufacturing</span></td>
+                <td class="data-mono" style="text-align: right;">₹14,75,000</td>
+                <td style="text-align: center; color: var(--on-surface-variant);">22 POs</td>
+                <td>
+                  <span style="color: #D97706; font-size: 14px;">★★★★<span style="opacity: 0.3;">★</span></span> <span class="data-mono" style="color: #D97706;">4.1</span>
+                </td>
+                <td style="white-space: nowrap;">
+                  <span class="label-bold" style="color: #B45309;">GOOD</span>
+                  <div class="perf-bar-bg"><div class="perf-bar-fill" style="width: 78%;"></div></div>
+                  <span class="data-mono">78%</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="data-mono" style="color: #0154CC;">#4</td>
+                <td style="font-weight: 600;">Digital Solutions Pvt.</td>
+                <td><span class="badge-pill" style="background: var(--surface-muted); color: var(--on-surface-variant); padding: 4px 8px; font-size: 12px;">Software</span></td>
+                <td class="data-mono" style="text-align: right;">₹11,30,000</td>
+                <td style="text-align: center; color: var(--on-surface-variant);">31 POs</td>
+                <td>
+                  <span style="color: #D97706; font-size: 14px;">★★★<span style="opacity: 0.3;">★★</span></span> <span class="data-mono" style="color: #D97706;">3.8</span>
+                </td>
+                <td style="white-space: nowrap;">
+                  <span class="label-bold" style="color: #B45309;">AVERAGE</span>
+                  <div class="perf-bar-bg"><div class="perf-bar-fill" style="width: 65%;"></div></div>
+                  <span class="data-mono">65%</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding: 16px 24px; text-align: center;">
+          <a href="#" class="body-sm" style="color: var(--primary); font-weight: 600; text-decoration: none;">Load more</a>
+        </div>
+      </section>
+
+      <!-- 10.5 RFQ Pipeline Funnel Chart -->
+      <section class="card">
+        <div class="card-header">
+          <h3 class="headline-sm">Procurement Pipeline — RFQ to Invoice Conversion Funnel</h3>
+          <div style="text-align: right;">
+            <span class="label-caps">CURRENT QUARTER</span><br>
+            <span class="body-sm" style="color: var(--outline);">Oct 1 - Dec 31, 2025</span>
+          </div>
+        </div>
+        <div style="margin-top: 16px;">
+          <div class="funnel-stage">
+            <div class="funnel-label label-caps" style="color: var(--data-ink);">RFQS CREATED</div>
+            <div class="funnel-bar-wrapper">
+              <div class="funnel-bar funnel-1">142 RFQs</div>
+              <span class="data-mono" style="color: #0154CC; margin-left: 12px; font-weight: 500;">142 <span class="body-sm" style="color: var(--outline);">(100%)</span></span>
+            </div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-label label-caps" style="color: var(--data-ink);">QUOTATIONS RECEIVED</div>
+            <div class="funnel-bar-wrapper">
+              <div class="funnel-bar funnel-2">122 Quotations</div>
+              <span class="data-mono" style="color: #0154CC; margin-left: 12px; font-weight: 500;">122 <span class="body-sm" style="color: var(--outline);">(86.0%)</span></span>
+            </div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-label label-caps" style="color: var(--data-ink);">COMPARISONS COMPLETED</div>
+            <div class="funnel-bar-wrapper">
+              <div class="funnel-bar funnel-3">102 Compared</div>
+              <span class="data-mono" style="color: #0154CC; margin-left: 12px; font-weight: 500;">102 <span class="body-sm" style="color: var(--outline);">(71.8%)</span></span>
+            </div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-label label-caps" style="color: var(--data-ink);">APPROVALS GRANTED</div>
+            <div class="funnel-bar-wrapper">
+              <div class="funnel-bar funnel-4">87 Approved</div>
+              <span class="data-mono" style="color: #0154CC; margin-left: 12px; font-weight: 500;">87 <span class="body-sm" style="color: var(--outline);">(61.2%)</span></span>
+            </div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-label label-caps" style="color: var(--data-ink);">POS & INVOICES ISSUED</div>
+            <div class="funnel-bar-wrapper">
+              <div class="funnel-bar funnel-5">77 Invoices</div>
+              <span class="data-mono" style="color: #0154CC; margin-left: 12px; font-weight: 500;">77 <span class="body-sm" style="color: var(--outline);">(54.2%)</span></span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 16px;">
+          <span class="body-sm" style="color: var(--outline);">Conversion rate this quarter</span><br>
+          <span class="headline-sm" style="color: #0154CC;">54.2% RFQ-to-Invoice</span>
+        </div>
+      </section>
+
+      <!-- 10.6 Two-Column Charts Row -->
+      <section class="grid-50-50">
+        <!-- Approval Turnaround Time -->
+        <div class="card">
+          <div class="card-header" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+            <h3 class="headline-sm">Approval Turnaround Time</h3>
+            <span class="body-sm" style="color: var(--outline);">Days to approve from submission</span>
+          </div>
+          <div style="height: 180px; position: relative; margin-top: 16px;">
+            <!-- Simulated SVG Line Chart -->
+            <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="none">
+              <!-- Threshold Line -->
+              <line x1="0" y1="90" x2="400" y2="90" stroke="#BA1A1A" stroke-width="1" stroke-dasharray="4 4" />
+              <!-- Chart Line & Fill -->
+              <polygon points="0,180 0,120 80,140 160,80 240,110 320,60 400,95 400,180" fill="rgba(1, 84, 204, 0.1)" />
+              <polyline points="0,120 80,140 160,80 240,110 320,60 400,95" fill="none" stroke="#0154CC" stroke-width="2" />
+              <!-- Data Points -->
+              <circle cx="80" cy="140" r="4" fill="#0154CC" stroke="#FFF" stroke-width="2" />
+              <circle cx="160" cy="80" r="4" fill="#0154CC" stroke="#FFF" stroke-width="2" />
+              <circle cx="240" cy="110" r="4" fill="#0154CC" stroke="#FFF" stroke-width="2" />
+              <circle cx="320" cy="60" r="4" fill="#0154CC" stroke="#FFF" stroke-width="2" />
+              <circle cx="400" cy="95" r="4" fill="#0154CC" stroke="#FFF" stroke-width="2" />
+            </svg>
+            <div class="label-caps" style="position: absolute; right: 0; top: 70px; color: #BA1A1A;">5-DAY SLA TARGET</div>
+          </div>
+          <div style="margin-top: 16px;">
+            <span class="headline-sm" style="color: var(--success);">Current Average: 4.2 days</span><br>
+            <span class="body-sm" style="color: var(--success);">↓ 19% improvement vs. last quarter</span>
+          </div>
+        </div>
+
+        <!-- Budget Utilization -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="headline-sm">Budget Utilization</h3>
+            <span class="label-caps" style="color: var(--outline);">Q4 FY2025</span>
+          </div>
+          <div class="gauge-wrapper">
+            <div class="gauge-bg"></div>
+            <div class="gauge-fill"></div>
+            <div class="gauge-center">
+              <div class="display-lg" style="color: #B45309;">73%</div>
+              <div class="body-sm" style="color: var(--outline);">₹61,40,000 of ₹84,00,000</div>
+            </div>
+          </div>
+          
+          <table style="width: 100%; font-size: 13px; font-family: var(--font-body); border-collapse: collapse;">
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="padding: 6px 0;">Operations</td><td style="text-align: right;">₹30L</td><td style="text-align: right;">₹24L</td><td style="text-align: right;"><div class="perf-bar-bg" style="margin: 0;"><div class="perf-bar-fill" style="width: 80%; background: #B45309;"></div></div></td></tr>
+              <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="padding: 6px 0;">IT</td><td style="text-align: right;">₹25L</td><td style="text-align: right;">₹18L</td><td style="text-align: right;"><div class="perf-bar-bg" style="margin: 0;"><div class="perf-bar-fill" style="width: 72%; background: #B45309;"></div></div></td></tr>
+              <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="padding: 6px 0;">Finance</td><td style="text-align: right;">₹15L</td><td style="text-align: right;">₹9L</td><td style="text-align: right;"><div class="perf-bar-bg" style="margin: 0;"><div class="perf-bar-fill" style="width: 60%; background: var(--success);"></div></div></td></tr>
+              <tr><td style="padding: 6px 0;">HR</td><td style="text-align: right;">₹14L</td><td style="text-align: right;">₹10.4L</td><td style="text-align: right;"><div class="perf-bar-bg" style="margin: 0;"><div class="perf-bar-fill" style="width: 74%; background: #B45309;"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 10.7 Procurement Statistics -->
+      <section class="grid-4-cols">
+        <div class="kpi-card">
+          <div class="label-caps" style="color: var(--data-ink);">RFQ TO PO CONVERSION RATE</div>
+          <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px;">
+            <span class="data-mono" style="font-size: 32px; color: #0154CC;">82%</span>
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(#0154CC 0% 82%, var(--surface-muted) 82% 100%);"></div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="label-caps" style="color: var(--data-ink);">ON-TIME DELIVERY RATE</div>
+          <div style="margin-top: 12px;">
+            <div class="data-mono" style="font-size: 32px; color: var(--success);">91%</div>
+            <div class="body-sm" style="color: var(--outline);">38 of 42 deliveries on time</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="label-caps" style="color: var(--data-ink);">VENDOR RESPONSE RATE</div>
+          <div style="margin-top: 12px;">
+            <div class="data-mono" style="font-size: 32px; color: #D97706;">74%</div>
+            <div class="body-sm" style="color: var(--outline);">91 vendors responded to last RFQ batch</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="label-caps" style="color: var(--data-ink);">INVOICE PAYMENT CYCLE</div>
+          <div style="margin-top: 12px;">
+            <div class="data-mono" style="font-size: 32px; color: #0154CC;">18 days</div>
+            <div class="body-sm" style="color: var(--outline);">vs. 30-day terms</div>
+            <div class="kpi-trend-badge success" style="margin-top: 4px;">▼ Faster</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10.8 Exportable Reports Panel -->
+      <section class="card">
+        <div class="card-header" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+          <h3 class="headline-sm">Exportable Reports</h3>
+          <span class="body-sm" style="color: var(--outline);">Generate and download formatted procurement reports for compliance, auditing, and board presentations.</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px;">
+          
+          <div style="background: var(--surface-muted); padding: 16px; border-radius: 4px; border: 1px solid var(--border-subtle);">
+            <div class="body-md" style="font-weight: 600; color: var(--on-surface);">Vendor Performance Report</div>
+            <div class="body-sm" style="color: var(--outline); margin-top: 4px; height: 36px;">Full vendor scorecard with ratings, PO counts, delivery metrics</div>
+            <div style="display: flex; gap: 4px; margin-top: 12px;">
+              <span class="badge-pill" style="background: #FFDAD6; color: #BA1A1A;">PDF</span>
+              <span class="badge-pill" style="background: #D1FAE5; color: #065F46;">XLSX</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+              <span class="body-sm" style="color: var(--outline);">Oct 24, 2023</span>
+              <a href="#" class="body-sm" style="color: var(--primary); font-weight: 600; text-decoration: none;">Download ↓</a>
+            </div>
+          </div>
+
+          <div style="background: var(--surface-muted); padding: 16px; border-radius: 4px; border: 1px solid var(--border-subtle);">
+            <div class="body-md" style="font-weight: 600; color: var(--on-surface);">Procurement Spend Summary</div>
+            <div class="body-sm" style="color: var(--outline); margin-top: 4px; height: 36px;">Department-wise and category-wise spend breakdown</div>
+            <div style="display: flex; gap: 4px; margin-top: 12px;">
+              <span class="badge-pill" style="background: #FFDAD6; color: #BA1A1A;">PDF</span>
+              <span class="badge-pill" style="background: #F4F7FF; color: var(--data-ink);">CSV</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+              <span class="body-sm" style="color: var(--outline);">Oct 22, 2023</span>
+              <a href="#" class="body-sm" style="color: var(--primary); font-weight: 600; text-decoration: none;">Download ↓</a>
+            </div>
+          </div>
+
+          <div style="background: var(--surface-muted); padding: 16px; border-radius: 4px; border: 1px solid var(--border-subtle);">
+            <div class="body-md" style="font-weight: 600; color: var(--on-surface);">RFQ Activity Log</div>
+            <div class="body-sm" style="color: var(--outline); margin-top: 4px; height: 36px;">All RFQs created, submitted, and closed in the period</div>
+            <div style="display: flex; gap: 4px; margin-top: 12px;">
+              <span class="badge-pill" style="background: #D1FAE5; color: #065F46;">XLSX</span>
+              <span class="badge-pill" style="background: #F4F7FF; color: var(--data-ink);">CSV</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+              <span class="body-sm" style="color: var(--outline);">Oct 20, 2023</span>
+              <a href="#" class="body-sm" style="color: var(--primary); font-weight: 600; text-decoration: none;">Download ↓</a>
+            </div>
+          </div>
+
+          <div style="background: var(--surface-muted); padding: 16px; border-radius: 4px; border: 1px solid var(--border-subtle);">
+            <div class="body-md" style="font-weight: 600; color: var(--on-surface);">Approval Audit Trail</div>
+            <div class="body-sm" style="color: var(--outline); margin-top: 4px; height: 36px;">Full approval chain with timestamps and remarks for compliance</div>
+            <div style="display: flex; gap: 4px; margin-top: 12px;">
+              <span class="badge-pill" style="background: #FFDAD6; color: #BA1A1A;">PDF</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+              <span class="body-sm" style="color: var(--outline);">Oct 19, 2023</span>
+              <a href="#" class="body-sm" style="color: var(--primary); font-weight: 600; text-decoration: none;">Download ↓</a>
+            </div>
+          </div>
+
+          <div style="background: var(--surface-muted); padding: 16px; border-radius: 4px; border: 1px solid var(--border-subtle);">
+            <div class="body-md" style="font-weight: 600; color: var(--on-surface);">Invoice Reconciliation</div>
+            <div class="body-sm" style="color: var(--outline); margin-top: 4px; height: 36px;">PO vs. Invoice matching with discrepancy flags</div>
+            <div style="display: flex; gap: 4px; margin-top: 12px;">
+              <span class="badge-pill" style="background: #FFDAD6; color: #BA1A1A;">PDF</span>
+              <span class="badge-pill" style="background: #D1FAE5; color: #065F46;">XLSX</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+              <span class="body-sm" style="color: var(--outline);">Oct 18, 2023</span>
+              <a href="#" class="body-sm" style="color: var(--primary); font-weight: 600; text-decoration: none;">Download ↓</a>
+            </div>
+          </div>
+          
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- 10.9 Export Report Modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 class="headline-sm">Export Analytics Report</h3>
+        <button onclick="closeExportModal()" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined" style="color: var(--outline);">cancel</span></button>
+      </div>
+      <div style="height: 1px; background: var(--border-subtle); margin-bottom: 16px;"></div>
+      
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label class="label-caps" style="color: var(--data-ink);">REPORT TYPE</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--border-subtle); border-radius: 2px; font-size: 14px; background: white;">
+            <option>Full Analytics Dashboard</option>
+            <option>Vendor Performance Only</option>
+            <option>Spending Summary</option>
+            <option>Custom Range</option>
+          </select>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label class="label-caps" style="color: var(--data-ink);">DATE RANGE</label>
+          <div style="position: relative;">
+            <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; font-size: 20px; color: var(--outline);">calendar_today</span>
+            <input type="text" value="Oct 1, 2023 - Oct 30, 2023" style="width: 100%; padding: 10px 10px 10px 36px; border: 1px solid var(--border-subtle); border-radius: 2px; font-size: 14px;">
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px;">
+          <span class="body-md" style="color: var(--data-ink);">Include Visual Charts</span>
+          <div class="ios-toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+          <label class="label-caps" style="color: var(--data-ink);">FORMAT</label>
+          <div class="toggle-group" style="width: 100%; display: flex;">
+            <button class="toggle-btn active" style="flex: 1;">PDF</button>
+            <button class="toggle-btn" style="flex: 1;">XLSX</button>
+            <button class="toggle-btn" style="flex: 1;">CSV</button>
+          </div>
+        </div>
+
+        <div style="background: var(--surface-muted); border-radius: 4px; padding: 12px; margin-top: 8px;">
+          <div class="label-caps" style="color: var(--data-ink); margin-bottom: 8px;">REPORT PREVIEW</div>
+          <div style="width: 80px; height: 100px; background: #FFF; border: 1px solid var(--border-subtle); padding: 8px; display: flex; flex-direction: column; gap: 4px;">
+            <div style="width: 60%; height: 4px; background: var(--outline);"></div>
+            <div style="width: 100%; height: 30px; background: var(--surface-muted); margin-top: 4px;"></div>
+            <div style="width: 100%; height: 2px; background: var(--border-subtle); margin-top: auto;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+        <button onclick="closeExportModal()" class="btn btn-secondary" style="padding: 10px 16px; border-radius: 4px; background: #FFF; border: 1px solid var(--border-subtle); color: var(--data-ink); font-weight: 600;">Cancel</button>
+        <button class="btn btn-success" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 4px; background: var(--success); color: white; border: none; font-weight: 600;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">download</span> Generate & Download
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMobileSidebar() { document.body.classList.toggle('sidebar-open'); }
+    function openExportModal() { document.getElementById('exportModal').classList.add('active'); }
+    function closeExportModal() { document.getElementById('exportModal').classList.remove('active'); }
+    
+    // Setup simple toggle group functionality for the chart and format buttons
+    document.querySelectorAll('.toggle-group').forEach(group => {
+      group.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

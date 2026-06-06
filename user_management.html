@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>VendorBridge ERP - User Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+  
+  <style>
+    /* Specific styles for User Management */
+    body {
+      background-color: var(--surface-background);
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar Navigation Styles */
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 24px 0;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--data-ink);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover { background-color: #F0EDEC; color: var(--on-surface); }
+    .nav-item.active {
+      border-left-color: var(--primary) !important;
+      background-color: var(--surface-muted) !important;
+      color: var(--primary) !important;
+      font-weight: 600;
+    }
+    .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: var(--primary); }
+    .nav-item .material-symbols-outlined { font-size: 20px; color: var(--outline); }
+
+    .main-container {
+      margin-left: 260px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--surface-background);
+    }
+    .topbar {
+      background-color: var(--surface-container-lowest);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center;
+      justify-content: center; color: var(--outline); background: none; border: none; cursor: pointer;
+    }
+    .icon-btn:hover { background-color: var(--surface-muted); color: var(--on-surface); }
+    .avatar-jd {
+      width: 36px; height: 36px; border-radius: 50%; background-color: #003FB1; color: #FFFFFF;
+      display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; letter-spacing: 0.05em;
+    }
+    .dashboard-content {
+      padding: 32px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Stats Overview Cards */
+    .grid-4-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .stat-card {
+      background-color: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Toolbar */
+    .toolbar-card {
+      background-color: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .form-select {
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      padding: 10px;
+      font-size: 14px;
+      background: white;
+      color: var(--data-ink);
+    }
+    .search-input {
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      padding: 10px 10px 10px 36px;
+      font-size: 14px;
+      width: 280px;
+    }
+
+    /* Bulk Action Bar */
+    .bulk-action-bar {
+      display: none;
+      background-color: #EFF6FF;
+      border-left: 4px solid var(--primary);
+      padding: 12px 24px;
+      border-radius: 4px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .bulk-action-bar.active { display: flex; }
+
+    /* User Table */
+    .table-card {
+      background-color: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .data-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .data-table th { background-color: var(--surface-muted); padding: 10px 16px; color: var(--data-ink); border-bottom: 1px solid var(--border-subtle); font-family: var(--font-body); font-size: 11px; font-weight: 700; }
+    .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--on-surface); font-size: 14px; height: 56px; }
+    .data-table tbody tr:hover { background-color: #F8FAFC; }
+    .data-table tbody tr.selected { background-color: var(--surface-muted); }
+    
+    .styled-checkbox {
+      width: 16px; height: 16px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      appearance: none;
+      cursor: pointer;
+      position: relative;
+    }
+    .styled-checkbox:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    .styled-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px; top: 1px;
+      width: 4px; height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .user-avatar-sm {
+      width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 600; font-size: 12px; margin-right: 12px; flex-shrink: 0;
+    }
+    
+    .role-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-block; }
+    .role-procurement { background: #EFF6FF; color: #0154CC; }
+    .role-vendor { background: #FEF3C7; color: #B45309; }
+    .role-manager { background: #EDE9FE; color: #534EC3; }
+    .role-admin { background: #FFDAD6; color: #BA1A1A; }
+
+    .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status-active { background: #D1FAE5; color: #065F46; } .status-active .status-dot { background: #10B981; }
+    .status-suspended { background: #FFDAD6; color: #BA1A1A; } .status-suspended .status-dot { background: #BA1A1A; }
+    .status-invite { background: #FEF3C7; color: #B45309; } .status-invite .status-dot { background: #B45309; }
+    
+    .action-links a { color: var(--primary); text-decoration: none; font-weight: 500; font-size: 14px; margin-right: 8px; }
+    .action-links a:hover { text-decoration: underline; }
+
+    /* Modals & Overlays */
+    .modal-overlay {
+      position: fixed; inset: 0; background-color: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 100;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card { background: #FFFFFF; width: 100%; border-radius: 8px; box-shadow: 0px 20px 25px -5px rgba(0,0,0,0.1); padding: 24px; }
+    
+    .input-field { width: 100%; padding: 10px 10px 10px 36px; border: 1px solid var(--border-subtle); border-radius: 2px; font-size: 14px; box-sizing: border-box; }
+    .input-container { position: relative; width: 100%; }
+    .input-icon { position: absolute; left: 10px; top: 10px; font-size: 20px; color: var(--outline); pointer-events: none; }
+
+    /* Slide Panel */
+    .slide-panel-overlay {
+      position: fixed; inset: 0; background-color: rgba(0,0,0,0.2); display: none; z-index: 90;
+    }
+    .slide-panel-overlay.active { display: block; }
+    .slide-panel {
+      position: fixed; top: 0; right: -400px; width: 400px; height: 100vh; background: #FFF; box-shadow: -4px 0 10px rgba(0,0,0,0.05);
+      z-index: 101; transition: right 0.3s ease; display: flex; flex-direction: column;
+    }
+    .slide-panel.active { right: 0; }
+    .panel-header { padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+    .panel-content { padding: 24px; flex-grow: 1; overflow-y: auto; }
+    .panel-footer { padding: 16px 24px; border-top: 1px solid var(--border-subtle); position: sticky; bottom: 0; background: #FFF; display: flex; flex-direction: column; gap: 8px; }
+
+    /* Tabs */
+    .tab-bar { display: flex; border-bottom: 1px solid var(--border-subtle); margin-bottom: 16px; }
+    .tab-item { padding: 8px 16px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; color: var(--outline); font-size: 14px; }
+    .tab-item.active { border-bottom-color: var(--primary); color: var(--primary); }
+
+    /* iOS Toggle */
+    .ios-toggle { position: relative; width: 44px; height: 24px; background-color: var(--surface-muted); border-radius: 12px; cursor: pointer; transition: 0.3s; }
+    .ios-toggle.on { background-color: var(--success); }
+    .ios-toggle.error-track { background-color: var(--error); }
+    .ios-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #FFFFFF; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .ios-toggle.on::after { transform: translateX(20px); }
+
+    /* Context Menu */
+    .context-menu {
+      position: absolute; display: none; background: #FFF; border-radius: 4px; width: 200px; padding: 8px 0;
+      box-shadow: 0px 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-subtle); z-index: 10;
+    }
+    .context-menu.active { display: block; }
+    .menu-item { display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 36px; font-size: 14px; color: var(--data-ink); cursor: pointer; text-decoration: none; }
+    .menu-item:hover { background: var(--surface-muted); }
+    .menu-item.danger { color: var(--error); }
+    .menu-item.danger:hover { background: #FFDAD6; }
+
+    /* Toasts */
+    .toast-container { position: fixed; top: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
+    .toast {
+      width: 320px; padding: 16px; background: #FFF; border-radius: 8px; box-shadow: 0px 4px 6px -1px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-subtle); border-left: 4px solid var(--success); position: relative; overflow: hidden; display: flex; gap: 12px;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .toast-progress { position: absolute; bottom: 0; left: 0; height: 4px; background: var(--primary); width: 100%; animation: shrink 5s linear forwards; }
+    @keyframes shrink { to { width: 0; } }
+
+  </style>
+</head>
+<body class="sidebar-closed">
+
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
+  <!-- Navigation Sidebar -->
+  <aside class="sidebar" style="width: 260px; background-color: var(--surface-muted); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; height: 100vh; position: fixed; left: 0; top: 0; z-index: 50;">
+    <div style="padding: 24px 16px 16px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-subtle);">
+      <div style="width: 36px; height: 36px; border-radius: 4px; background-color: #003FB1; display: flex; align-items: center; justify-content: center; color: #FFFFFF; flex-shrink: 0;">
+        <span class="material-symbols-outlined" style="font-size: 20px; font-variation-settings: 'FILL' 1;">account_tree</span>
+      </div>
+      <div>
+        <h2 class="headline-sm" style="color: var(--data-ink); font-weight: 700; margin: 0; font-size: 15px;">VendorBridge</h2>
+        <span class="label-caps" style="color: var(--outline); font-size: 9px; display: block; font-weight: 700;">Enterprise ERP</span>
+      </div>
+    </div>
+
+    <!-- Navigation List -->
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <a href="vendors.html" class="nav-item">
+        <span class="material-symbols-outlined">storefront</span>
+        Vendors
+      </a>
+      <a href="create_rfq.html" class="nav-item">
+        <span class="material-symbols-outlined">request_quote</span>
+        RFQs
+      </a>
+      <a href="submit_quote.html" class="nav-item">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Quotations
+      </a>
+      <a href="compare_quotes.html" class="nav-item">
+        <span class="material-symbols-outlined">compare_arrows</span>
+        Comparison
+      </a>
+      <a href="approval.html" class="nav-item">
+        <span class="material-symbols-outlined">fact_check</span>
+        Approvals
+      </a>
+      <a href="purchase_order.html" class="nav-item">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        Purchase Orders
+      </a>
+      <a href="invoices.html" class="nav-item">
+        <span class="material-symbols-outlined">description</span>
+        Invoices
+      </a>
+      <a href="reports_analytics.html" class="nav-item">
+        <span class="material-symbols-outlined">assessment</span>
+        Reports
+      </a>
+      <a href="activity_logs.html" class="nav-item">
+        <span class="material-symbols-outlined">history</span>
+        Activity
+      </a>
+      <a href="user_management.html" class="nav-item active">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        User Management
+      </a>
+    </nav>
+
+    <!-- Sidebar Bottom -->
+    <div style="padding: 16px; margin-top: auto; border-top: 1px solid var(--border-subtle);">
+      <button class="btn btn-success" onclick="window.location.href='vendors.html#add-vendor'" style="width: 100%; height: 40px; border-radius: 4px; font-weight: 600; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;">
+        <span class="material-symbols-outlined" style="font-size: 18px;">add</span> Add New
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main View Container -->
+  <div class="main-container">
+    
+    <!-- Topbar -->
+    <header class="topbar">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <a href="#" class="body-md" style="color: var(--outline); text-decoration: none;">Admin</a>
+          <span class="material-symbols-outlined" style="font-size: 16px; color: var(--outline);">chevron_right</span>
+          <span class="body-md" style="color: var(--on-surface);">User Management</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 12px;">
+          <h1 class="headline-md" style="color: var(--on-surface); margin: 0;">User Management</h1>
+          <p class="body-sm" style="color: var(--outline); margin: 0;">Manage system users, roles, and access permissions across the organization.</p>
+        </div>
+      </div>
+      
+      <div class="topbar-right">
+        <button class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 4px; background: #FFF; border: 1px solid var(--border-subtle);">
+          <span class="material-symbols-outlined" style="font-size: 18px;">download</span>
+          <span class="label-bold" style="color: var(--data-ink);">Export Users</span>
+        </button>
+        <button class="btn btn-success" onclick="openInviteModal()" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 4px; background: var(--success); color: white; border: none;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">person_add</span>
+          <span class="label-bold">Invite User</span>
+        </button>
+        <div style="width: 1px; height: 24px; background-color: var(--border-subtle); margin: 0 8px;"></div>
+        <button class="icon-btn" aria-label="Notifications"><span class="material-symbols-outlined" style="font-size: 22px;">notifications</span></button>
+        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size: 22px;">help_outline</span></button>
+        <div class="avatar-jd">JD</div>
+      </div>
+    </header>
+
+    <!-- Page Body Contents -->
+    <main class="dashboard-content">
+      
+      <!-- 11.2 Stats Overview Cards -->
+      <section class="grid-4-cols">
+        <div class="stat-card">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-muted); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+              <span class="material-symbols-outlined">people</span>
+            </div>
+            <div class="headline-lg" style="font-size: 24px; font-weight: 600; font-family: var(--font-headlines);">52</div>
+            <div>
+              <div class="label-caps" style="color: var(--data-ink);">TOTAL USERS</div>
+              <div class="body-sm" style="color: var(--outline);">All registered accounts</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-muted); display: flex; align-items: center; justify-content: center; color: var(--success);">
+              <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <div class="headline-lg" style="font-size: 24px; font-weight: 600; font-family: var(--font-headlines);">41</div>
+            <div>
+              <div class="label-caps" style="color: var(--data-ink);">ACTIVE USERS</div>
+              <div class="body-sm" style="color: var(--outline);">Currently enabled accounts</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-muted); display: flex; align-items: center; justify-content: center; color: #B45309;">
+              <span class="material-symbols-outlined">pending</span>
+            </div>
+            <div class="headline-lg" style="font-size: 24px; font-weight: 600; font-family: var(--font-headlines);">7</div>
+            <div>
+              <div class="label-caps" style="color: var(--data-ink);">PENDING INVITES</div>
+              <div class="body-sm" style="color: var(--outline);">Invitations awaiting acceptance</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-muted); display: flex; align-items: center; justify-content: center; color: var(--error);">
+              <span class="material-symbols-outlined">block</span>
+            </div>
+            <div class="headline-lg" style="font-size: 24px; font-weight: 600; font-family: var(--font-headlines);">4</div>
+            <div>
+              <div class="label-caps" style="color: var(--data-ink);">SUSPENDED</div>
+              <div class="body-sm" style="color: var(--error);">Accounts with restricted access</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11.3 Bulk Action Bar (Hidden initially) -->
+      <div class="bulk-action-bar" id="bulkActionBar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="material-symbols-outlined" style="color: var(--primary);">check_box</span>
+          <span class="label-bold" style="color: var(--primary);"><span id="selectedCount">0</span> users selected</span>
+          <a href="#" class="body-sm" style="color: var(--outline); text-decoration: none;" onclick="clearSelection(event)">Deselect All</a>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" style="display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #FFF; border: 1px solid var(--border-subtle); border-radius: 4px;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">manage_accounts</span> <span class="label-bold">Change Roles</span>
+          </button>
+          <button class="btn btn-secondary" style="display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #FFF; border: 1px solid var(--border-subtle); border-radius: 4px;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">lock_reset</span> <span class="label-bold">Send Password Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 11.3 Filter & Search Toolbar -->
+      <section class="toolbar-card" id="toolbarCard">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <select class="form-select" style="width: 180px;">
+            <option>All Roles</option>
+            <option>Procurement Officer</option>
+            <option>Vendor</option>
+            <option>Manager / Approver</option>
+            <option>Admin</option>
+          </select>
+          <select class="form-select" style="width: 160px;">
+            <option>All Statuses</option>
+            <option>Active</option>
+            <option>Suspended</option>
+            <option>Pending Invite</option>
+          </select>
+          <select class="form-select" style="width: 180px;">
+            <option>All Departments</option>
+            <option>Operations</option>
+            <option>Finance</option>
+            <option>IT</option>
+            <option>External</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <div style="position: relative;">
+            <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; font-size: 20px; color: var(--outline);">search</span>
+            <input type="text" class="search-input" placeholder="Search by name or email...">
+          </div>
+          <button style="background: none; border: none; color: var(--error); font-size: 13px; cursor: pointer;">Clear</button>
+          <button class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 4px; background: var(--primary); color: white; border: none;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">filter_list</span>
+            <span class="label-bold">Apply Filters</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 11.4 User Table -->
+      <section class="table-card">
+        <table class="data-table" id="userTable">
+          <thead>
+            <tr>
+              <th style="width: 48px; text-align: center;"><input type="checkbox" class="styled-checkbox" onchange="toggleAllCheckboxes(this)"></th>
+              <th class="label-caps">USER</th>
+              <th class="label-caps">ROLE</th>
+              <th class="label-caps">DEPARTMENT</th>
+              <th class="label-caps">LAST LOGIN</th>
+              <th class="label-caps">STATUS</th>
+              <th class="label-caps">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr>
+              <td style="text-align: center;"><input type="checkbox" class="styled-checkbox row-checkbox" onchange="updateSelection()"></td>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="user-avatar-sm" style="background: #0154CC;">JD</div>
+                  <div>
+                    <div class="body-md" style="font-weight: 600;">Jane Doe</div>
+                    <a href="#" class="body-sm" style="color: var(--primary); text-decoration: none;">jane.doe@company.com</a>
+                  </div>
+                </div>
+              </td>
+              <td><span class="role-badge role-procurement">Procurement Officer</span></td>
+              <td class="body-md" style="color: var(--on-surface-variant);">Operations</td>
+              <td class="body-sm" style="color: var(--outline);">Today, 09:41 AM</td>
+              <td><span class="status-badge status-active"><span class="status-dot"></span>Active</span></td>
+              <td class="action-links" style="position: relative;">
+                <a href="#" onclick="openProfilePanel(event)">View</a>
+                <span style="color: var(--data-ink);">·</span>
+                <a href="#" onclick="openEditModal(event)">Edit</a>
+                <span style="color: var(--data-ink);">·</span>
+                <button onclick="toggleContextMenu(event, this)" style="background: none; border: none; cursor: pointer; padding: 0; color: var(--outline);"><span class="material-symbols-outlined">more_horiz</span></button>
+              </td>
+            </tr>
+            <!-- Row 2 -->
+            <tr>
+              <td style="text-align: center;"><input type="checkbox" class="styled-checkbox row-checkbox" onchange="updateSelection()"></td>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="user-avatar-sm" style="background: #0154CC;">RC</div>
+                  <div>
+                    <div class="body-md" style="font-weight: 600;">Robert Chen</div>
+                    <a href="#" class="body-sm" style="color: var(--primary); text-decoration: none;">r.chen@company.com</a>
+                  </div>
+                </div>
+              </td>
+              <td><span class="role-badge role-manager">Manager / Approver</span></td>
+              <td class="body-md" style="color: var(--on-surface-variant);">Finance</td>
+              <td class="body-sm" style="color: var(--outline);">Yesterday, 4:30 PM</td>
+              <td><span class="status-badge status-active"><span class="status-dot"></span>Active</span></td>
+              <td class="action-links">
+                <a href="#">View</a> <span style="color: var(--data-ink);">·</span> <a href="#">Edit</a> <span style="color: var(--data-ink);">·</span>
+                <button onclick="toggleContextMenu(event, this)" style="background: none; border: none; cursor: pointer; padding: 0; color: var(--outline);"><span class="material-symbols-outlined">more_horiz</span></button>
+              </td>
+            </tr>
+            <!-- Row 3 -->
+            <tr>
+              <td style="text-align: center;"><input type="checkbox" class="styled-checkbox row-checkbox" onchange="updateSelection()"></td>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="user-avatar-sm" style="background: #B45309;">AV</div>
+                  <div>
+                    <div class="body-md" style="font-weight: 600;">Apex Vendor Rep</div>
+                    <a href="#" class="body-sm" style="color: var(--primary); text-decoration: none;">vendor@apex.com</a>
+                  </div>
+                </div>
+              </td>
+              <td><span class="role-badge role-vendor">Vendor</span></td>
+              <td class="label-bold" style="color: var(--outline);">External</td>
+              <td class="body-sm" style="color: var(--outline);">Oct 22, 2023</td>
+              <td><span class="status-badge status-active"><span class="status-dot"></span>Active</span></td>
+              <td class="action-links">
+                <a href="#">View</a> <span style="color: var(--data-ink);">·</span> <a href="#">Edit</a> <span style="color: var(--data-ink);">·</span>
+                <button onclick="toggleContextMenu(event, this)" style="background: none; border: none; cursor: pointer; padding: 0; color: var(--outline);"><span class="material-symbols-outlined">more_horiz</span></button>
+              </td>
+            </tr>
+            <!-- Row 4 -->
+            <tr>
+              <td style="text-align: center;"><input type="checkbox" class="styled-checkbox row-checkbox" onchange="updateSelection()"></td>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="user-avatar-sm" style="background: #0154CC;">ML</div>
+                  <div>
+                    <div class="body-md" style="font-weight: 600;">Michael Lee</div>
+                    <a href="#" class="body-sm" style="color: var(--primary); text-decoration: none;">m.lee@company.com</a>
+                  </div>
+                </div>
+              </td>
+              <td><span class="role-badge role-admin">Admin</span></td>
+              <td class="body-md" style="color: var(--on-surface-variant);">IT</td>
+              <td class="body-sm" style="color: var(--outline);">Oct 20, 2023</td>
+              <td><span class="status-badge status-suspended"><span class="status-dot"></span>Suspended</span></td>
+              <td class="action-links">
+                <a href="#">View</a> <span style="color: var(--data-ink);">·</span> <a href="#">Edit</a> <span style="color: var(--data-ink);">·</span>
+                <button onclick="toggleContextMenu(event, this)" style="background: none; border: none; cursor: pointer; padding: 0; color: var(--outline);"><span class="material-symbols-outlined">more_horiz</span></button>
+              </td>
+            </tr>
+            <!-- Row 5 -->
+            <tr>
+              <td style="text-align: center;"><input type="checkbox" class="styled-checkbox row-checkbox" onchange="updateSelection()"></td>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="user-avatar-sm" style="background: #0154CC;">SJ</div>
+                  <div>
+                    <div class="body-md" style="font-weight: 600;">Sarah Jenkins</div>
+                    <a href="#" class="body-sm" style="color: var(--primary); text-decoration: none;">s.jenkins@company.com</a>
+                  </div>
+                </div>
+              </td>
+              <td><span class="role-badge role-procurement">Procurement Officer</span></td>
+              <td class="body-md" style="color: var(--on-surface-variant);">Procurement</td>
+              <td class="body-sm" style="color: var(--outline); font-style: italic;">Pending</td>
+              <td><span class="status-badge status-invite"><span class="status-dot"></span>Invite Sent</span></td>
+              <td class="action-links">
+                <a href="#">Resend</a> <span style="color: var(--data-ink);">·</span> <a href="#" style="color: var(--error);">Cancel</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- 11.5 Context Menu -->
+  <div id="rowContextMenu" class="context-menu">
+    <a href="#" class="menu-item"><span class="material-symbols-outlined" style="font-size: 20px;">person</span> View Profile</a>
+    <a href="#" class="menu-item"><span class="material-symbols-outlined" style="font-size: 20px;">edit</span> Edit User</a>
+    <a href="#" class="menu-item"><span class="material-symbols-outlined" style="font-size: 20px;">manage_accounts</span> Change Role</a>
+    <a href="#" class="menu-item"><span class="material-symbols-outlined" style="font-size: 20px;">lock_reset</span> Reset Password</a>
+    <div style="height: 1px; background: var(--border-subtle); margin: 8px 0;"></div>
+    <a href="#" class="menu-item danger" onclick="openConfirmDialog(event)"><span class="material-symbols-outlined" style="font-size: 20px;">block</span> Suspend Account</a>
+    <a href="#" class="menu-item danger"><span class="material-symbols-outlined" style="font-size: 20px;">delete_forever</span> Remove User</a>
+  </div>
+
+  <!-- 11.7 Invite User Modal -->
+  <div class="modal-overlay" id="inviteModal">
+    <div class="modal-card" style="max-width: 560px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 class="headline-sm">Invite New User</h3>
+        <button onclick="closeInviteModal()" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined" style="color: var(--outline);">cancel</span></button>
+      </div>
+      <div style="height: 1px; background: var(--border-subtle); margin-bottom: 12px;"></div>
+      <p class="body-sm" style="color: var(--outline); font-style: italic; margin-bottom: 16px;">An invitation email will be sent to the provided address with a link to set up their account.</p>
+      
+      <form style="display: flex; flex-direction: column; gap: 16px;">
+        <div>
+          <label class="label-caps" style="color: var(--data-ink);">FULL NAME <span style="color: var(--error);">*</span></label>
+          <div class="input-container" style="margin-top: 4px;">
+            <span class="material-symbols-outlined input-icon">person</span>
+            <input type="text" class="input-field" placeholder="Jane Doe" required>
+          </div>
+        </div>
+        <div>
+          <label class="label-caps" style="color: var(--data-ink);">WORK EMAIL <span style="color: var(--error);">*</span></label>
+          <div class="input-container" style="margin-top: 4px;">
+            <span class="material-symbols-outlined input-icon">mail</span>
+            <input type="email" class="input-field" placeholder="jane.doe@company.com" required>
+          </div>
+        </div>
+        <div>
+          <label class="label-caps" style="color: var(--data-ink);">ROLE ASSIGNMENT <span style="color: var(--error);">*</span></label>
+          <div class="input-container" style="margin-top: 4px;">
+            <span class="material-symbols-outlined input-icon">admin_panel_settings</span>
+            <select class="input-field" style="appearance: none;">
+              <option>Procurement Officer</option>
+              <option>Vendor</option>
+              <option>Manager</option>
+              <option>Admin</option>
+            </select>
+            <span class="material-symbols-outlined" style="position: absolute; right: 10px; top: 10px; color: var(--outline); pointer-events: none;">expand_more</span>
+          </div>
+        </div>
+        <div>
+          <label class="label-caps" style="color: var(--data-ink);">DEPARTMENT</label>
+          <div class="input-container" style="margin-top: 4px;">
+            <span class="material-symbols-outlined input-icon">business</span>
+            <select class="input-field" style="appearance: none;">
+              <option>Operations</option>
+              <option>Finance</option>
+              <option>IT</option>
+            </select>
+            <span class="material-symbols-outlined" style="position: absolute; right: 10px; top: 10px; color: var(--outline); pointer-events: none;">expand_more</span>
+          </div>
+        </div>
+        <div>
+          <label class="label-caps" style="color: var(--data-ink);">SEND WELCOME MESSAGE</label>
+          <div class="input-container" style="margin-top: 4px;">
+            <textarea class="input-field" rows="3" placeholder="Add a personal message to the invitation email (optional)..." style="padding-left: 10px; resize: none;"></textarea>
+            <div class="body-sm" style="text-align: right; color: var(--outline); margin-top: 4px;">0 / 500</div>
+          </div>
+        </div>
+        <div>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" checked class="styled-checkbox" style="width: 16px; height: 16px; margin: 0;">
+            <span class="body-md" style="color: var(--data-ink);">SEND INVITE IMMEDIATELY</span>
+          </label>
+        </div>
+      </form>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+        <button type="button" onclick="closeInviteModal()" class="btn btn-secondary" style="padding: 10px 16px; border-radius: 4px; background: #FFF; border: 1px solid var(--border-subtle); color: var(--data-ink); font-weight: 600;">Cancel</button>
+        <button type="button" onclick="showToast(); closeInviteModal()" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 4px; background: var(--primary); color: white; border: none; font-weight: 600;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">send</span> Send Invitation
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.8 Edit User Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="tab-bar">
+        <div class="tab-item active">User Details</div>
+        <div class="tab-item">Permissions</div>
+      </div>
+      <div class="panel-content" style="padding: 0;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: #0154CC; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600;">JD</div>
+          <div>
+            <div class="headline-sm">Jane Doe</div>
+            <span class="role-badge role-procurement" style="margin-top: 4px;">Procurement Officer</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <label class="label-caps" style="color: var(--data-ink);">FULL NAME</label>
+            <div class="input-container" style="margin-top: 4px;">
+              <span class="material-symbols-outlined input-icon">person</span>
+              <input type="text" class="input-field" value="Jane Doe">
+            </div>
+          </div>
+          <div>
+            <label class="label-caps" style="color: var(--data-ink);">WORK EMAIL</label>
+            <div class="input-container" style="margin-top: 4px;">
+              <span class="material-symbols-outlined input-icon">mail</span>
+              <input type="email" class="input-field" value="jane.doe@company.com">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+            <span class="body-md" style="font-weight: 600;">Account Status</span>
+            <div class="ios-toggle on" onclick="this.classList.toggle('on'); this.classList.toggle('error-track')"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+        <button onclick="closeEditModal()" class="btn btn-secondary" style="padding: 10px 16px; border-radius: 4px; background: #FFF; border: 1px solid var(--border-subtle); font-weight: 600;">Cancel</button>
+        <button class="btn btn-primary" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 4px; background: var(--primary); color: white; border: none; font-weight: 600;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">save</span> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.9 User Profile Slide Panel -->
+  <div class="slide-panel-overlay" id="profileOverlay" onclick="closeProfilePanel()"></div>
+  <div class="slide-panel" id="profilePanel">
+    <div class="panel-header">
+      <h3 class="headline-sm">User Profile</h3>
+      <button onclick="closeProfilePanel()" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="panel-content">
+      <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 24px;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #0154CC; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin-bottom: 12px;">JD</div>
+        <div class="headline-sm" style="color: var(--on-surface);">Jane Doe</div>
+        <div class="body-md" style="color: var(--primary); margin: 4px 0 8px 0;">jane.doe@company.com</div>
+        <span class="role-badge role-procurement">Procurement Officer</span>
+      </div>
+      <div style="height: 1px; background: var(--border-subtle); margin-bottom: 24px;"></div>
+      
+      <div class="label-caps" style="color: var(--data-ink); margin-bottom: 12px;">ACCOUNT DETAILS</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+        <div><div class="label-caps" style="color: var(--outline);">DEPARTMENT</div><div class="body-md">Operations</div></div>
+        <div><div class="label-caps" style="color: var(--outline);">STATUS</div><div style="margin-top: 4px;"><span class="status-badge status-active"><span class="status-dot"></span>Active</span></div></div>
+        <div><div class="label-caps" style="color: var(--outline);">JOINED</div><div class="body-md">Jan 12, 2024</div></div>
+        <div><div class="label-caps" style="color: var(--outline);">LAST LOGIN</div><div class="body-md">Today, 09:41 AM</div></div>
+        <div><div class="label-caps" style="color: var(--outline);">2FA ENABLED</div><div class="body-md" style="color: var(--success);">Yes</div></div>
+        <div><div class="label-caps" style="color: var(--outline);">TOTAL LOGINS</div><div class="data-mono">142</div></div>
+      </div>
+
+      <div class="label-caps" style="color: var(--data-ink); margin-bottom: 12px;">LOGIN HISTORY</div>
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+        <div style="display: flex; gap: 12px;">
+          <span class="material-symbols-outlined" style="font-size: 16px; color: var(--outline);">calendar_today</span>
+          <div>
+            <div class="body-sm" style="color: var(--on-surface-variant);">Today, 09:41 AM</div>
+            <div class="body-sm" style="color: var(--outline);">Mac OS Safari · Mumbai, India</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px;">
+          <span class="material-symbols-outlined" style="font-size: 16px; color: var(--outline);">calendar_today</span>
+          <div>
+            <div class="body-sm" style="color: var(--on-surface-variant);">Yesterday, 08:30 AM</div>
+            <div class="body-sm" style="color: var(--outline);">Mac OS Safari · Mumbai, India</div>
+          </div>
+        </div>
+      </div>
+      <a href="#" class="body-sm" style="color: var(--primary); text-decoration: none; display: block; margin-bottom: 24px;">View full login history &rarr;</a>
+
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-primary" onclick="closeProfilePanel(); openEditModal()" style="width: 100%; padding: 10px; border-radius: 4px; background: var(--primary); color: white; border: none; font-weight: 600;">Edit User</button>
+      <button class="btn" onclick="closeProfilePanel(); openConfirmDialog(event)" style="width: 100%; padding: 10px; border-radius: 4px; background: var(--error); color: white; border: none; font-weight: 600;">Suspend Account</button>
+    </div>
+  </div>
+
+  <!-- 11.10 Confirmation Dialog -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-card" style="max-width: 480px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--error); color: #FFF; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+        <span class="material-symbols-outlined" style="font-size: 28px;">warning</span>
+      </div>
+      <h3 class="headline-sm" style="margin-bottom: 8px;">Suspend Account?</h3>
+      <p class="body-md" style="color: var(--on-surface-variant); margin-bottom: 24px;">Are you sure you want to suspend Jane Doe's account? They will immediately lose access to all VendorBridge modules.</p>
+      <div style="width: 100%; display: flex; justify-content: flex-end; gap: 8px;">
+        <button onclick="closeConfirmDialog()" class="btn btn-secondary" style="padding: 10px 16px; border-radius: 4px; background: #FFF; border: 1px solid var(--border-subtle); color: var(--data-ink); font-weight: 600;">Cancel</button>
+        <button onclick="closeConfirmDialog()" class="btn" style="padding: 10px 16px; border-radius: 4px; background: var(--error); color: white; border: none; font-weight: 600;">Suspend Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.11 Toast Notification System -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // Sidebar toggle
+    function toggleMobileSidebar() { document.body.classList.toggle('sidebar-open'); }
+
+    // Bulk selection logic
+    function updateSelection() {
+      const checkboxes = document.querySelectorAll('.row-checkbox');
+      const selected = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const toolbar = document.getElementById('toolbarCard');
+      const bulkBar = document.getElementById('bulkActionBar');
+      
+      document.getElementById('selectedCount').innerText = selected;
+      if (selected > 0) {
+        toolbar.style.display = 'none';
+        bulkBar.classList.add('active');
+      } else {
+        toolbar.style.display = 'flex';
+        bulkBar.classList.remove('active');
+      }
+
+      checkboxes.forEach(cb => {
+        if(cb.checked) cb.closest('tr').classList.add('selected');
+        else cb.closest('tr').classList.remove('selected');
+      });
+    }
+
+    function toggleAllCheckboxes(source) {
+      const checkboxes = document.querySelectorAll('.row-checkbox');
+      checkboxes.forEach(cb => cb.checked = source.checked);
+      updateSelection();
+    }
+
+    function clearSelection(e) {
+      e.preventDefault();
+      document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = false);
+      document.querySelector('thead .styled-checkbox').checked = false;
+      updateSelection();
+    }
+
+    // Context Menu Logic
+    let currentMenu = null;
+    function toggleContextMenu(e, btn) {
+      e.stopPropagation();
+      const menu = document.getElementById('rowContextMenu');
+      if (currentMenu === btn && menu.classList.contains('active')) {
+        menu.classList.remove('active');
+        currentMenu = null;
+      } else {
+        const rect = btn.getBoundingClientRect();
+        menu.style.top = `${rect.bottom + window.scrollY + 4}px`;
+        menu.style.left = `${rect.right - 200 + window.scrollX}px`;
+        menu.classList.add('active');
+        currentMenu = btn;
+      }
+    }
+    document.addEventListener('click', () => {
+      document.getElementById('rowContextMenu').classList.remove('active');
+      currentMenu = null;
+    });
+
+    // Modals & Panels
+    function openInviteModal() { document.getElementById('inviteModal').classList.add('active'); }
+    function closeInviteModal() { document.getElementById('inviteModal').classList.remove('active'); }
+    
+    function openEditModal(e) { if(e) e.preventDefault(); document.getElementById('editModal').classList.add('active'); }
+    function closeEditModal() { document.getElementById('editModal').classList.remove('active'); }
+
+    function openProfilePanel(e) { if(e) e.preventDefault(); document.getElementById('profileOverlay').classList.add('active'); document.getElementById('profilePanel').classList.add('active'); }
+    function closeProfilePanel() { document.getElementById('profileOverlay').classList.remove('active'); document.getElementById('profilePanel').classList.remove('active'); }
+
+    function openConfirmDialog(e) { if(e) e.preventDefault(); document.getElementById('confirmModal').classList.add('active'); }
+    function closeConfirmDialog() { document.getElementById('confirmModal').classList.remove('active'); }
+
+    // Toast logic
+    function showToast() {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span class="material-symbols-outlined" style="color: var(--success); font-size: 20px;">check_circle</span>
+        <div style="flex-grow: 1;">
+          <div class="body-md" style="font-weight: 600; color: var(--on-surface);">Invitation sent successfully.</div>
+          <div class="body-sm" style="color: var(--outline); margin-top: 4px;">Jane Doe will receive an email.</div>
+        </div>
+        <span class="material-symbols-outlined" style="font-size: 16px; color: var(--outline); cursor: pointer;" onclick="this.parentElement.remove()">cancel</span>
+        <div class="toast-progress"></div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => { if (toast.parentElement) toast.remove(); }, 5000);
+    }
+  </script>
+</body>
+</html>

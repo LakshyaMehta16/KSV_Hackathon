@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VendorBridge - Approval Workflow</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Tab functionality */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-btn.active { 
+            border-bottom-width: 2px;
+            border-bottom-color: #003fb1; /* primary */
+            color: #003fb1;
+            font-weight: 600;
+        }
+    </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#fcf9f8",
+                        "success-accent": "#10B981",
+                        "on-tertiary-fixed-variant": "#802a00",
+                        "inverse-primary": "#b5c4ff",
+                        "tertiary-fixed-dim": "#ffb59a",
+                        "on-secondary-container": "#1d0a91",
+                        "outline": "#737686",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-container": "#8985fd",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "tertiary": "#852b00",
+                        "outline-variant": "#c3c5d7",
+                        "on-tertiary": "#ffffff",
+                        "border-subtle": "#E2E8F0",
+                        "on-primary-container": "#d4dcff",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#b5c4ff",
+                        "surface-container": "#f0edec",
+                        "primary": "#003fb1",
+                        "on-background": "#1c1b1b",
+                        "on-tertiary-fixed": "#380d00",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#ffd4c5",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "background": "#fcf9f8",
+                        "data-ink": "#334155",
+                        "inverse-surface": "#313030",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-dim": "#dcd9d9",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#e2dfff",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-fixed": "#0f0069",
+                        "primary-container": "#1a56db",
+                        "on-surface": "#1c1b1b",
+                        "surface-container-high": "#ebe7e7",
+                        "tertiary-container": "#ad3b00",
+                        "surface-tint": "#1353d8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#00174d",
+                        "secondary": "#534ec3",
+                        "on-secondary-fixed-variant": "#3a33ab",
+                        "surface-muted": "#F4F7FF",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface": "#fcf9f8",
+                        "tertiary-fixed": "#ffdbcf",
+                        "on-primary-fixed-variant": "#003dab",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#434654"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.75rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sidebar-width": "260px",
+                        "density-compact": "8px",
+                        "container-max": "1440px",
+                        "margin-page": "32px",
+                        "gutter": "24px",
+                        "baseline": "4px",
+                        "density-comfortable": "16px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Hanken Grotesk"],
+                        "label-caps": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "label-bold": ["Hanken Grotesk"],
+                        "headline-sm": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "data-mono": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-bright text-on-surface font-body-md antialiased min-h-screen">
+<!-- TopNavBar Component -->
+<nav class="fixed top-0 right-0 w-full md:w-[calc(100%-260px)] h-16 bg-surface-bright border-b border-border-subtle flex items-center justify-between px-margin-page z-40">
+<!-- Search (Left) -->
+<div class="flex-1 flex items-center">
+<div class="relative w-full max-w-md hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-border-subtle rounded-DEFAULT font-body-sm text-body-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-outline-variant" placeholder="Search..." type="text"/>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface mr-4">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="md:hidden font-headline-sm text-headline-sm font-semibold text-on-surface">VendorBridge</span>
+</div>
+<!-- Trailing Actions (Right) -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-all relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all hidden sm:block">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all hidden sm:block">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-muted border border-border-subtle overflow-hidden ml-2 cursor-pointer">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a business executive used as a user profile placeholder in a corporate enterprise software interface. The individual has a composed expression, short hair, and is wearing a smart business shirt. The lighting is soft and natural, emphasizing a trustworthy and competent persona. The background is slightly blurred to keep focus on the subject, perfectly suited for a modern, minimalist application dashboard." src="https://lh3.googleusercontent.com/aida/AP1WRLv51z8VjAhL83zcxsygD4Hwl8qvDqeZftFbH-9mVnGu1h-xzAoxoO6DQsWdlW6jNQl8r1JzQgMRFfM2XKV3e9bd2KGZzWQwFqzK5lyPyTVCR-3OE_AQI-F6uOvd8E4CYNBzcf5AYfLHvdmtqhQOTkGWa5y-l8gyhSY1rKVvRvWDKGIKGVKJbIEd_93fJpUApQzERA9XeSeRUMjc7twLaWQp0YMSs66LgmLIA5ibo0Hq7lelTe6uc84fHsw"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest border-r border-border-subtle hidden md:flex flex-col py-baseline z-50">
+<!-- Brand -->
+<div class="px-6 py-4 mb-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-DEFAULT bg-primary text-on-primary flex items-center justify-center font-bold">V</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">VendorBridge</h1>
+<p class="font-body-sm text-body-sm text-outline text-[11px] uppercase tracking-wider">Enterprise ERP</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex-1 overflow-y-auto font-body-md text-body-md">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-muted/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                        Dashboard
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-muted/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">storefront</span>
+                        Vendors
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-muted/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">request_quote</span>
+                        RFQs
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-muted/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                        Quotations
+                    </a>
+</li>
+<!-- ACTIVE TAB -->
+<li>
+<a class="flex items-center gap-3 px-4 py-2 bg-surface-muted border-l-4 border-primary text-primary font-bold opacity-90 scale-[0.99] transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">fact_check</span>
+                        Approvals
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-muted/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+                        Purchase Orders
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-muted/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+                        Invoices
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-muted/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">assessment</span>
+                        Reports
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-muted/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+                        Activity
+                    </a>
+</li>
+</ul>
+</nav>
+<!-- CTA -->
+<div class="px-4 mt-auto mb-4">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary font-body-md text-body-md font-medium py-2 rounded-DEFAULT hover:bg-primary-container hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                + Add New
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-sidebar-width pt-16 min-h-screen">
+<!-- Page Header -->
+<header class="px-margin-page py-6 border-b border-border-subtle bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-caps text-label-caps text-outline bg-surface-muted px-2 py-0.5 rounded-sm">REQ-2023-1042</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Pending Manager Approval</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                        Approval for 'Office Furniture Procurement'
+                    </h2>
+</div>
+<div class="text-right">
+<p class="font-body-sm text-body-sm text-outline mb-1">Total Value</p>
+<p class="font-headline-md text-headline-md text-primary font-bold">$12,400.00</p>
+</div>
+</div>
+</header>
+<!-- Content Grid -->
+<div class="px-margin-page py-6 max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column (Main Details) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Project Info Card -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-xl p-density-comfortable">
+<h3 class="font-label-bold text-label-bold text-data-ink uppercase tracking-wider mb-4 border-b border-border-subtle pb-2">Request Details</h3>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6">
+<div>
+<p class="font-label-caps text-label-caps text-outline mb-1">Vendor</p>
+<p class="font-body-md text-body-md text-data-ink font-medium">Vendor Alpha Inc.</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-outline mb-1">Requested By</p>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-muted flex items-center justify-center text-[10px] font-bold text-data-ink">JD</div>
+<p class="font-body-md text-body-md text-data-ink">Jane Doe</p>
+</div>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-outline mb-1">Department</p>
+<p class="font-body-md text-body-md text-data-ink">Operations</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-outline mb-1">Date Submitted</p>
+<p class="font-data-mono text-data-mono text-data-ink">Oct 24, 2023</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-outline mb-1">Cost Center</p>
+<p class="font-data-mono text-data-mono text-data-ink">CC-8921-OP</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-outline mb-1">Priority</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-tertiary-fixed text-on-tertiary-fixed">High</span>
+</div>
+</div>
+</div>
+<!-- Line Items Table -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-xl overflow-hidden">
+<h3 class="font-label-bold text-label-bold text-data-ink uppercase tracking-wider p-density-comfortable bg-surface-muted border-b border-border-subtle m-0">Line Items</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-muted border-b border-border-subtle font-label-caps text-label-caps text-outline">
+<th class="py-density-compact px-density-comfortable font-semibold">Item Description</th>
+<th class="py-density-compact px-density-comfortable font-semibold">SKU / Code</th>
+<th class="py-density-compact px-density-comfortable font-semibold text-right">Qty</th>
+<th class="py-density-compact px-density-comfortable font-semibold text-right">Unit Price</th>
+<th class="py-density-compact px-density-comfortable font-semibold text-right">Total</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-data-ink divide-y divide-border-subtle">
+<tr class="hover:bg-[#F8FAFC] transition-colors">
+<td class="py-3 px-density-comfortable">Ergonomic Office Chair - Model X</td>
+<td class="py-3 px-density-comfortable font-data-mono text-data-mono text-outline">CH-9021</td>
+<td class="py-3 px-density-comfortable text-right font-data-mono text-data-mono">12</td>
+<td class="py-3 px-density-comfortable text-right font-data-mono text-data-mono">$450.00</td>
+<td class="py-3 px-density-comfortable text-right font-data-mono text-data-mono font-medium">$5,400.00</td>
+</tr>
+<tr class="hover:bg-[#F8FAFC] transition-colors">
+<td class="py-3 px-density-comfortable">Height Adjustable Standing Desk</td>
+<td class="py-3 px-density-comfortable font-data-mono text-data-mono text-outline">DK-5542</td>
+<td class="py-3 px-density-comfortable text-right font-data-mono text-data-mono">10</td>
+<td class="py-3 px-density-comfortable text-right font-data-mono text-data-mono">$700.00</td>
+<td class="py-3 px-density-comfortable text-right font-data-mono text-data-mono font-medium">$7,000.00</td>
+</tr>
+</tbody>
+<tfoot class="bg-surface-muted/50 border-t border-border-subtle">
+<tr>
+<td class="py-3 px-density-comfortable text-right font-label-bold text-label-bold text-data-ink" colspan="4">Total Requisition Amount</td>
+<td class="py-3 px-density-comfortable text-right font-data-mono text-data-mono font-bold text-primary">$12,400.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<!-- Approval Timeline (Vertical Stepper) -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded-xl p-density-comfortable">
+<h3 class="font-label-bold text-label-bold text-data-ink uppercase tracking-wider mb-6">Approval Timeline</h3>
+<div class="relative pl-3">
+<!-- Vertical Line -->
+<div class="absolute left-[19px] top-2 bottom-6 w-[2px] bg-border-subtle"></div>
+<!-- Step 1: Completed -->
+<div class="relative flex items-start gap-4 mb-6">
+<div class="w-4 h-4 mt-1 rounded-full bg-success-accent border-2 border-surface-container-lowest flex items-center justify-center z-10 shadow-sm relative -ml-[1px]">
+<span class="material-symbols-outlined text-[10px] text-white font-bold">check</span>
+</div>
+<div class="flex-1">
+<p class="font-body-sm text-body-sm font-medium text-data-ink">Requisition Submitted</p>
+<p class="font-body-sm text-body-sm text-outline text-[12px]">Jane Doe • Oct 24, 09:15 AM</p>
+</div>
+</div>
+<!-- Step 2: Completed -->
+<div class="relative flex items-start gap-4 mb-6">
+<div class="w-4 h-4 mt-1 rounded-full bg-success-accent border-2 border-surface-container-lowest flex items-center justify-center z-10 shadow-sm relative -ml-[1px]">
+<span class="material-symbols-outlined text-[10px] text-white font-bold">check</span>
+</div>
+<div class="flex-1">
+<p class="font-body-sm text-body-sm font-medium text-data-ink">Department Head Review</p>
+<p class="font-body-sm text-body-sm text-outline text-[12px]">Approved by Robert Chen • Oct 24, 11:30 AM</p>
+</div>
+</div>
+<!-- Step 3: Current -->
+<div class="relative flex items-start gap-4 mb-6">
+<div class="w-4 h-4 mt-1 rounded-full bg-surface-container-lowest border-[3px] border-primary z-10 relative -ml-[1px] ring-2 ring-primary/20"></div>
+<div class="flex-1">
+<p class="font-body-sm text-body-sm font-medium text-primary">Finance Manager Approval</p>
+<p class="font-body-sm text-body-sm text-outline text-[12px]">Pending your review</p>
+</div>
+</div>
+<!-- Step 4: Future -->
+<div class="relative flex items-start gap-4">
+<div class="w-4 h-4 mt-1 rounded-full bg-surface-variant border-2 border-surface-container-lowest z-10 relative -ml-[1px]"></div>
+<div class="flex-1">
+<p class="font-body-sm text-body-sm font-medium text-outline">Final Procurement Processing</p>
+<p class="font-body-sm text-body-sm text-outline-variant text-[12px]">Awaiting preceding steps</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (Action Card) -->
+<div class="lg:col-span-4 relative">
+<!-- Sticky Container for Actions -->
+<div class="sticky top-[88px] bg-surface-container-lowest border border-border-subtle rounded-xl shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.05)] flex flex-col h-[calc(100vh-120px)] max-h-[600px]">
+<!-- Tabs Header -->
+<div class="flex border-b border-border-subtle bg-surface-muted rounded-t-xl">
+<button class="tab-btn active flex-1 py-3 px-4 font-body-sm text-body-sm font-medium text-outline text-center hover:text-data-ink transition-colors" data-target="tab-remarks">
+                            Action
+                        </button>
+<button class="tab-btn flex-1 py-3 px-4 font-body-sm text-body-sm font-medium text-outline text-center hover:text-data-ink transition-colors" data-target="tab-history">
+                            History
+                        </button>
+<button class="tab-btn flex-1 py-3 px-4 font-body-sm text-body-sm font-medium text-outline text-center hover:text-data-ink transition-colors" data-target="tab-notes">
+                            Notes (2)
+                        </button>
+</div>
+<!-- Tab Contents Container -->
+<div class="flex-1 overflow-y-auto p-density-comfortable">
+<!-- Remarks Tab (Active) -->
+<div class="tab-content active h-full flex flex-col" id="tab-remarks">
+<div class="mb-4">
+<label class="block font-label-bold text-label-bold text-data-ink mb-2" for="approval-remarks">Remarks / Justification <span class="text-error">*</span></label>
+<textarea class="w-full p-3 border border-border-subtle rounded-xl bg-surface-bright font-body-sm text-body-sm text-data-ink focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none" id="approval-remarks" placeholder="Enter your comments regarding this approval decision..." rows="6"></textarea>
+<p class="mt-2 text-[11px] text-outline font-body-sm">Remarks are required if rejecting the request.</p>
+</div>
+<div class="mt-auto pt-4 border-t border-border-subtle flex flex-col gap-3">
+<button class="w-full bg-success-accent text-white font-body-md text-body-md font-medium py-2.5 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                    Approve Requisition
+                                </button>
+<button class="w-full bg-error text-white font-body-md text-body-md font-medium py-2.5 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+                                    Reject Request
+                                </button>
+<button class="w-full bg-surface-lowest border border-border-subtle text-data-ink font-body-md text-body-md font-medium py-2.5 rounded-xl hover:bg-surface-muted transition-colors mt-2">
+                                    Request Clarification
+                                </button>
+</div>
+</div>
+<!-- History Tab -->
+<div class="tab-content h-full" id="tab-history">
+<h4 class="font-label-bold text-label-bold text-data-ink mb-4">Action Log</h4>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="mt-1"><span class="material-symbols-outlined text-success-accent text-[18px]">verified</span></div>
+<div>
+<p class="font-body-sm text-body-sm text-data-ink font-medium">Approved by Robert Chen</p>
+<p class="font-body-sm text-body-sm text-outline text-[11px]">Oct 24, 2023 - 11:30 AM</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 p-2 bg-surface-muted rounded-DEFAULT text-[12px]">"Budget verified for Q4 operational expenses. Proceeding to finance."</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="mt-1"><span class="material-symbols-outlined text-outline text-[18px]">upload_file</span></div>
+<div>
+<p class="font-body-sm text-body-sm text-data-ink font-medium">Submitted by Jane Doe</p>
+<p class="font-body-sm text-body-sm text-outline text-[11px]">Oct 24, 2023 - 09:15 AM</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Notes Tab -->
+<div class="tab-content h-full" id="tab-notes">
+<h4 class="font-label-bold text-label-bold text-data-ink mb-4">Internal Notes</h4>
+<p class="font-body-sm text-body-sm text-outline italic text-center py-8">No internal notes added yet.</p>
+<button class="w-full bg-surface-lowest border border-dashed border-outline-variant text-outline font-body-sm text-body-sm py-2 rounded-DEFAULT hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span> Add Note
+                             </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Simple JS for Tabs -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body></html>

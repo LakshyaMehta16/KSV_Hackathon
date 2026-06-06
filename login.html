@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>VendorBridge ERP - Secure Access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+  
+  <style>
+    /* Specific layouts and overrides for the Login screen */
+    body {
+      background-color: var(--surface-muted); /* Surface Muted background as level 0 */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+      padding: 16px;
+    }
+
+    /* Style override for Screen 1 input focus colors */
+    .login-input:focus {
+      border-color: #003FB1 !important;
+      box-shadow: 0 0 0 1px #003FB1 !important;
+    }
+
+    /* Primary button for auth is specifically styled */
+    .btn-auth-primary {
+      background-color: #003FB1;
+      color: #FFFFFF;
+      height: 48px;
+      border-radius: 12px; /* Visual harmony with card's 12px radius */
+      width: 100%;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: none; /* Spec says: label-bold 'Sign In' (Inter 12px weight 600 letter-spacing 0.05em) */
+    }
+
+    .btn-auth-primary:hover {
+      background-color: #1A56DB; /* shifts to Primary Container */
+    }
+
+    .btn-auth-primary:active {
+      background-color: #003DAB; /* Primary Fixed Variant */
+    }
+
+    /* Morph animations and visibility rules */
+    .forgot-password-active .hide-on-forgot {
+      display: none !important;
+    }
+
+    .forgot-password-active .show-on-forgot {
+      display: flex !important;
+    }
+
+    .show-on-forgot {
+      display: none !important;
+    }
+
+    /* Transitions */
+    .login-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-bg">
+    <div class="orb-tr"></div>
+    <div class="orb-bl"></div>
+  </div>
+
+  <!-- Centered Login Card -->
+  <main class="login-card" id="loginCard">
+    
+    <!-- Branded Header Area -->
+    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 32px;">
+      <!-- Logo Container -->
+      <div class="logo-circle" style="margin-bottom: 16px;">
+        <span class="material-symbols-outlined" style="font-size: 32px; color: #003FB1; font-variation-settings: 'FILL' 1;">
+          admin_panel_settings
+        </span>
+      </div>
+      <!-- Brand Name -->
+      <h1 class="display-lg" id="cardTitle" style="color: #1C1B1B; margin-bottom: 4px;">VendorBridge</h1>
+      <!-- Brand Tagline -->
+      <p class="body-sm" id="cardTagline" style="color: #434654;">Enterprise Resource Planning System</p>
+    </div>
+
+    <!-- Login/Reset Form -->
+    <form id="authForm" style="display: flex; flex-direction: column; gap: 20px;" onsubmit="handleFormSubmit(event)">
+      
+      <!-- Field 1: Corporate ID or Email -->
+      <div class="form-group">
+        <label class="label-caps" for="corporateId" style="color: #334155;">Corporate ID or Email</label>
+        <div class="input-container has-left-icon">
+          <span class="material-symbols-outlined left-icon">person</span>
+          <input 
+            type="text" 
+            id="corporateId" 
+            class="input-field login-input" 
+            placeholder="Enter your credentials" 
+            style="padding-top: 10px; padding-bottom: 10px; border-radius: 2px;"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Field 2: Secure Password (Hidden in Forgot Password mode) -->
+      <div class="form-group hide-on-forgot">
+        <label class="label-caps" for="password" style="color: #334155;">Secure Password</label>
+        <div class="input-container has-left-icon has-right-icon">
+          <span class="material-symbols-outlined left-icon">lock</span>
+          <input 
+            type="password" 
+            id="password" 
+            class="input-field login-input" 
+            placeholder="••••••••" 
+            style="padding-top: 10px; padding-bottom: 10px; border-radius: 2px;"
+            required
+          />
+          <button type="button" class="right-icon-btn" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
+            <span class="material-symbols-outlined" id="passwordToggleIcon">visibility_off</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Utilities Row: Remember Me + Forgot Password (Hidden in Forgot Password mode) -->
+      <div class="hide-on-forgot" style="display: flex; align-items: center; justify-content: space-between; margin-top: -8px;">
+        <label class="checkbox-container">
+          <input type="checkbox" class="checkbox-input"/>
+          <span class="body-sm" style="color: #434654;">Remember me</span>
+        </label>
+        <a 
+          href="#" 
+          class="body-sm" 
+          style="color: #003FB1; font-weight: 500; text-decoration: none;"
+          onclick="activateForgotPassword(event)"
+          id="forgotPasswordLink"
+        >Forgot Password?</a>
+      </div>
+
+      <!-- Action Area -->
+      <div style="border-top: 1px solid rgba(226, 232, 240, 0.5); padding-top: 16px; margin-top: 8px;">
+        <!-- Sign In / Send Reset Link Button -->
+        <button type="submit" class="btn btn-auth-primary">
+          <span class="material-symbols-outlined" id="ctaIcon" style="font-size: 18px;">login</span>
+          <span id="ctaText">Sign In</span>
+        </button>
+      </div>
+
+      <!-- Footer navigation options -->
+      <div style="display: flex; flex-direction: column; gap: 12px; text-align: center; margin-top: 8px;">
+        <!-- Sign Up Toggle Link -->
+        <div class="hide-on-forgot" class="body-sm" style="color: #434654;">
+          Don't have an account? 
+          <a href="register.html" class="body-sm" style="color: #003FB1; font-weight: 500; text-decoration: none;">Create Vendor Account &rarr;</a>
+        </div>
+        <!-- Back to Sign In Link (Only visible in Forgot Password mode) -->
+        <div class="show-on-forgot" style="justify-content: center; width: 100%;">
+          <a 
+            href="#" 
+            class="body-sm" 
+            style="color: #003FB1; font-weight: 500; text-decoration: none;"
+            onclick="deactivateForgotPassword(event)"
+          >&larr; Back to Sign In</a>
+        </div>
+      </div>
+    </form>
+
+    <!-- Trust Indicator -->
+    <div style="margin-top: 24px; padding-top: 16px; display: flex; align-items: center; justify-content: center; gap: 6px; color: #737686;">
+      <span class="material-symbols-outlined" style="font-size: 14px;">encrypted</span>
+      <span class="body-sm" style="color: #737686;">Secured by 256-bit AES encryption</span>
+    </div>
+  </main>
+
+  <!-- Watermark at very bottom of screen -->
+  <div class="watermark label-caps">
+    VendorBridge ERP v3.1  &middot;  &copy; 2025 Nexus Systems Ltd.
+  </div>
+
+  <script>
+    // Toggle Password Visibility
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const icon = document.getElementById('passwordToggleIcon');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.textContent = 'visibility';
+      } else {
+        passwordInput.type = 'password';
+        icon.textContent = 'visibility_off';
+      }
+    }
+
+    // Toggle Forgot Password State (In-place Morph)
+    function activateForgotPassword(event) {
+      event.preventDefault();
+      
+      const card = document.getElementById('loginCard');
+      const title = document.getElementById('cardTitle');
+      const tagline = document.getElementById('cardTagline');
+      const ctaIcon = document.getElementById('ctaIcon');
+      const ctaText = document.getElementById('ctaText');
+      const passwordInput = document.getElementById('password');
+
+      // Add state class for CSS
+      card.classList.add('forgot-password-active');
+      
+      // Update typography
+      title.textContent = 'Reset Password';
+      tagline.textContent = 'Enter your corporate email to receive a reset link';
+      
+      // Update CTA
+      ctaIcon.textContent = 'mail';
+      ctaText.textContent = 'Send Reset Link';
+
+      // Turn off password requirement so form validation works
+      passwordInput.removeAttribute('required');
+    }
+
+    function deactivateForgotPassword(event) {
+      event.preventDefault();
+
+      const card = document.getElementById('loginCard');
+      const title = document.getElementById('cardTitle');
+      const tagline = document.getElementById('cardTagline');
+      const ctaIcon = document.getElementById('ctaIcon');
+      const ctaText = document.getElementById('ctaText');
+      const passwordInput = document.getElementById('password');
+
+      // Remove state class
+      card.classList.remove('forgot-password-active');
+      
+      // Restore typography
+      title.textContent = 'VendorBridge';
+      tagline.textContent = 'Enterprise Resource Planning System';
+      
+      // Restore CTA
+      ctaIcon.textContent = 'login';
+      ctaText.textContent = 'Sign In';
+
+      // Restore password requirement
+      passwordInput.setAttribute('required', '');
+    }
+
+    // Handle Form submission
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      const card = document.getElementById('loginCard');
+      const emailOrId = document.getElementById('corporateId').value;
+
+      if (card.classList.contains('forgot-password-active')) {
+        alert('Reset password link has been sent to ' + emailOrId);
+        deactivateForgotPassword(event);
+      } else {
+        // Redirect directly to dashboard.html on successful login
+        window.location.href = 'dashboard.html';
+      }
+    }
+  </script>
+</body>
+</html>

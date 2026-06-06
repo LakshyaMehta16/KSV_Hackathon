@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vendors - VendorBridge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-secondary-container": "#006078",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed": "#001f29",
+                "primary-container": "#346ee6",
+                "secondary-fixed": "#b8eaff",
+                "tertiary-container": "#b45d00",
+                "surface-container-high": "#eae7e7",
+                "on-error-container": "#93000a",
+                "inverse-surface": "#313030",
+                "on-primary": "#ffffff",
+                "on-surface-variant": "#424654",
+                "surface-variant": "#e5e2e1",
+                "surface-tint": "#0a56ce",
+                "error": "#ba1a1a",
+                "on-error": "#ffffff",
+                "surface-dim": "#dcd9d9",
+                "surface-container-highest": "#e5e2e1",
+                "on-tertiary-fixed": "#301400",
+                "primary-fixed": "#dae2ff",
+                "error-container": "#ffdad6",
+                "secondary-fixed-dim": "#72d3f6",
+                "outline": "#737785",
+                "tertiary": "#904900",
+                "primary": "#0154cc",
+                "background": "#fcf9f8",
+                "on-background": "#1b1b1b",
+                "outline-variant": "#c3c6d6",
+                "tertiary-fixed": "#ffdcc5",
+                "surface": "#fcf9f8",
+                "on-tertiary": "#ffffff",
+                "secondary-container": "#7bdbff",
+                "on-primary-fixed-variant": "#0040a0",
+                "on-primary-fixed": "#001847",
+                "on-secondary": "#ffffff",
+                "on-primary-container": "#fefcff",
+                "surface-bright": "#fcf9f8",
+                "surface-container-low": "#f6f3f2",
+                "surface-container": "#f0eded",
+                "on-tertiary-fixed-variant": "#703800",
+                "inverse-on-surface": "#f3f0ef",
+                "on-surface": "#1b1b1b",
+                "inverse-primary": "#b2c5ff",
+                "secondary": "#006780",
+                "on-tertiary-container": "#fffbff",
+                "tertiary-fixed-dim": "#ffb782",
+                "primary-fixed-dim": "#b2c5ff",
+                "on-secondary-fixed-variant": "#004d61"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "sidebar-width": "260px",
+                "margin-page": "32px",
+                "baseline": "4px",
+                "lg": "24px",
+                "gutter": "16px",
+                "md": "16px",
+                "container-margin": "24px",
+                "xl": "32px",
+                "sm": "8px",
+                "base": "4px",
+                "xs": "4px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Hanken Grotesk"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "body-sm": [
+                        "Inter"
+                ],
+                "headline-xl": [
+                        "Hanken Grotesk"
+                ],
+                "headline-md": [
+                        "Hanken Grotesk"
+                ],
+                "headline-lg": [
+                        "Hanken Grotesk"
+                ],
+                "headline-lg-mobile": [
+                        "Hanken Grotesk"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "14px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low min-h-screen text-on-surface font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest fixed left-0 top-0 h-screen w-sidebar-width border-r border-outline-variant z-50 hidden md:block">
+<div class="flex flex-col h-full py-baseline">
+<div class="px-6 py-4 mb-4">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">VendorBridge</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Enterprise ERP</p>
+</div>
+<div class="flex-1 overflow-y-auto">
+<ul class="space-y-1 mt-2 px-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined opacity-70">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 bg-primary-container text-on-primary-container font-label-md rounded-xl transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-body-md text-body-md">Vendors</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined opacity-70">request_quote</span>
+<span class="font-body-md text-body-md">RFQs</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined opacity-70">receipt_long</span>
+<span class="font-body-md text-body-md">Quotations</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined opacity-70">fact_check</span>
+<span class="font-body-md text-body-md">Approvals</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined opacity-70">shopping_cart</span>
+<span class="font-body-md text-body-md">Purchase Orders</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined opacity-70">description</span>
+<span class="font-body-md text-body-md">Invoices</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined opacity-70">assessment</span>
+<span class="font-body-md text-body-md">Reports</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined opacity-70">history</span>
+<span class="font-body-md text-body-md">Activity</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="px-4 py-4 border-t border-outline-variant mt-auto">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-2 px-4 rounded-xl font-label-md text-label-md hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    + Add New
+                </button>
+</div>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest fixed top-0 right-0 w-full md:w-[calc(100%-260px)] h-16 border-b border-outline-variant z-40 hidden md:block">
+<div class="flex items-center justify-between px-margin-page h-full">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-1.5 bg-surface-container-low border border-outline-variant rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:text-primary transition-all focus:ring-2 focus:ring-primary/20 outline-none rounded-full p-1"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary transition-all focus:ring-2 focus:ring-primary/20 outline-none rounded-full p-1"><span class="material-symbols-outlined">help_outline</span></button>
+<button class="hover:text-primary transition-all focus:ring-2 focus:ring-primary/20 outline-none rounded-full p-1"><span class="material-symbols-outlined">settings</span></button>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<button class="flex items-center gap-2 focus:ring-2 focus:ring-primary/20 outline-none rounded-full p-1">
+<img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida/AP1WRLsm0VkWHuM4hFd9bvuzLtMqDflPLYO3WbN9E4kdsv6lFdwvWyiyn4Iab6t4jDzcD7oRI9z6Lc6Uy6_VRcUb44hT1a1sOm4Ktl6t5CP7zWlR1UYmapOg7JOSBxiC2w_I2p6r3Wov9FJO4O1nDzraZePVg6dNSDdlKcm04lqkt0VzFDeUMRIh8l5lsOY3UwEjk0eeHD5SxrqvxzgFVHVVjEUmOkUr5Wd0PvNeaH3CdwwOPv3sYqBSDZwzUw"/>
+</button>
+</div>
+</div>
+</header>
+<!-- Mobile Header (Simplified) -->
+<header class="md:hidden bg-surface-container-lowest border-b border-outline-variant h-16 flex items-center justify-between px-4 sticky top-0 z-40">
+<h1 class="font-headline-md text-headline-md font-semibold text-primary">VendorBridge</h1>
+<button class="text-on-surface"><span class="material-symbols-outlined">menu</span></button>
+</header>
+<!-- Main Content -->
+<main class="pt-16 md:pl-sidebar-width min-h-screen">
+<div class="max-w-[1440px] mx-auto px-4 md:px-margin-page py-8">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-1">Vendors</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage supplier profiles and registrations.</p>
+</div>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-primary/90 transition-colors shadow-sm w-fit">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    + Add Vendor
+                </button>
+</div>
+<!-- Table Area Wrapper -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<!-- Toolbar / Filters -->
+<div class="p-4 flex flex-col md:flex-row gap-4 items-center justify-between border-b border-outline-variant">
+<div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+<div class="relative min-w-[160px]">
+<select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-xl px-3 py-1.5 pr-8 font-body-sm text-body-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+<option value="">All Statuses</option>
+<option value="active">Active</option>
+<option value="pending">Pending</option>
+<option value="inactive">Inactive</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[18px]">expand_more</span>
+</div>
+<div class="relative min-w-[180px]">
+<select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-xl px-3 py-1.5 pr-8 font-body-sm text-body-sm text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+<option value="">All Categories</option>
+<option value="hardware">Hardware Components</option>
+<option value="software">Software Licenses</option>
+<option value="services">Professional Services</option>
+<option value="logistics">Logistics &amp; Shipping</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[18px]">expand_more</span>
+</div>
+</div>
+<div class="relative w-full md:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 bg-surface-container-low border border-outline-variant rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" placeholder="Search vendors by name or ID..." type="text"/>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container border-b border-outline-variant">
+<tr>
+<th class="px-4 py-3 font-label-sm uppercase tracking-wider text-label-sm text-on-surface-variant w-24">Vendor ID</th>
+<th class="px-4 py-3 font-label-sm uppercase tracking-wider text-label-sm text-on-surface-variant">Vendor Name</th>
+<th class="px-4 py-3 font-label-sm uppercase tracking-wider text-label-sm text-on-surface-variant">Category</th>
+<th class="px-4 py-3 font-label-sm uppercase tracking-wider text-label-sm text-on-surface-variant">Contact</th>
+<th class="px-4 py-3 font-label-sm uppercase tracking-wider text-label-sm text-on-surface-variant">Location</th>
+<th class="px-4 py-3 font-label-sm uppercase tracking-wider text-label-sm text-on-surface-variant">Status</th>
+<th class="px-4 py-3 font-label-sm uppercase tracking-wider text-label-sm text-on-surface-variant text-right w-24">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-sm text-body-sm text-on-surface-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container/50 transition-colors group">
+<td class="px-4 py-3">VND-1042</td>
+<td class="px-4 py-3 font-label-md text-label-md text-on-surface">TechCorp Industries</td>
+<td class="px-4 py-3">Hardware Components</td>
+<td class="px-4 py-3">
+<div class="flex flex-col">
+<span class="text-on-surface">j.smith@techcorp.com</span>
+<span class="text-outline text-xs">+1 (555) 019-2834</span>
+</div>
+</td>
+<td class="px-4 py-3">San Jose, CA</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold tracking-wide bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#10B981] mr-1.5"></span>Active
+                                </span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container/50 transition-colors group">
+<td class="px-4 py-3">VND-1043</td>
+<td class="px-4 py-3 font-label-md text-label-md text-on-surface">Global Logistics Partners</td>
+<td class="px-4 py-3">Logistics &amp; Shipping</td>
+<td class="px-4 py-3">
+<div class="flex flex-col">
+<span class="text-on-surface">operations@glp.net</span>
+<span class="text-outline text-xs">+44 20 7123 4567</span>
+</div>
+</td>
+<td class="px-4 py-3">London, UK</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold tracking-wide bg-[#FFFBEB] text-[#92400E] border border-[#FDE68A]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#F59E0B] mr-1.5"></span>Pending
+                                </span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container/50 transition-colors group">
+<td class="px-4 py-3">VND-1044</td>
+<td class="px-4 py-3 font-label-md text-label-md text-on-surface">Apex Software Solutions</td>
+<td class="px-4 py-3">Software Licenses</td>
+<td class="px-4 py-3">
+<div class="flex flex-col">
+<span class="text-on-surface">licensing@apexsoft.io</span>
+<span class="text-outline text-xs">+1 (555) 982-3310</span>
+</div>
+</td>
+<td class="px-4 py-3">Austin, TX</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold tracking-wide bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#10B981] mr-1.5"></span>Active
+                                </span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container/50 transition-colors group">
+<td class="px-4 py-3">VND-1045</td>
+<td class="px-4 py-3 font-label-md text-label-md text-on-surface">Nexus Consultancies</td>
+<td class="px-4 py-3">Professional Services</td>
+<td class="px-4 py-3">
+<div class="flex flex-col">
+<span class="text-on-surface">contact@nexusconsult.com</span>
+<span class="text-outline text-xs">+1 (555) 443-8899</span>
+</div>
+</td>
+<td class="px-4 py-3">New York, NY</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold tracking-wide bg-[#FEF2F2] text-[#991B1B] border border-[#FECACA]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#EF4444] mr-1.5"></span>Inactive
+                                </span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-4 py-3 border-t border-outline-variant bg-surface-container-lowest flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1 to 4 of 48 entries</span>
+<div class="flex items-center gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary disabled:opacity-50" disabled=""><span class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+<button class="w-7 h-7 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center">1</button>
+<button class="w-7 h-7 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors">2</button>
+<button class="w-7 h-7 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors">3</button>
+<span class="px-1 text-outline">...</span>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

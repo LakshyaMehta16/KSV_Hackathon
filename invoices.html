@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>VendorBridge ERP - Purchase Order #2329</title>
+  <meta name="description" content="Purchase Order PO-2023-2329 for Global Tech Supplies Inc. View line items, generate invoice, print or email the official PO document."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+
+  <style>
+    /* ============================================================
+       Screen 8 — Purchase Order & Invoice Generation
+       Executive Precision Design System
+    ============================================================ */
+
+    body { background-color: var(--surface-background); min-height: 100vh; margin: 0; }
+
+    /* ── Sidebar ── */
+    .sidebar-nav { display: flex; flex-direction: column; gap: 4px; padding: 24px 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      text-decoration: none; color: var(--data-ink); font-family: var(--font-body);
+      font-size: 14px; font-weight: 500; border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover { background-color: #F0EDEC; color: var(--on-surface); }
+    .nav-item.active {
+      border-left-color: var(--primary) !important;
+      background-color: var(--surface-muted) !important;
+      color: var(--primary) !important; font-weight: 600;
+    }
+    .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: var(--primary); }
+    .nav-item .material-symbols-outlined { font-size: 20px; color: var(--outline); }
+
+    /* ── Shell ── */
+    .main-container {
+      margin-left: 260px; min-height: 100vh;
+      display: flex; flex-direction: column;
+      background-color: var(--surface-background);
+    }
+    .topbar {
+      background-color: var(--surface-container-lowest);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px; display: flex; align-items: center;
+      justify-content: space-between; height: 70px;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .mobile-menu-btn {
+      display: none; background: none; border: none;
+      cursor: pointer; color: var(--data-ink); padding: 0; margin-right: 12px;
+    }
+    .avatar-jd {
+      width: 36px; height: 36px; border-radius: 50%; background-color: #003FB1;
+      color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 13px; letter-spacing: 0.05em;
+    }
+
+    /* ── Page Content ── */
+    .page-content {
+      padding: 0 32px 64px 32px; max-width: 1200px;
+      width: 100%; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    /* ── Back Navigation ── */
+    .back-nav {
+      display: flex; align-items: center; gap: 6px;
+      padding: 20px 0 0 0;
+      text-decoration: none; color: var(--data-ink);
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      width: fit-content; transition: color 0.15s;
+    }
+    .back-nav:hover { color: var(--primary); }
+    .back-nav .material-symbols-outlined { font-size: 20px; }
+
+    /* ── Document Header Row ── */
+    .doc-header-row {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .doc-title-cluster { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .status-pill-success {
+      background-color: #D1FAE5; color: #065F46;
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 4px 8px; border-radius: 4px; white-space: nowrap;
+    }
+    .actions-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    /* ── Card base ── */
+    .card {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+    }
+
+    /* ── Vendor & Buyer Details Card ── */
+    .details-card {
+      padding: 24px;
+    }
+    .details-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .detail-section-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--outline); margin-bottom: 10px; display: block;
+    }
+    .company-name {
+      font-family: var(--font-body); font-size: 16px; font-weight: 600;
+      color: var(--on-surface); margin: 0 0 6px 0;
+    }
+    .address-block {
+      font-family: var(--font-body); font-size: 13px; color: var(--on-surface-variant);
+      line-height: 1.6; margin: 0 0 10px 0;
+    }
+    .contact-row {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--font-body); font-size: 13px;
+      color: var(--on-surface-variant); margin-bottom: 6px;
+    }
+    .contact-row .material-symbols-outlined { font-size: 16px; color: var(--outline); flex-shrink: 0; }
+    .contact-row a { color: var(--primary); text-decoration: none; }
+    .contact-row a:hover { text-decoration: underline; }
+    .vendor-id {
+      font-family: var(--font-headlines); font-size: 11px; font-weight: 500;
+      color: var(--outline); margin-top: 10px;
+    }
+
+    /* PO Metadata Strip */
+    .po-meta-divider { border: none; border-top: 1px solid var(--border-subtle); margin: 20px 0; }
+    .po-meta-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .po-meta-cell {}
+    .po-meta-label {
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--outline);
+      margin-bottom: 4px; display: block;
+    }
+    .po-meta-value {
+      font-family: var(--font-headlines); font-size: 14px; font-weight: 500;
+      color: var(--on-surface); letter-spacing: -0.01em;
+    }
+    .po-meta-value.primary { color: var(--primary); font-weight: 600; }
+
+    /* ── Line Items Table ── */
+    .line-items-card { overflow: hidden; }
+    .line-items-tbl {
+      width: 100%; border-collapse: collapse;
+    }
+    .line-items-tbl thead th {
+      background-color: var(--surface-muted);
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--data-ink);
+      padding: 12px 16px; border-bottom: 1px solid var(--border-subtle);
+    }
+    .line-items-tbl thead th:not(:first-child):not(:nth-child(2)) { text-align: right; }
+    .line-items-tbl thead th:first-child { text-align: center; width: 48px; }
+    .line-items-tbl tbody tr {
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background-color 0.15s;
+    }
+    .line-items-tbl tbody tr:last-child { border-bottom: none; }
+    .line-items-tbl tbody tr:hover { background-color: #F8FAFC; }
+    .line-items-tbl tbody td { padding: 16px; vertical-align: top; }
+    .line-items-tbl tbody td.cell-num {
+      text-align: center; font-family: var(--font-headlines);
+      font-size: 13px; font-weight: 500; color: var(--outline);
+    }
+    .line-items-tbl tbody td.cell-right {
+      text-align: right; font-family: var(--font-headlines);
+      font-size: 14px; font-weight: 500; color: var(--data-ink);
+      white-space: nowrap;
+    }
+    .line-items-tbl tbody td.cell-total {
+      text-align: right; font-family: var(--font-headlines);
+      font-size: 14px; font-weight: 600; color: var(--on-surface);
+      white-space: nowrap;
+    }
+    .item-name {
+      font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      color: var(--on-surface); margin: 0 0 3px 0;
+    }
+    .item-detail {
+      font-family: var(--font-body); font-size: 12px;
+      color: var(--outline); margin: 0; line-height: 1.4;
+    }
+
+    /* ── Special Instructions + Financial Summary ── */
+    .bottom-section {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .instructions-block {
+      padding: 24px; border-right: 1px solid var(--border-subtle);
+    }
+    .instructions-label {
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--data-ink); margin-bottom: 10px; display: block;
+    }
+    .instructions-text {
+      font-family: var(--font-body); font-size: 13px; color: var(--on-surface-variant);
+      line-height: 1.65; border: 1px solid var(--border-subtle);
+      border-radius: 2px; padding: 12px; background-color: var(--surface-muted);
+      margin: 0;
+    }
+
+    /* Financial Summary */
+    .financial-block { padding: 24px; }
+    .financial-label {
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--data-ink); margin-bottom: 14px; display: block;
+    }
+    .fin-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 0; border-bottom: 1px solid var(--border-subtle);
+    }
+    .fin-row:last-child { border-bottom: none; }
+    .fin-row-label {
+      font-family: var(--font-body); font-size: 13px;
+      color: var(--on-surface-variant);
+    }
+    .fin-row-label.bold {
+      font-weight: 700; font-size: 14px; color: var(--on-surface);
+    }
+    .fin-row-value {
+      font-family: var(--font-headlines); font-size: 14px; font-weight: 500;
+      color: var(--data-ink); text-align: right;
+    }
+    .fin-row-value.total {
+      font-size: 20px; font-weight: 700; color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+
+    /* ── Signature Block ── */
+    .signature-card {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px; padding: 24px;
+    }
+    .sig-label {
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--data-ink); margin-bottom: 32px; display: block;
+    }
+    .sig-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; align-items: end; }
+    .sig-field { display: flex; flex-direction: column; gap: 6px; }
+    .sig-line {
+      width: 100%; border: none; border-bottom: 1px solid var(--on-surface-variant);
+      height: 32px; background: none; outline: none;
+      font-family: var(--font-body); font-size: 13px; color: var(--outline);
+      letter-spacing: 0.02em;
+    }
+    .sig-line:focus { border-bottom-color: var(--primary); }
+    .sig-field-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--outline);
+    }
+
+    /* PO Brand stamp */
+    .po-stamp {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, #001D6C 0%, #003FB1 50%, #0154CC 100%);
+    }
+    .po-stamp-brand {
+      font-family: var(--font-headlines); font-size: 20px; font-weight: 700;
+      color: #FFFFFF; letter-spacing: -0.02em;
+    }
+    .po-stamp-tag {
+      font-family: var(--font-body); font-size: 10px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+    .po-doc-number {
+      margin-left: auto;
+      font-family: var(--font-headlines); font-size: 22px; font-weight: 700;
+      color: #FFFFFF; letter-spacing: -0.02em;
+    }
+
+    /* ── Send Email Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background-color: rgba(0,0,0,0.45);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background-color: #FFFFFF; border-radius: 8px;
+      width: 100%; max-width: 560px;
+      box-shadow: 0px 20px 25px -5px rgba(0,0,0,0.1), 0px 10px 10px -5px rgba(0,0,0,0.04);
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 16px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex; justify-content: flex-end; gap: 10px;
+    }
+
+    /* Modal form fields */
+    .modal-field { display: flex; flex-direction: column; gap: 5px; }
+    .modal-field-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--data-ink);
+    }
+    .modal-input-wrap { position: relative; display: flex; align-items: center; }
+    .modal-input-wrap .material-symbols-outlined {
+      position: absolute; left: 10px; font-size: 18px; color: var(--outline); pointer-events: none;
+    }
+    .modal-text-input {
+      width: 100%; background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 2px;
+      padding: 9px 12px 9px 36px;
+      font-family: var(--font-body); font-size: 13px; color: var(--on-surface);
+      outline: none; transition: border-color .15s, box-shadow .15s;
+    }
+    .modal-text-input.no-icon { padding-left: 12px; }
+    .modal-text-input:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+    .modal-text-input::placeholder { color: var(--outline); }
+    .modal-textarea {
+      width: 100%; background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 2px;
+      padding: 10px 12px; font-family: var(--font-body); font-size: 13px;
+      color: var(--on-surface); outline: none; resize: vertical;
+      line-height: 1.5; transition: border-color .15s, box-shadow .15s;
+    }
+    .modal-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+
+    /* Toggle checkbox row */
+    .attach-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .attach-toggle {
+      width: 18px; height: 18px; appearance: none;
+      border: 1px solid var(--border-subtle); border-radius: 4px;
+      background-color: var(--surface-container-lowest); cursor: pointer;
+      display: inline-grid; place-content: center;
+      transition: background-color .15s, border-color .15s; flex-shrink: 0;
+    }
+    .attach-toggle:checked { background-color: var(--success); border-color: var(--success); }
+    .attach-toggle:checked::before {
+      content: ''; width: 9px; height: 9px; background-color: white;
+      clip-path: polygon(14% 44%, 0 58%, 35% 93%, 100% 16%, 85% 2%, 35% 63%);
+    }
+    .attach-file-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background-color: var(--surface-muted); border: 1px solid var(--border-subtle);
+      border-radius: 4px; padding: 4px 10px;
+      font-family: var(--font-body); font-size: 12px; font-weight: 500; color: var(--data-ink);
+    }
+    .attach-file-chip .material-symbols-outlined { font-size: 14px; color: var(--error); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background-color: var(--on-surface); color: #FFFFFF;
+      border-radius: 4px; padding: 12px 20px;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18); z-index: 999;
+      transform: translateY(80px); opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+      pointer-events: none; min-width: 260px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .toast.success { background-color: var(--success); }
+
+    /* ── Print Styles ── */
+    @media print {
+      .sidebar, .topbar, .back-nav, .actions-row,
+      .doc-header-row .actions-row { display: none !important; }
+      .main-container { margin-left: 0 !important; }
+      .page-content { padding: 0 !important; max-width: 100% !important; }
+      body { background: white !important; }
+      .card, .line-items-card, .bottom-section, .signature-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .main-container { margin-left: 0; }
+      .sidebar { display: none !important; }
+      .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+    }
+    @media (max-width: 900px) {
+      .details-columns { grid-template-columns: 1fr; }
+      .po-meta-strip { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .bottom-section { grid-template-columns: 1fr; }
+      .instructions-block { border-right: none; border-bottom: 1px solid var(--border-subtle); }
+      .sig-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .page-content { padding: 0 16px 48px 16px; }
+      .topbar { padding: 16px 20px; }
+      .doc-header-row { flex-direction: column; align-items: flex-start; }
+      .po-meta-strip { grid-template-columns: 1fr 1fr; }
+      .sidebar {
+        position: fixed; left: -260px; top: 0; bottom: 0;
+        width: 260px; z-index: 100;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+      }
+      .sidebar-open .sidebar { left: 0; }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background-color: rgba(0,0,0,0.4); z-index: 90;
+      }
+      .sidebar-open .sidebar-overlay { display: block; }
+    }
+  </style>
+</head>
+<body class="sidebar-closed">
+
+  <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
+  <!-- ══════════════════════════════════════
+       Sidebar
+  ══════════════════════════════════════ -->
+  <aside class="sidebar" style="width:260px;background-color:var(--surface-muted);border-right:1px solid var(--border-subtle);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:50;">
+    <div style="padding:24px 16px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-subtle);">
+      <div style="width:36px;height:36px;border-radius:4px;background-color:#003FB1;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;">
+        <span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'FILL' 1;">account_tree</span>
+      </div>
+      <div>
+        <h2 class="headline-sm" style="color:var(--data-ink);font-weight:700;margin:0;line-height:1.1;font-size:15px;">VendorBridge</h2>
+        <span class="label-caps" style="color:var(--outline);font-size:9px;margin-top:2px;display:block;font-weight:700;">Enterprise ERP</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <a href="vendors.html" class="nav-item">
+        <span class="material-symbols-outlined">storefront</span>
+        Vendors
+      </a>
+      <a href="create_rfq.html" class="nav-item">
+        <span class="material-symbols-outlined">request_quote</span>
+        RFQs
+      </a>
+      <a href="submit_quote.html" class="nav-item">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Quotations
+      </a>
+      <a href="compare_quotes.html" class="nav-item">
+        <span class="material-symbols-outlined">compare_arrows</span>
+        Comparison
+      </a>
+      <a href="approval.html" class="nav-item">
+        <span class="material-symbols-outlined">fact_check</span>
+        Approvals
+      </a>
+      <a href="purchase_order.html" class="nav-item">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        Purchase Orders
+      </a>
+      <a href="invoices.html" class="nav-item active">
+        <span class="material-symbols-outlined">description</span>
+        Invoices
+      </a>
+      <a href="reports_analytics.html" class="nav-item">
+        <span class="material-symbols-outlined">assessment</span>
+        Reports
+      </a>
+      <a href="activity_logs.html" class="nav-item">
+        <span class="material-symbols-outlined">history</span>
+        Activity
+      </a>
+      <a href="user_management.html" class="nav-item">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        User Management
+      </a>
+    </nav>
+    <div style="padding:16px;margin-top:auto;border-top:1px solid var(--border-subtle);">
+      <button class="btn btn-success" onclick="window.location.href='vendors.html#add-vendor'" style="width:100%;height:40px;border-radius:4px;font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase;">
+        <span class="material-symbols-outlined" style="font-size:18px;">add</span>Add New
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════
+       Main Container
+  ══════════════════════════════════════ -->
+  <div class="main-container">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle navigation">
+          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
+        </button>
+        <h1 class="headline-md" style="color:var(--on-surface);">Invoices</h1>
+      </div>
+      <div style="background-color:#F0EDEC;border-radius:9999px;display:flex;align-items:center;padding:6px 16px;width:380px;gap:8px;">
+        <span class="material-symbols-outlined" style="color:var(--outline);font-size:20px;">search</span>
+        <input type="text" style="background:none;border:none;outline:none;font-family:var(--font-body);font-size:14px;color:var(--on-surface);width:100%;" placeholder="Search purchase orders…"/>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Notifications"><span class="material-symbols-outlined" style="font-size:22px;">notifications</span></button>
+        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size:22px;">help_outline</span></button>
+        <button class="icon-btn" aria-label="Settings"><span class="material-symbols-outlined" style="font-size:22px;">settings</span></button>
+        <div class="avatar-jd">JD</div>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════
+         Page Content
+    ══════════════════════════════════════ -->
+    <main class="page-content">
+
+      <!-- 8.1 — Back Navigation -->
+      <a href="#" class="back-nav" onclick="history.back(); return false;" aria-label="Back to Purchase Orders list">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Back to Purchase Orders
+      </a>
+
+      <!-- Document Identity + Actions Row -->
+      <div class="doc-header-row">
+        <div class="doc-title-cluster">
+          <h2 class="headline-md" style="color:var(--on-surface);margin:0;">Purchase Order #2329</h2>
+          <span class="status-pill-success">Approved &amp; Issued</span>
+        </div>
+        <div class="actions-row">
+          <button class="btn btn-secondary" onclick="handlePrint('po')" style="height:36px;padding:0 14px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border-radius:4px;" aria-label="Print Purchase Order">
+            <span class="material-symbols-outlined" style="font-size:18px;">print</span>Print PO
+          </button>
+          <button class="btn btn-secondary" onclick="handleDownload()" style="height:36px;padding:0 14px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border-radius:4px;" aria-label="Download PDF">
+            <span class="material-symbols-outlined" style="font-size:18px;">download</span>Download PDF
+          </button>
+          <button class="btn btn-secondary" onclick="handlePrint('invoice')" style="height:36px;padding:0 14px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border-radius:4px;" aria-label="Print Invoice">
+            <span class="material-symbols-outlined" style="font-size:18px;">receipt</span>Print Invoice
+          </button>
+          <button class="btn btn-primary" onclick="openEmailModal()" style="height:36px;padding:0 14px;font-size:13px;font-weight:600;background-color:var(--primary);display:inline-flex;align-items:center;gap:6px;border-radius:4px;" aria-label="Send Invoice via Email">
+            <span class="material-symbols-outlined" style="font-size:18px;">send</span>Send Email
+          </button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PO Document Begins Here
+      ══════════════════════════════════════ -->
+
+      <!-- Brand Stamp Header -->
+      <div class="card" style="overflow:hidden;border-radius:4px;">
+        <div class="po-stamp">
+          <div>
+            <p class="po-stamp-brand">VendorBridge</p>
+            <p class="po-stamp-tag">Enterprise ERP — Purchase Order</p>
+          </div>
+          <div class="po-doc-number">PO-2023-2329</div>
+        </div>
+
+        <!-- 8.2 — Vendor & Buyer Details -->
+        <div class="details-card">
+          <div class="details-columns">
+
+            <!-- Vendor Details -->
+            <div>
+              <span class="detail-section-label">Vendor Details</span>
+              <p class="company-name">Global Tech Supplies Inc.</p>
+              <p class="address-block">
+                100 Silicon Way, Suite 400<br/>
+                San Jose, CA 95131<br/>
+                United States
+              </p>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">mail</span>
+                <a href="mailto:accounting@globaltech.com">accounting@globaltech.com</a>
+              </div>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">call</span>
+                <span>+1 (555) 123-4567</span>
+              </div>
+              <p class="vendor-id">Vendor ID: VEN-88492-XT</p>
+            </div>
+
+            <!-- Bill To / Ship To -->
+            <div>
+              <span class="detail-section-label">Bill To / Ship To</span>
+              <p class="company-name">VendorBridge Enterprise</p>
+              <p class="address-block">
+                4500 Enterprise Blvd, Building B<br/>
+                New York, NY 10001<br/>
+                United States
+              </p>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">person</span>
+                <span>Attn: Procurement Dept</span>
+              </div>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">mail</span>
+                <a href="mailto:ap@vendorbridge.com">ap@vendorbridge.com</a>
+              </div>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">call</span>
+                <span>+1 (212) 555-9100</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PO Metadata Strip -->
+          <hr class="po-meta-divider"/>
+          <div class="po-meta-strip" role="list" aria-label="Purchase order metadata">
+            <div class="po-meta-cell">
+              <span class="po-meta-label">PO Number</span>
+              <span class="po-meta-value primary">PO-2023-2329</span>
+            </div>
+            <div class="po-meta-cell">
+              <span class="po-meta-label">Issue Date</span>
+              <span class="po-meta-value">Oct 24, 2023</span>
+            </div>
+            <div class="po-meta-cell">
+              <span class="po-meta-label">Expected Delivery</span>
+              <span class="po-meta-value">Nov 15, 2023</span>
+            </div>
+            <div class="po-meta-cell">
+              <span class="po-meta-label">Payment Terms</span>
+              <span class="po-meta-value">Net 30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8.3 — Line Items Table -->
+      <div class="card line-items-card" role="region" aria-label="Purchase order line items">
+        <table class="line-items-tbl" aria-label="Line items">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th style="text-align:left;">Item Description</th>
+              <th style="text-align:right;">Qty</th>
+              <th style="text-align:right;">Unit Price</th>
+              <th style="text-align:right;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-num">01</td>
+              <td>
+                <p class="item-name">ThinkPad X1 Carbon Gen 10</p>
+                <p class="item-detail">Intel Core i7, 32GB RAM, 1TB SSD &nbsp;·&nbsp; Part# 21CB000GUS</p>
+              </td>
+              <td class="cell-right">15</td>
+              <td class="cell-right">$1,850.00</td>
+              <td class="cell-total">$27,750.00</td>
+            </tr>
+            <tr>
+              <td class="cell-num">02</td>
+              <td>
+                <p class="item-name">Dell UltraSharp 27 4K USB-C Hub Monitor</p>
+                <p class="item-detail">U2723QE &nbsp;·&nbsp; Dual Setup Configuration</p>
+              </td>
+              <td class="cell-right">30</td>
+              <td class="cell-right">$620.00</td>
+              <td class="cell-total">$18,600.00</td>
+            </tr>
+            <tr>
+              <td class="cell-num">03</td>
+              <td>
+                <p class="item-name">Logitech MX Master 3S Wireless Mouse</p>
+                <p class="item-detail">Graphite &nbsp;·&nbsp; Enterprise Edition</p>
+              </td>
+              <td class="cell-right">15</td>
+              <td class="cell-right">$99.00</td>
+              <td class="cell-total">$1,485.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 8.4 — Special Instructions + Financial Summary -->
+      <div class="bottom-section">
+
+        <!-- Instructions -->
+        <div class="instructions-block">
+          <span class="instructions-label">Special Instructions &amp; Notes</span>
+          <p class="instructions-text">
+            Please ensure all deliveries are made to the loading dock at the rear of Building B. Deliveries accepted Monday through Friday, 8:00 AM to 4:00 PM EST only. All packages must reference <strong>PO-2023-2329</strong> on the external packing slip.
+          </p>
+          <!-- Bank details for payment -->
+          <div style="margin-top:16px;padding:12px 14px;background-color:var(--surface-muted);border:1px solid var(--border-subtle);border-radius:4px;">
+            <span style="font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--outline);display:block;margin-bottom:8px;">Payment Reference</span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div>
+                <span style="font-size:11px;color:var(--outline);font-family:var(--font-body);display:block;">Bank Name</span>
+                <span style="font-size:13px;font-family:var(--font-headlines);font-weight:500;color:var(--on-surface);">Chase Commercial</span>
+              </div>
+              <div>
+                <span style="font-size:11px;color:var(--outline);font-family:var(--font-body);display:block;">Account #</span>
+                <span style="font-size:13px;font-family:var(--font-headlines);font-weight:500;color:var(--on-surface);">****4829</span>
+              </div>
+              <div>
+                <span style="font-size:11px;color:var(--outline);font-family:var(--font-body);display:block;">Routing #</span>
+                <span style="font-size:13px;font-family:var(--font-headlines);font-weight:500;color:var(--on-surface);">021000021</span>
+              </div>
+              <div>
+                <span style="font-size:11px;color:var(--outline);font-family:var(--font-body);display:block;">Reference</span>
+                <span style="font-size:13px;font-family:var(--font-headlines);font-weight:500;color:var(--primary);">INV-2023-2329</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="financial-block">
+          <span class="financial-label">Financial Summary</span>
+          <div class="fin-row">
+            <span class="fin-row-label">Subtotal</span>
+            <span class="fin-row-value">$47,835.00</span>
+          </div>
+          <div class="fin-row">
+            <span class="fin-row-label">Tax (8.875%)</span>
+            <span class="fin-row-value">$4,245.36</span>
+          </div>
+          <div class="fin-row">
+            <span class="fin-row-label">Shipping &amp; Freight</span>
+            <span class="fin-row-value">$150.00</span>
+          </div>
+          <div class="fin-row" style="border-top: 2px solid var(--border-subtle);margin-top:4px;padding-top:12px;">
+            <span class="fin-row-label bold">Total Amount</span>
+            <span class="fin-row-value total">$52,230.36</span>
+          </div>
+
+          <!-- Due date chip -->
+          <div style="margin-top:16px;background-color:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:10px 14px;display:flex;align-items:center;gap:8px;">
+            <span class="material-symbols-outlined" style="font-size:18px;color:var(--primary);">event</span>
+            <div>
+              <p style="font-family:var(--font-body);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);margin:0 0 2px 0;">Payment Due</p>
+              <p style="font-family:var(--font-headlines);font-size:14px;font-weight:600;color:var(--primary);margin:0;">Nov 23, 2023 (Net 30)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8.5 — Authorized Signature Block -->
+      <div class="signature-card">
+        <span class="sig-label">Authorization</span>
+        <div class="sig-grid">
+          <div class="sig-field">
+            <span class="sig-field-label">Authorized Signature (Purchasing)</span>
+            <input type="text" class="sig-line" placeholder="Name &amp; Title" aria-label="Authorized signature name and title"/>
+          </div>
+          <div class="sig-field">
+            <span class="sig-field-label">Date</span>
+            <input type="date" class="sig-line" aria-label="Authorization date"/>
+          </div>
+        </div>
+        <!-- Official seal / footer -->
+        <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;border-radius:4px;background-color:#003FB1;display:flex;align-items:center;justify-content:center;">
+              <span class="material-symbols-outlined" style="font-size:18px;color:#fff;font-variation-settings:'FILL' 1;">account_tree</span>
+            </div>
+            <div>
+              <p style="font-family:var(--font-headlines);font-size:13px;font-weight:700;color:var(--data-ink);margin:0;">VendorBridge Enterprise</p>
+              <p style="font-family:var(--font-body);font-size:11px;color:var(--outline);margin:0;">This is a legally binding purchase order.</p>
+            </div>
+          </div>
+          <p style="font-family:var(--font-headlines);font-size:12px;color:var(--outline);margin:0;letter-spacing:-0.01em;">PO-2023-2329 &nbsp;·&nbsp; Issued Oct 24, 2023 &nbsp;·&nbsp; Page 1 of 1</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       8.6 — Send Invoice Modal
+  ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="email-modal" role="dialog" aria-modal="true" aria-labelledby="email-modal-title">
+    <div class="modal-box">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background-color:#EFF6FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span class="material-symbols-outlined" style="font-size:20px;color:var(--primary);font-variation-settings:'FILL' 1;">forward_to_inbox</span>
+          </div>
+          <h3 id="email-modal-title" class="headline-sm" style="margin:0;color:var(--on-surface);">Send Invoice via Email</h3>
+        </div>
+        <button onclick="closeEmailModal()" style="background:none;border:none;cursor:pointer;color:var(--outline);display:flex;align-items:center;padding:4px;border-radius:2px;" aria-label="Close email modal">
+          <span class="material-symbols-outlined" style="font-size:22px;">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+
+        <!-- To field -->
+        <div class="modal-field">
+          <label for="email-to" class="modal-field-label">To</label>
+          <div class="modal-input-wrap">
+            <span class="material-symbols-outlined">person</span>
+            <input type="email" id="email-to" class="modal-text-input" placeholder="recipient@company.com" value="accounting@globaltech.com" aria-label="Email recipient"/>
+          </div>
+        </div>
+
+        <!-- CC field -->
+        <div class="modal-field">
+          <label for="email-cc" class="modal-field-label">CC</label>
+          <div class="modal-input-wrap">
+            <span class="material-symbols-outlined">group</span>
+            <input type="email" id="email-cc" class="modal-text-input" placeholder="cc@company.com" aria-label="CC email recipients"/>
+          </div>
+        </div>
+
+        <!-- Subject field -->
+        <div class="modal-field">
+          <label for="email-subject" class="modal-field-label">Subject</label>
+          <div class="modal-input-wrap">
+            <span class="material-symbols-outlined">subject</span>
+            <input type="text" id="email-subject" class="modal-text-input" value="Invoice INV-2023-2329 from VendorBridge Enterprise" aria-label="Email subject"/>
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div class="modal-field">
+          <label for="email-message" class="modal-field-label">Message</label>
+          <textarea
+            id="email-message"
+            class="modal-textarea"
+            rows="5"
+            aria-label="Email message body"
+          >Dear Global Tech Supplies Inc.,
+
+Please find attached Invoice INV-2023-2329 for Purchase Order PO-2023-2329 (Office Furniture Procurement).
+
+Total Amount Due: $52,230.36 — Payment due by Nov 23, 2023 (Net 30).
+
+Please reference the invoice number on all correspondence and payment remittances. Contact ap@vendorbridge.com with any questions.
+
+Thank you for your partnership.
+
+Regards,
+VendorBridge Procurement Team</textarea>
+        </div>
+
+        <!-- Attach Invoice toggle -->
+        <div class="attach-row">
+          <input type="checkbox" class="attach-toggle" id="attach-pdf" checked aria-label="Attach invoice PDF"/>
+          <label for="attach-pdf" style="font-family:var(--font-body);font-size:13px;color:var(--data-ink);cursor:pointer;">Attach Invoice PDF</label>
+          <div class="attach-file-chip" id="attach-chip">
+            <span class="material-symbols-outlined" style="font-size:14px;color:var(--error);font-variation-settings:'FILL' 1;">picture_as_pdf</span>
+            Invoice_PO-2023-2329.pdf
+            <span style="font-family:var(--font-body);font-size:11px;color:var(--outline);">&nbsp;(1.2 MB)</span>
+          </div>
+        </div>
+
+      </div><!-- /modal-body -->
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeEmailModal()" style="height:36px;padding:0 16px;font-size:13px;border-radius:4px;">Cancel</button>
+        <button class="btn btn-primary" onclick="handleSendEmail()" style="height:36px;padding:0 16px;font-size:13px;font-weight:600;background-color:var(--primary);border-radius:4px;display:inline-flex;align-items:center;gap:6px;" id="send-email-btn">
+          <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+          Send Invoice
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast-notification" role="alert" aria-live="assertive">
+    <span class="material-symbols-outlined" id="toast-icon" style="font-size:20px;">check_circle</span>
+    <span id="toast-message">Done.</span>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       JavaScript
+  ══════════════════════════════════════ -->
+  <script>
+    /* ── Email Modal ── */
+    function openEmailModal() {
+      document.getElementById('email-modal').classList.add('open');
+      document.getElementById('email-to').focus();
+    }
+    function closeEmailModal() {
+      document.getElementById('email-modal').classList.remove('open');
+    }
+
+    function handleSendEmail() {
+      const to = document.getElementById('email-to').value.trim();
+      if (!to) {
+        document.getElementById('email-to').focus();
+        document.getElementById('email-to').style.borderColor = 'var(--error)';
+        return;
+      }
+      const btn = document.getElementById('send-email-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;animation:spin .6s linear infinite;">autorenew</span> Sending…`;
+
+      setTimeout(() => {
+        closeEmailModal();
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">send</span> Send Invoice`;
+        showToast('Invoice emailed to accounting@globaltech.com', 'success', 'mark_email_read');
+      }, 1400);
+    }
+
+    /* ── Attach toggle chip visibility ── */
+    document.getElementById('attach-pdf').addEventListener('change', function() {
+      document.getElementById('attach-chip').style.opacity = this.checked ? '1' : '0.4';
+    });
+
+    /* ── Print ── */
+    function handlePrint(type) {
+      showToast(`Opening ${type === 'invoice' ? 'Invoice' : 'PO'} print dialog…`, '', 'print');
+      setTimeout(() => window.print(), 800);
+    }
+
+    /* ── Download ── */
+    function handleDownload() {
+      showToast('PO-2023-2329.pdf downloading…', '', 'download');
+    }
+
+    /* ── Toast ── */
+    function showToast(message, type = '', icon = 'info') {
+      const toast  = document.getElementById('toast-notification');
+      const msgEl  = document.getElementById('toast-message');
+      const iconEl = document.getElementById('toast-icon');
+
+      toast.className = 'toast' + (type ? ' ' + type : '');
+      msgEl.textContent = message;
+      iconEl.textContent = icon;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3800);
+    }
+
+    /* ── Mobile Sidebar ── */
+    function toggleMobileSidebar() { document.body.classList.toggle('sidebar-open'); }
+
+    /* ── Close modal on overlay click / Escape ── */
+    document.getElementById('email-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeEmailModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeEmailModal();
+    });
+
+    /* ── Clear email error on type ── */
+    document.getElementById('email-to').addEventListener('input', function() {
+      this.style.borderColor = '';
+    });
+
+    /* ── Update all PO links across app ── */
+    // Update other sidebars' Purchase Orders link on first visit (no-op if already done)
+  </script>
+</body>
+</html>

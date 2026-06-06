@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>VendorBridge ERP - Quotation Comparison</title>
+  <meta name="description" content="Compare vendor quotations side-by-side for RFQ-2023-089. Evaluate pricing, delivery timelines, and ratings to select the best supplier."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+
+  <style>
+    /* ============================================================
+       Screen 6 — Quotation Comparison
+       Executive Precision Design System
+    ============================================================ */
+
+    body { background-color: var(--surface-background); min-height: 100vh; margin: 0; }
+
+    /* ── Sidebar ── */
+    .sidebar-nav { display: flex; flex-direction: column; gap: 4px; padding: 24px 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      text-decoration: none; color: var(--data-ink); font-family: var(--font-body);
+      font-size: 14px; font-weight: 500; border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover { background-color: #F0EDEC; color: var(--on-surface); }
+    .nav-item.active {
+      border-left-color: var(--primary) !important;
+      background-color: var(--surface-muted) !important;
+      color: var(--primary) !important; font-weight: 600;
+    }
+    .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: var(--primary); }
+    .nav-item .material-symbols-outlined { font-size: 20px; color: var(--outline); }
+
+    /* ── Shell ── */
+    .main-container {
+      margin-left: 260px; min-height: 100vh; display: flex;
+      flex-direction: column; background-color: var(--surface-background);
+    }
+    .topbar {
+      background-color: var(--surface-container-lowest);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px; display: flex; align-items: center;
+      justify-content: space-between; height: 70px;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .mobile-menu-btn {
+      display: none; background: none; border: none;
+      cursor: pointer; color: var(--data-ink); padding: 0; margin-right: 12px;
+    }
+    .avatar-jd {
+      width: 36px; height: 36px; border-radius: 50%; background-color: #003FB1;
+      color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 13px; letter-spacing: 0.05em;
+    }
+
+    /* ── Page Content ── */
+    .page-content {
+      padding: 0 32px 48px 32px; max-width: 1440px;
+      width: 100%; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .page-header-row {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 24px 0 0 0; gap: 16px; flex-wrap: wrap;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 4px;
+      color: var(--outline); margin-bottom: 6px;
+    }
+    .breadcrumb a { color: var(--outline); text-decoration: none; font-weight: 400; transition: color 0.15s; }
+    .breadcrumb a:hover { color: var(--primary); }
+    .action-row { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    /* ── Filter/Sort Inline Panel ── */
+    .filter-sort-panel {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 0 24px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  padding 0.25s ease, opacity 0.25s ease;
+      opacity: 0;
+    }
+    .filter-sort-panel.open {
+      max-height: 160px;
+      padding: 16px 24px;
+      opacity: 1;
+    }
+    .filter-sort-inner {
+      display: flex; align-items: flex-start; gap: 40px; flex-wrap: wrap;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 8px; }
+    .filter-group-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--data-ink);
+    }
+    .filter-select {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 2px;
+      padding: 8px 32px 8px 10px; font-family: var(--font-body); font-size: 13px;
+      color: var(--on-surface); outline: none; cursor: pointer;
+      appearance: none; min-width: 200px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737686' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+    }
+    .filter-select:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+
+    .vendor-checkbox-group { display: flex; gap: 16px; flex-wrap: wrap; }
+    .vendor-checkbox-label {
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+      font-family: var(--font-body); font-size: 13px; color: var(--data-ink);
+      user-select: none;
+    }
+    .vendor-checkbox-label input[type="checkbox"] {
+      appearance: none; width: 16px; height: 16px;
+      border: 1px solid var(--border-subtle); border-radius: 3px;
+      background-color: var(--surface-container-lowest); cursor: pointer;
+      display: inline-grid; place-content: center;
+      transition: background-color 0.15s, border-color 0.15s;
+    }
+    .vendor-checkbox-label input[type="checkbox"]:checked {
+      background-color: var(--primary); border-color: var(--primary);
+    }
+    .vendor-checkbox-label input[type="checkbox"]:checked::before {
+      content: "";  width: 8px; height: 8px; background-color: white;
+      clip-path: polygon(14% 44%, 0 58%, 35% 93%, 100% 16%, 85% 2%, 35% 63%);
+    }
+
+    /* Expand toggle */
+    .expand-toggle {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      font-family: var(--font-body); font-size: 13px; color: var(--data-ink);
+      background: none; border: none; padding: 0;
+    }
+    .toggle-track {
+      width: 36px; height: 20px; border-radius: 9999px;
+      background-color: var(--border-subtle); position: relative;
+      transition: background-color 0.2s ease; flex-shrink: 0;
+    }
+    .toggle-track.on { background-color: var(--primary); }
+    .toggle-thumb {
+      width: 14px; height: 14px; border-radius: 50%;
+      background-color: #FFFFFF; position: absolute;
+      top: 3px; left: 3px;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle-track.on .toggle-thumb { transform: translateX(16px); }
+
+    /* ── Comparison Table Card ── */
+    .comparison-card {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    /* Criteria column */
+    .col-criteria {
+      width: 200px;
+      background-color: var(--surface-muted);
+      border-right: 1px solid var(--border-subtle);
+      padding: 16px 20px;
+      vertical-align: middle;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--data-ink);
+      min-height: 56px;
+    }
+
+    /* Vendor header cells */
+    .vendor-header-cell {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      vertical-align: top;
+    }
+    .vendor-header-cell:last-child { border-right: none; }
+
+    .vendor-header-cell.recommended {
+      background-color: #EFF6FF;
+    }
+
+    .recommended-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.05em; color: var(--primary);
+      background-color: #DBEAFE; border-radius: 9999px;
+      padding: 2px 8px; margin-bottom: 6px;
+    }
+
+    /* Data rows */
+    .comparison-table tbody tr {
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .comparison-table tbody tr:last-child { border-bottom: none; }
+
+    .comparison-table tbody td {
+      padding: 18px 20px;
+      border-right: 1px solid var(--border-subtle);
+      vertical-align: middle;
+    }
+    .comparison-table tbody td:last-child { border-right: none; }
+    .comparison-table tbody td.col-criteria {
+      background-color: var(--surface-muted);
+    }
+
+    /* Vendor column recommended tint on body cells */
+    .comparison-table tbody td.recommended-col {
+      background-color: #FAFCFF;
+    }
+
+    /* ── Price Cell States ── */
+    .price-cell-lowest {
+      background-color: #ECFDF5 !important;
+    }
+    .price-val-lowest {
+      font-family: var(--font-headlines);
+      font-size: 16px; font-weight: 600;
+      color: #065F46;
+      display: block;
+    }
+    .lowest-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      margin-top: 4px;
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      color: var(--success); letter-spacing: 0.03em;
+    }
+    .price-val-normal {
+      font-family: var(--font-headlines);
+      font-size: 16px; font-weight: 500;
+      color: var(--on-surface);
+      display: block;
+    }
+    .price-val-high {
+      font-family: var(--font-headlines);
+      font-size: 16px; font-weight: 500;
+      color: var(--on-surface-variant);
+      display: block;
+    }
+
+    /* ── Timeline Cell States ── */
+    .timeline-fastest {
+      font-family: var(--font-headlines);
+      font-size: 14px; font-weight: 500;
+      color: var(--on-surface);
+    }
+    .timeline-middle {
+      font-family: var(--font-headlines);
+      font-size: 14px; font-weight: 500;
+      color: var(--on-surface-variant);
+    }
+    .timeline-slowest {
+      font-family: var(--font-headlines);
+      font-size: 14px; font-weight: 500;
+      color: #B45309;
+    }
+    .timeline-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      margin-top: 4px;
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      color: #B45309; letter-spacing: 0.03em;
+    }
+
+    /* ── Star Rating ── */
+    .star-rating-cell {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .stars { display: flex; align-items: center; gap: 1px; }
+    .star-icon { font-size: 16px; }
+    .star-filled { color: #D97706; }
+    .star-half { color: #D97706; opacity: 0.6; }
+    .star-empty { color: #E5E7EB; }
+    .rating-text {
+      font-family: var(--font-headlines);
+      font-size: 13px; font-weight: 500;
+      color: #D97706;
+      white-space: nowrap;
+    }
+
+    /* ── Sub-items Expandable ── */
+    .sub-items-row {
+      display: none;
+    }
+    .sub-items-row.expanded { display: table-row; }
+    .sub-items-cell {
+      padding: 0 !important;
+      background-color: #FAFAFA;
+    }
+    .sub-items-cell.col-criteria {
+      background-color: #F0F2FA !important;
+    }
+    .sub-item-inner {
+      padding: 10px 20px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .sub-item-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-body); font-size: 12px; color: var(--data-ink);
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+    .sub-item-row:last-child { border-bottom: none; }
+    .sub-item-name { color: var(--outline); font-size: 11px; font-weight: 600; text-transform: uppercase; }
+    .sub-item-val {
+      font-family: var(--font-headlines); font-size: 12px;
+      font-weight: 500; color: var(--data-ink);
+    }
+
+    /* Expand row trigger arrow */
+    .row-expand-btn {
+      background: none; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 4px;
+      color: var(--outline); font-size: 11px; font-family: var(--font-body);
+      padding: 0; margin-top: 4px; letter-spacing: 0.04em;
+      transition: color 0.15s;
+    }
+    .row-expand-btn:hover { color: var(--primary); }
+    .row-expand-btn .material-symbols-outlined {
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+    .row-expand-btn.expanded .material-symbols-outlined {
+      transform: rotate(180deg);
+    }
+
+    /* ── Summary Stats Bar ── */
+    .stats-bar {
+      display: flex; gap: 0;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px; overflow: hidden;
+      background-color: var(--surface-container-lowest);
+    }
+    .stat-block {
+      flex: 1; padding: 16px 20px;
+      border-right: 1px solid var(--border-subtle);
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-block:last-child { border-right: none; }
+    .stat-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--outline);
+    }
+    .stat-value {
+      font-family: var(--font-headlines); font-size: 20px;
+      font-weight: 600; color: var(--on-surface); letter-spacing: -0.02em;
+    }
+    .stat-sub {
+      font-family: var(--font-body); font-size: 12px; color: var(--outline);
+    }
+
+    /* ── Modals ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background-color: rgba(0,0,0,0.45);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background-color: #FFFFFF; border-radius: 8px; padding: 32px;
+      width: 100%; max-width: 520px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+    .modal-box-wide { max-width: 700px; }
+    .modal-icon-ring {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .modal-icon-ring .material-symbols-outlined {
+      font-size: 26px; font-variation-settings: 'FILL' 1;
+    }
+    .modal-actions {
+      display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end;
+    }
+
+    /* Doc preview mock */
+    .doc-preview-area {
+      background-color: var(--surface-muted); border: 1px solid var(--border-subtle);
+      border-radius: 4px; padding: 24px; margin-top: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .doc-row {
+      display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 4px;
+    }
+    .doc-icon { font-size: 20px; color: var(--primary); }
+    .doc-name { font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--on-surface); }
+    .doc-size { font-family: var(--font-body); font-size: 12px; color: var(--outline); margin-left: auto; }
+
+    /* Award confirm */
+    .award-vendor-name {
+      font-family: var(--font-headlines); font-size: 18px; font-weight: 600;
+      color: var(--on-surface); margin: 8px 0 4px 0;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background-color: var(--on-surface); color: #FFFFFF;
+      border-radius: 4px; padding: 12px 20px;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18); z-index: 999;
+      transform: translateY(80px); opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+      pointer-events: none; min-width: 260px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .toast.success { background-color: var(--success); }
+    .toast.error   { background-color: var(--error); }
+
+    /* Active filter/sort button state */
+    .btn-filter-active {
+      background-color: var(--surface-muted) !important;
+      border-color: var(--primary) !important;
+      color: var(--primary) !important;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .main-container { margin-left: 0; }
+      .sidebar { display: none !important; }
+      .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+    }
+    @media (max-width: 768px) {
+      .page-content { padding: 0 16px 48px 16px; }
+      .topbar { padding: 16px 20px; }
+      .page-header-row { flex-direction: column; align-items: flex-start; }
+      .comparison-table { font-size: 12px; }
+      .col-criteria { width: 120px; padding: 12px; }
+      .sidebar {
+        position: fixed; left: -260px; top: 0; bottom: 0;
+        width: 260px; z-index: 100;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+      }
+      .sidebar-open .sidebar { left: 0; }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background-color: rgba(0,0,0,0.4); z-index: 90;
+      }
+      .sidebar-open .sidebar-overlay { display: block; }
+      .stats-bar { flex-direction: column; }
+      .stat-block { border-right: none; border-bottom: 1px solid var(--border-subtle); }
+      .stat-block:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body class="sidebar-closed">
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
+  <!-- ══════════════════════════════════════
+       Sidebar
+  ══════════════════════════════════════ -->
+  <aside class="sidebar" style="width:260px;background-color:var(--surface-muted);border-right:1px solid var(--border-subtle);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:50;">
+    <div style="padding:24px 16px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-subtle);">
+      <div style="width:36px;height:36px;border-radius:4px;background-color:#003FB1;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;">
+        <span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'FILL' 1;">account_tree</span>
+      </div>
+      <div>
+        <h2 class="headline-sm" style="color:var(--data-ink);font-weight:700;margin:0;line-height:1.1;font-size:15px;">VendorBridge</h2>
+        <span class="label-caps" style="color:var(--outline);font-size:9px;margin-top:2px;display:block;font-weight:700;">Enterprise ERP</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <a href="vendors.html" class="nav-item">
+        <span class="material-symbols-outlined">storefront</span>
+        Vendors
+      </a>
+      <a href="create_rfq.html" class="nav-item">
+        <span class="material-symbols-outlined">request_quote</span>
+        RFQs
+      </a>
+      <a href="submit_quote.html" class="nav-item">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Quotations
+      </a>
+      <a href="compare_quotes.html" class="nav-item active">
+        <span class="material-symbols-outlined">compare_arrows</span>
+        Comparison
+      </a>
+      <a href="approval.html" class="nav-item">
+        <span class="material-symbols-outlined">fact_check</span>
+        Approvals
+      </a>
+      <a href="purchase_order.html" class="nav-item">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        Purchase Orders
+      </a>
+      <a href="invoices.html" class="nav-item">
+        <span class="material-symbols-outlined">description</span>
+        Invoices
+      </a>
+      <a href="reports_analytics.html" class="nav-item">
+        <span class="material-symbols-outlined">assessment</span>
+        Reports
+      </a>
+      <a href="activity_logs.html" class="nav-item">
+        <span class="material-symbols-outlined">history</span>
+        Activity
+      </a>
+      <a href="user_management.html" class="nav-item">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        User Management
+      </a>
+    </nav>
+    <div style="padding:16px;margin-top:auto;border-top:1px solid var(--border-subtle);">
+      <button class="btn btn-success" onclick="window.location.href='vendors.html#add-vendor'" style="width:100%;height:40px;border-radius:4px;font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase;">
+        <span class="material-symbols-outlined" style="font-size:18px;">add</span>Add New
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════
+       Main Container
+  ══════════════════════════════════════ -->
+  <div class="main-container">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle navigation">
+          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
+        </button>
+        <h1 class="headline-md" style="color:var(--on-surface);">Quotations</h1>
+      </div>
+      <div style="background-color:#F0EDEC;border-radius:9999px;display:flex;align-items:center;padding:6px 16px;width:380px;gap:8px;">
+        <span class="material-symbols-outlined" style="color:var(--outline);font-size:20px;">search</span>
+        <input type="text" style="background:none;border:none;outline:none;font-family:var(--font-body);font-size:14px;color:var(--on-surface);width:100%;" placeholder="Search quotations, RFQs, or vendors..."/>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Notifications"><span class="material-symbols-outlined" style="font-size:22px;">notifications</span></button>
+        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size:22px;">help_outline</span></button>
+        <button class="icon-btn" aria-label="Settings"><span class="material-symbols-outlined" style="font-size:22px;">settings</span></button>
+        <div class="avatar-jd">JD</div>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════
+         Page Content
+    ══════════════════════════════════════ -->
+    <main class="page-content">
+
+      <!-- 6.1 — Page Header Row -->
+      <section class="page-header-row">
+        <div>
+          <div class="breadcrumb body-md">
+            <a href="#">Quotations</a>
+            <span class="material-symbols-outlined" style="font-size:16px;">chevron_right</span>
+            <span style="color:var(--on-surface);">Comparison</span>
+          </div>
+          <h2 class="headline-md" style="color:var(--on-surface);margin:4px 0 4px 0;">Quotation Comparison</h2>
+          <p class="body-md" style="color:var(--outline);margin:0;">RFQ-2023-089: Industrial HVAC Systems</p>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-secondary" id="filter-btn" onclick="toggleFilterPanel()" style="height:38px;padding:0 16px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border-radius:4px;" aria-expanded="false" aria-controls="filter-panel">
+            <span class="material-symbols-outlined" style="font-size:18px;">filter_list</span>
+            Filter
+          </button>
+          <button class="btn btn-secondary" id="sort-btn" onclick="toggleFilterPanel()" style="height:38px;padding:0 16px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border-radius:4px;" aria-expanded="false">
+            <span class="material-symbols-outlined" style="font-size:18px;">sort</span>
+            Sort
+          </button>
+          <button class="btn btn-primary" onclick="handleExport()" style="height:38px;padding:0 16px;font-size:13px;font-weight:600;background-color:var(--primary);display:inline-flex;align-items:center;gap:6px;border-radius:4px;">
+            <span class="material-symbols-outlined" style="font-size:18px;">download</span>
+            Export Report
+          </button>
+        </div>
+      </section>
+
+      <!-- 6.4 — Filter/Sort Inline Panel -->
+      <div class="filter-sort-panel" id="filter-panel" aria-label="Filter and sort options">
+        <div class="filter-sort-inner">
+
+          <!-- Sort By -->
+          <div class="filter-group">
+            <span class="filter-group-label">Sort By</span>
+            <select class="filter-select" id="sort-select" onchange="sortTable(this.value)" aria-label="Sort vendors by">
+              <option value="price-asc" selected>Total Price (Asc)</option>
+              <option value="price-desc">Total Price (Desc)</option>
+              <option value="timeline">Delivery Timeline</option>
+              <option value="rating">Vendor Rating</option>
+              <option value="name">Vendor Name</option>
+            </select>
+          </div>
+
+          <!-- Filter Vendors -->
+          <div class="filter-group">
+            <span class="filter-group-label">Filter Vendors</span>
+            <div class="vendor-checkbox-group">
+              <label class="vendor-checkbox-label">
+                <input type="checkbox" id="chk-vendor-a" checked onchange="toggleVendorColumn('vendor-a', this.checked)"> TechFlow Solutions
+              </label>
+              <label class="vendor-checkbox-label">
+                <input type="checkbox" id="chk-vendor-b" checked onchange="toggleVendorColumn('vendor-b', this.checked)"> Global Industries
+              </label>
+              <label class="vendor-checkbox-label">
+                <input type="checkbox" id="chk-vendor-c" checked onchange="toggleVendorColumn('vendor-c', this.checked)"> Apex Manufacturing
+              </label>
+            </div>
+          </div>
+
+          <!-- Expand All Toggle -->
+          <div class="filter-group" style="justify-content:flex-end;margin-left:auto;">
+            <span class="filter-group-label">Expand All Rows</span>
+            <button class="expand-toggle" id="expand-all-toggle" onclick="toggleExpandAll()" aria-label="Toggle expand all rows" aria-pressed="false">
+              <div class="toggle-track" id="expand-track">
+                <div class="toggle-thumb"></div>
+              </div>
+              <span id="expand-label" style="font-size:13px;color:var(--data-ink);">Show Details</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Summary Stats Bar ── -->
+      <div class="stats-bar" role="region" aria-label="Quotation summary statistics">
+        <div class="stat-block">
+          <span class="stat-label">Quotations Received</span>
+          <span class="stat-value">3</span>
+          <span class="stat-sub">of 4 invited vendors</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label">Lowest Bid</span>
+          <span class="stat-value" style="color:var(--success);">$11,800</span>
+          <span class="stat-sub">Apex Manufacturing</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label">Price Range</span>
+          <span class="stat-value">$1,700</span>
+          <span class="stat-sub">Between min & max bids</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label">Avg Delivery</span>
+          <span class="stat-value">2.5 wks</span>
+          <span class="stat-sub">Across all vendors</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label">Recommended</span>
+          <span class="stat-value" style="font-size:15px;color:var(--primary);">Apex Mfg.</span>
+          <span class="stat-sub">Best price + rating</span>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           6.2 — Comparison Table
+      ══════════════════════════════════════ -->
+      <div class="comparison-card" role="region" aria-label="Vendor comparison table">
+        <table class="comparison-table" id="comparison-table" aria-label="Side-by-side vendor quotation comparison">
+          <thead>
+            <tr>
+              <!-- Criteria Header -->
+              <th class="col-criteria" style="background-color:var(--surface-muted);border-bottom:1px solid var(--border-subtle);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--data-ink);">
+                Criteria
+              </th>
+
+              <!-- Vendor A: TechFlow Solutions -->
+              <th class="vendor-header-cell" id="header-vendor-a" style="background-color:var(--surface-container-lowest);">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  <span style="font-family:var(--font-body);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--outline);">Vendor A</span>
+                  <span style="font-family:var(--font-body);font-size:14px;font-weight:600;color:var(--on-surface);line-height:1.3;">TechFlow Solutions</span>
+                  <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+                    <span style="font-family:var(--font-body);font-size:11px;color:var(--outline);">Quoted: <strong style="color:var(--data-ink);">$12,000</strong></span>
+                  </div>
+                </div>
+              </th>
+
+              <!-- Vendor B: Global Industries -->
+              <th class="vendor-header-cell" id="header-vendor-b" style="background-color:var(--surface-container-lowest);">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  <span style="font-family:var(--font-body);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--outline);">Vendor B</span>
+                  <span style="font-family:var(--font-body);font-size:14px;font-weight:600;color:var(--on-surface);line-height:1.3;">Global Industries</span>
+                  <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+                    <span style="font-family:var(--font-body);font-size:11px;color:var(--outline);">Quoted: <strong style="color:var(--data-ink);">$13,500</strong></span>
+                  </div>
+                </div>
+              </th>
+
+              <!-- Vendor C: Apex Manufacturing — RECOMMENDED -->
+              <th class="vendor-header-cell recommended" id="header-vendor-c">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span style="font-family:var(--font-body);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--outline);">Vendor C</span>
+                    <span class="recommended-tag">
+                      <span class="material-symbols-outlined" style="font-size:12px;font-variation-settings:'FILL' 1;">star</span>
+                      RECOMMENDED
+                    </span>
+                  </div>
+                  <span style="font-family:var(--font-body);font-size:14px;font-weight:600;color:var(--on-surface);line-height:1.3;">Apex Manufacturing</span>
+                  <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+                    <span style="font-family:var(--font-body);font-size:11px;color:var(--outline);">Quoted: <strong style="color:var(--primary);">$11,800</strong></span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <!-- ── ROW: Total Pricing ── -->
+            <tr id="row-pricing">
+              <td class="col-criteria">
+                Total Pricing
+                <button class="row-expand-btn" id="expand-pricing" onclick="toggleRow('pricing')" aria-expanded="false" aria-label="Expand pricing row details">
+                  <span class="material-symbols-outlined">expand_more</span>
+                  View breakdown
+                </button>
+              </td>
+              <!-- Vendor A -->
+              <td id="td-price-a" data-vendor="vendor-a" data-price="12000">
+                <span class="price-val-normal">$12,000.00</span>
+                <span class="body-sm" style="color:var(--outline);margin-top:3px;display:block;">+1.7% above lowest</span>
+              </td>
+              <!-- Vendor B -->
+              <td id="td-price-b" data-vendor="vendor-b" data-price="13500">
+                <span class="price-val-high">$13,500.00</span>
+                <span class="body-sm" style="color:#B45309;margin-top:3px;display:block;">
+                  <span class="material-symbols-outlined" style="font-size:13px;vertical-align:-2px;">arrow_upward</span>Highest bid
+                </span>
+              </td>
+              <!-- Vendor C — LOWEST -->
+              <td id="td-price-c" class="price-cell-lowest recommended-col" data-vendor="vendor-c" data-price="11800">
+                <span class="price-val-lowest">$11,800.00</span>
+                <span class="lowest-badge">
+                  <span class="material-symbols-outlined" style="font-size:13px;font-variation-settings:'FILL' 1;">star</span>
+                  Lowest Bid
+                </span>
+              </td>
+            </tr>
+
+            <!-- Sub-items: Pricing breakdown (expandable) -->
+            <tr class="sub-items-row" id="sub-pricing">
+              <td class="sub-items-cell col-criteria">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-name">HVAC Unit</span></div>
+                  <div class="sub-item-row"><span class="sub-item-name">Installation</span></div>
+                  <div class="sub-item-row"><span class="sub-item-name">Commissioning</span></div>
+                  <div class="sub-item-row"><span class="sub-item-name">Warranty (2yr)</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell" data-vendor="vendor-a">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val">$9,200.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">$1,800.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">$600.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">$400.00</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell" data-vendor="vendor-b">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val">$10,500.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">$1,500.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">$900.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">$600.00</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell recommended-col" data-vendor="vendor-c">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#065F46;font-weight:600;">$9,000.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#065F46;font-weight:600;">$1,500.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#065F46;font-weight:600;">$800.00</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#065F46;font-weight:600;">$500.00</span></div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── ROW: Delivery Timeline ── -->
+            <tr id="row-timeline">
+              <td class="col-criteria">
+                Delivery Timeline
+                <button class="row-expand-btn" id="expand-timeline" onclick="toggleRow('timeline')" aria-expanded="false" aria-label="Expand delivery row details">
+                  <span class="material-symbols-outlined">expand_more</span>
+                  View details
+                </button>
+              </td>
+              <!-- Vendor A — fastest -->
+              <td data-vendor="vendor-a">
+                <span class="timeline-fastest">2 weeks</span>
+                <span style="display:block;margin-top:3px;" class="body-sm" style="color:var(--success);">
+                  <span class="material-symbols-outlined" style="font-size:13px;color:var(--success);vertical-align:-2px;">bolt</span>
+                  <span style="color:var(--success);font-size:12px;font-weight:600;">Fastest</span>
+                </span>
+              </td>
+              <!-- Vendor B — slowest -->
+              <td data-vendor="vendor-b">
+                <span class="timeline-slowest">3 weeks</span>
+                <span class="timeline-badge">
+                  <span class="material-symbols-outlined" style="font-size:13px;">schedule</span>
+                  Slowest delivery
+                </span>
+              </td>
+              <!-- Vendor C — middle -->
+              <td class="recommended-col" data-vendor="vendor-c">
+                <span class="timeline-middle">2.5 weeks</span>
+              </td>
+            </tr>
+
+            <!-- Sub-items: Delivery breakdown -->
+            <tr class="sub-items-row" id="sub-timeline">
+              <td class="sub-items-cell col-criteria">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-name">Lead Time</span></div>
+                  <div class="sub-item-row"><span class="sub-item-name">Installation Days</span></div>
+                  <div class="sub-item-row"><span class="sub-item-name">Handover</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell" data-vendor="vendor-a">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val">5 days</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">7 days</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">2 days</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell" data-vendor="vendor-b">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#B45309;">7 days</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#B45309;">10 days</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">4 days</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell recommended-col" data-vendor="vendor-c">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val">6 days</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">8 days</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">3 days</span></div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── ROW: Vendor Rating ── -->
+            <tr id="row-rating">
+              <td class="col-criteria">
+                Vendor Rating
+                <button class="row-expand-btn" id="expand-rating" onclick="toggleRow('rating')" aria-expanded="false" aria-label="Expand rating row details">
+                  <span class="material-symbols-outlined">expand_more</span>
+                  View scores
+                </button>
+              </td>
+              <!-- Vendor A: 4.5 -->
+              <td data-vendor="vendor-a">
+                <div class="star-rating-cell">
+                  <div class="stars" aria-label="4.5 out of 5 stars">
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-half" style="font-variation-settings:'FILL' 0;">star_half</span>
+                  </div>
+                  <span class="rating-text">4.5 / 5.0</span>
+                </div>
+              </td>
+              <!-- Vendor B: 3.8 -->
+              <td data-vendor="vendor-b">
+                <div class="star-rating-cell">
+                  <div class="stars" aria-label="3.8 out of 5 stars">
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-half" style="font-variation-settings:'FILL' 0;">star_half</span>
+                    <span class="material-symbols-outlined star-icon star-empty">star_outline</span>
+                  </div>
+                  <span class="rating-text">3.8 / 5.0</span>
+                </div>
+              </td>
+              <!-- Vendor C: 4.0 -->
+              <td class="recommended-col" data-vendor="vendor-c">
+                <div class="star-rating-cell">
+                  <div class="stars" aria-label="4.0 out of 5 stars">
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-filled" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined star-icon star-empty">star_outline</span>
+                  </div>
+                  <span class="rating-text">4.0 / 5.0</span>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Sub-items: Rating breakdown -->
+            <tr class="sub-items-row" id="sub-rating">
+              <td class="sub-items-cell col-criteria">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-name">Quality</span></div>
+                  <div class="sub-item-row"><span class="sub-item-name">Reliability</span></div>
+                  <div class="sub-item-row"><span class="sub-item-name">Communication</span></div>
+                  <div class="sub-item-row"><span class="sub-item-name">Past Orders</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell" data-vendor="vendor-a">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">4.8 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">4.5 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">4.2 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">18 orders</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell" data-vendor="vendor-b">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">3.9 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">3.7 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">3.8 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">9 orders</span></div>
+                </div>
+              </td>
+              <td class="sub-items-cell recommended-col" data-vendor="vendor-c">
+                <div class="sub-item-inner">
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">4.2 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">4.0 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val" style="color:#D97706;">3.9 / 5</span></div>
+                  <div class="sub-item-row"><span class="sub-item-val">24 orders</span></div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── ROW: Quote Validity ── -->
+            <tr>
+              <td class="col-criteria">Quote Validity</td>
+              <td data-vendor="vendor-a">
+                <span class="data-mono" style="color:var(--on-surface);">60 Days</span>
+              </td>
+              <td data-vendor="vendor-b">
+                <span class="data-mono" style="color:var(--on-surface);">30 Days</span>
+                <span class="body-sm" style="color:#B45309;display:block;margin-top:2px;">Short validity window</span>
+              </td>
+              <td class="recommended-col" data-vendor="vendor-c">
+                <span class="data-mono" style="color:var(--on-surface);">90 Days</span>
+                <span class="body-sm" style="color:var(--success);display:block;margin-top:2px;">Extended validity</span>
+              </td>
+            </tr>
+
+            <!-- ── ROW: Payment Terms ── -->
+            <tr>
+              <td class="col-criteria">Payment Terms</td>
+              <td data-vendor="vendor-a">
+                <span class="data-mono" style="color:var(--on-surface);">Net 30</span>
+              </td>
+              <td data-vendor="vendor-b">
+                <span class="data-mono" style="color:var(--on-surface);">Net 15</span>
+                <span class="body-sm" style="color:#B45309;display:block;margin-top:2px;">Shorter payment window</span>
+              </td>
+              <td class="recommended-col" data-vendor="vendor-c">
+                <span class="data-mono" style="color:var(--on-surface);">Net 45</span>
+                <span class="body-sm" style="color:var(--success);display:block;margin-top:2px;">Longest payment window</span>
+              </td>
+            </tr>
+
+            <!-- ── ROW: Warranty ── -->
+            <tr>
+              <td class="col-criteria">Warranty Period</td>
+              <td data-vendor="vendor-a">
+                <span class="data-mono" style="color:var(--on-surface);">2 Years</span>
+              </td>
+              <td data-vendor="vendor-b">
+                <span class="data-mono" style="color:var(--on-surface);">1 Year</span>
+                <span class="body-sm" style="color:#B45309;display:block;margin-top:2px;">Below standard</span>
+              </td>
+              <td class="recommended-col" data-vendor="vendor-c">
+                <span class="data-mono" style="color:var(--on-surface);">3 Years</span>
+                <span class="body-sm" style="color:var(--success);display:block;margin-top:2px;">Best coverage</span>
+              </td>
+            </tr>
+
+            <!-- ── ROW: Actions ── -->
+            <tr style="background-color:var(--surface-muted);">
+              <td class="col-criteria" style="background-color:#ECEEF8;">Actions</td>
+              <td data-vendor="vendor-a" style="text-align:center;padding:20px;">
+                <button class="btn btn-secondary" onclick="openDocsModal('TechFlow Solutions')" style="height:36px;padding:0 16px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border-radius:4px;">
+                  <span class="material-symbols-outlined" style="font-size:16px;">description</span>
+                  Review Docs
+                </button>
+              </td>
+              <td data-vendor="vendor-b" style="text-align:center;padding:20px;">
+                <button class="btn btn-secondary" onclick="openDocsModal('Global Industries')" style="height:36px;padding:0 16px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border-radius:4px;">
+                  <span class="material-symbols-outlined" style="font-size:16px;">description</span>
+                  Review Docs
+                </button>
+              </td>
+              <td class="recommended-col" data-vendor="vendor-c" style="text-align:center;padding:20px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                  <button class="btn btn-primary" onclick="openAwardModal()" style="height:38px;padding:0 16px;font-size:13px;font-weight:600;background-color:var(--primary);display:inline-flex;align-items:center;gap:6px;border-radius:4px;" id="award-btn">
+                    <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1;">workspace_premium</span>
+                    Award Contract
+                  </button>
+                  <button class="btn btn-secondary" onclick="openDocsModal('Apex Manufacturing')" style="height:34px;padding:0 12px;font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:4px;border-radius:4px;">
+                    <span class="material-symbols-outlined" style="font-size:14px;">description</span>
+                    Review Docs
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div><!-- /comparison-card -->
+
+    </main>
+  </div><!-- /main-container -->
+
+  <!-- ══════════════════════════════════════
+       Modal: Review Documents
+  ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="docs-modal" role="dialog" aria-modal="true" aria-labelledby="docs-modal-title">
+    <div class="modal-box modal-box-wide">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="modal-icon-ring" style="background-color:#EFF6FF;width:44px;height:44px;margin-bottom:0;">
+            <span class="material-symbols-outlined" style="font-size:22px;color:var(--primary);font-variation-settings:'FILL' 1;">folder_open</span>
+          </div>
+          <div>
+            <p class="label-caps" style="color:var(--outline);margin:0 0 2px 0;">Vendor Documents</p>
+            <h3 id="docs-modal-title" class="headline-sm" style="margin:0;color:var(--on-surface);" aria-live="polite">TechFlow Solutions</h3>
+          </div>
+        </div>
+        <button onclick="closeDocsModal()" style="background:none;border:none;cursor:pointer;color:var(--outline);display:flex;align-items:center;" aria-label="Close document modal">
+          <span class="material-symbols-outlined" style="font-size:22px;">close</span>
+        </button>
+      </div>
+      <p class="body-sm" style="color:var(--outline);margin:8px 0 0 0;">Supporting documentation submitted with this quotation.</p>
+
+      <div class="doc-preview-area">
+        <div class="doc-row">
+          <span class="material-symbols-outlined doc-icon" style="font-variation-settings:'FILL' 1;">picture_as_pdf</span>
+          <div><p class="doc-name">Quotation_Proposal.pdf</p><p style="font-size:11px;color:var(--outline);margin:0;">Submitted Jun 4, 2026</p></div>
+          <span class="doc-size">2.4 MB</span>
+          <button class="btn btn-secondary" style="height:30px;padding:0 10px;font-size:12px;margin-left:12px;border-radius:3px;display:inline-flex;align-items:center;gap:4px;">
+            <span class="material-symbols-outlined" style="font-size:14px;">download</span>Download
+          </button>
+        </div>
+        <div class="doc-row">
+          <span class="material-symbols-outlined doc-icon" style="font-variation-settings:'FILL' 1;">table_chart</span>
+          <div><p class="doc-name">Line_Item_Breakdown.xlsx</p><p style="font-size:11px;color:var(--outline);margin:0;">Submitted Jun 4, 2026</p></div>
+          <span class="doc-size">890 KB</span>
+          <button class="btn btn-secondary" style="height:30px;padding:0 10px;font-size:12px;margin-left:12px;border-radius:3px;display:inline-flex;align-items:center;gap:4px;">
+            <span class="material-symbols-outlined" style="font-size:14px;">download</span>Download
+          </button>
+        </div>
+        <div class="doc-row">
+          <span class="material-symbols-outlined doc-icon" style="color:#065F46;font-variation-settings:'FILL' 1;">verified</span>
+          <div><p class="doc-name">Compliance_Certificate.pdf</p><p style="font-size:11px;color:var(--outline);margin:0;">Submitted Jun 4, 2026</p></div>
+          <span class="doc-size">1.1 MB</span>
+          <button class="btn btn-secondary" style="height:30px;padding:0 10px;font-size:12px;margin-left:12px;border-radius:3px;display:inline-flex;align-items:center;gap:4px;">
+            <span class="material-symbols-outlined" style="font-size:14px;">download</span>Download
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeDocsModal()" style="height:36px;padding:0 16px;font-size:13px;border-radius:4px;">Close</button>
+        <button class="btn btn-primary" style="height:36px;padding:0 16px;font-size:13px;font-weight:600;background-color:var(--primary);border-radius:4px;display:inline-flex;align-items:center;gap:6px;" onclick="handleDownloadAll()">
+          <span class="material-symbols-outlined" style="font-size:16px;">download</span>
+          Download All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       Modal: Award Contract
+  ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="award-modal" role="dialog" aria-modal="true" aria-labelledby="award-modal-title">
+    <div class="modal-box">
+      <div class="modal-icon-ring" style="background-color:#DCFCE7;width:56px;height:56px;">
+        <span class="material-symbols-outlined" style="font-size:28px;color:#065F46;font-variation-settings:'FILL' 1;">workspace_premium</span>
+      </div>
+      <p class="label-caps" style="color:var(--outline);margin:0 0 4px 0;">Award Contract</p>
+      <h3 id="award-modal-title" class="headline-sm" style="margin:0 0 6px 0;color:var(--on-surface);">Confirm Contract Award</h3>
+      <p class="award-vendor-name">Apex Manufacturing</p>
+      <p class="body-md" style="color:var(--on-surface-variant);margin:0 0 12px 0;">
+        You are about to award the contract for <strong>RFQ-2023-089: Industrial HVAC Systems</strong> to Apex Manufacturing. This will initiate the Purchase Order workflow and notify all participating vendors.
+      </p>
+
+      <!-- Award summary block -->
+      <div style="background-color:var(--surface-muted);border:1px solid var(--border-subtle);border-radius:4px;padding:14px 16px;display:flex;gap:24px;flex-wrap:wrap;">
+        <div>
+          <p class="label-caps" style="color:var(--outline);margin:0 0 2px 0;">Contract Value</p>
+          <p class="data-mono" style="color:var(--success);font-weight:600;font-size:16px;margin:0;">$11,800.00</p>
+        </div>
+        <div>
+          <p class="label-caps" style="color:var(--outline);margin:0 0 2px 0;">Delivery</p>
+          <p class="data-mono" style="color:var(--on-surface);margin:0;">2.5 weeks</p>
+        </div>
+        <div>
+          <p class="label-caps" style="color:var(--outline);margin:0 0 2px 0;">Warranty</p>
+          <p class="data-mono" style="color:var(--on-surface);margin:0;">3 Years</p>
+        </div>
+        <div>
+          <p class="label-caps" style="color:var(--outline);margin:0 0 2px 0;">Payment</p>
+          <p class="data-mono" style="color:var(--on-surface);margin:0;">Net 45</p>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;background-color:#FEF2F2;border:1px solid #FECACA;border-radius:4px;padding:10px 14px;display:flex;align-items:flex-start;gap:8px;">
+        <span class="material-symbols-outlined" style="font-size:18px;color:var(--error);flex-shrink:0;margin-top:1px;">warning</span>
+        <p class="body-sm" style="color:#991B1B;margin:0;">This action will automatically reject all other vendor quotations and cannot be reversed. Ensure all stakeholder approvals are complete before proceeding.</p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeAwardModal()" style="height:38px;padding:0 18px;font-size:13px;border-radius:4px;">Cancel</button>
+        <button class="btn" onclick="confirmAward()" id="confirm-award-btn" style="height:38px;padding:0 18px;font-size:13px;font-weight:600;background-color:var(--success);color:#FFFFFF;border-radius:4px;display:inline-flex;align-items:center;gap:6px;">
+          <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1;">workspace_premium</span>
+          Confirm Award
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast-notification" role="alert" aria-live="assertive">
+    <span class="material-symbols-outlined" id="toast-icon" style="font-size:20px;">check_circle</span>
+    <span id="toast-message">Done.</span>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       JavaScript
+  ══════════════════════════════════════ -->
+  <script>
+    /* ── Filter/Sort Panel Toggle ── */
+    let panelOpen = false;
+
+    function toggleFilterPanel() {
+      panelOpen = !panelOpen;
+      const panel = document.getElementById('filter-panel');
+      const filterBtn = document.getElementById('filter-btn');
+      const sortBtn   = document.getElementById('sort-btn');
+
+      panel.classList.toggle('open', panelOpen);
+      filterBtn.classList.toggle('btn-filter-active', panelOpen);
+      sortBtn.classList.toggle('btn-filter-active', panelOpen);
+      filterBtn.setAttribute('aria-expanded', panelOpen);
+      sortBtn.setAttribute('aria-expanded', panelOpen);
+    }
+
+    /* ── Toggle Vendor Column Visibility ── */
+    function toggleVendorColumn(vendorId, show) {
+      // Get all cells with data-vendor attribute matching vendorId
+      const cells = document.querySelectorAll(`[data-vendor="${vendorId}"], #header-${vendorId}`);
+      cells.forEach(cell => {
+        cell.style.display = show ? '' : 'none';
+      });
+    }
+
+    /* ── Expand/Collapse Individual Rows ── */
+    function toggleRow(rowName) {
+      const subRow  = document.getElementById(`sub-${rowName}`);
+      const btn     = document.getElementById(`expand-${rowName}`);
+      const isOpen  = subRow.classList.contains('expanded');
+
+      subRow.classList.toggle('expanded', !isOpen);
+      btn.classList.toggle('expanded', !isOpen);
+      btn.setAttribute('aria-expanded', !isOpen);
+    }
+
+    /* ── Expand All Toggle ── */
+    let allExpanded = false;
+    const expandableRows = ['pricing', 'timeline', 'rating'];
+
+    function toggleExpandAll() {
+      allExpanded = !allExpanded;
+      const track  = document.getElementById('expand-track');
+      const label  = document.getElementById('expand-label');
+      const toggle = document.getElementById('expand-all-toggle');
+
+      track.classList.toggle('on', allExpanded);
+      label.textContent = allExpanded ? 'Hide Details' : 'Show Details';
+      toggle.setAttribute('aria-pressed', allExpanded);
+
+      expandableRows.forEach(rowName => {
+        const subRow = document.getElementById(`sub-${rowName}`);
+        const btn    = document.getElementById(`expand-${rowName}`);
+        subRow.classList.toggle('expanded', allExpanded);
+        btn.classList.toggle('expanded', allExpanded);
+        btn.setAttribute('aria-expanded', allExpanded);
+      });
+    }
+
+    /* ── Sort Table ── */
+    function sortTable(criteria) {
+      // Visual feedback only for this prototype
+      showToast(`Sorted by: ${document.getElementById('sort-select').options[document.getElementById('sort-select').selectedIndex].text}`, '', 'sort');
+    }
+
+    /* ── Export ── */
+    function handleExport() {
+      showToast('Exporting comparison report as PDF…', '', 'download');
+    }
+
+    /* ── Docs Modal ── */
+    function openDocsModal(vendorName) {
+      document.getElementById('docs-modal-title').textContent = vendorName;
+      document.getElementById('docs-modal').classList.add('open');
+    }
+    function closeDocsModal() {
+      document.getElementById('docs-modal').classList.remove('open');
+    }
+    function handleDownloadAll() {
+      closeDocsModal();
+      showToast('All documents packaged for download.', '', 'folder_zip');
+    }
+
+    /* ── Award Modal ── */
+    function openAwardModal() {
+      document.getElementById('award-modal').classList.add('open');
+      document.getElementById('confirm-award-btn').focus();
+    }
+    function closeAwardModal() {
+      document.getElementById('award-modal').classList.remove('open');
+    }
+    function confirmAward() {
+      closeAwardModal();
+      // Update award button state
+      const awardBtn = document.getElementById('award-btn');
+      awardBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1;">check_circle</span> Contract Awarded`;
+      awardBtn.style.backgroundColor = 'var(--success)';
+      awardBtn.disabled = true;
+      awardBtn.style.cursor = 'not-allowed';
+      showToast('Contract awarded to Apex Manufacturing! PO workflow initiated.', 'success', 'workspace_premium');
+    }
+
+    /* ── Toast ── */
+    function showToast(message, type = '', icon = 'info') {
+      const toast  = document.getElementById('toast-notification');
+      const msgEl  = document.getElementById('toast-message');
+      const iconEl = document.getElementById('toast-icon');
+
+      toast.className = 'toast' + (type ? ' ' + type : '');
+      msgEl.textContent = message;
+      iconEl.textContent = icon;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3800);
+    }
+
+    /* ── Mobile Sidebar ── */
+    function toggleMobileSidebar() {
+      document.body.classList.toggle('sidebar-open');
+    }
+
+    /* ── Close modals on overlay click ── */
+    document.getElementById('docs-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeDocsModal();
+    });
+    document.getElementById('award-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeAwardModal();
+    });
+
+    /* ── Escape key closes modals ── */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeDocsModal();
+        closeAwardModal();
+        if (panelOpen) toggleFilterPanel();
+      }
+    });
+  </script>
+</body>
+</html>

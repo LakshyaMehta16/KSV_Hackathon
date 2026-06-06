@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>VendorBridge ERP - Activity Logs &amp; Notifications</title>
+  <meta name="description" content="Comprehensive audit trail of all VendorBridge procurement transactions, state changes, and system events. Filter by action type, user, or date range."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+
+  <style>
+    /* ============================================================
+       Screen 9 — Activity Logs & Notifications
+       Executive Precision Design System
+    ============================================================ */
+
+    body { background-color: var(--surface-background); min-height: 100vh; margin: 0; }
+
+    /* ── Sidebar ── */
+    .sidebar-nav { display: flex; flex-direction: column; gap: 4px; padding: 24px 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      text-decoration: none; color: var(--data-ink); font-family: var(--font-body);
+      font-size: 14px; font-weight: 500; border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover { background-color: #F0EDEC; color: var(--on-surface); }
+    .nav-item.active {
+      border-left-color: var(--primary) !important;
+      background-color: var(--surface-muted) !important;
+      color: var(--primary) !important; font-weight: 600;
+    }
+    .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: var(--primary); }
+    .nav-item .material-symbols-outlined { font-size: 20px; color: var(--outline); }
+
+    /* ── Shell ── */
+    .main-container {
+      margin-left: 260px; min-height: 100vh;
+      display: flex; flex-direction: column;
+      background-color: var(--surface-background);
+    }
+    .topbar {
+      background-color: var(--surface-container-lowest);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px; display: flex; align-items: center;
+      justify-content: space-between; height: 70px;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .mobile-menu-btn {
+      display: none; background: none; border: none;
+      cursor: pointer; color: var(--data-ink); padding: 0; margin-right: 12px;
+    }
+    .avatar-jd {
+      width: 36px; height: 36px; border-radius: 50%; background-color: #003FB1;
+      color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 13px; letter-spacing: 0.05em;
+    }
+
+    /* ── Notification bell with badge ── */
+    .notif-bell-wrapper {
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .notif-badge {
+      position: absolute; top: 2px; right: 2px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background-color: #BA1A1A; border: 1px solid var(--surface-container-lowest);
+    }
+    .notif-badge.hidden { display: none; }
+
+    /* ── Notification Dropdown ── */
+    .notif-dropdown {
+      position: absolute; top: calc(100% + 12px); right: 0;
+      width: 320px;
+      background-color: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      box-shadow: 0px 4px 6px -1px rgba(0,0,0,0.05), 0px 10px 20px -4px rgba(0,0,0,0.08);
+      z-index: 300;
+      opacity: 0; pointer-events: none; transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .notif-dropdown.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    .notif-dropdown-header {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .notif-dropdown-title {
+      font-family: var(--font-headlines); font-size: 15px; font-weight: 600;
+      color: var(--on-surface); margin: 0;
+    }
+    .mark-all-read {
+      font-family: var(--font-body); font-size: 12px; color: var(--primary);
+      cursor: pointer; background: none; border: none; padding: 0;
+      font-weight: 500; transition: opacity .15s;
+    }
+    .mark-all-read:hover { opacity: 0.75; }
+
+    .notif-list { list-style: none; padding: 0; margin: 0; }
+    .notif-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 16px; border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer; transition: background-color .15s;
+    }
+    .notif-row:last-child { border-bottom: none; }
+    .notif-row:hover { background-color: #F8FAFC; }
+    .notif-row.unread { background-color: #F4F7FF; }
+    .notif-row.unread:hover { background-color: #E8F0FE; }
+
+    .notif-icon-circle {
+      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .notif-icon-circle .material-symbols-outlined { font-size: 16px; }
+
+    .notif-row-body { flex: 1; min-width: 0; }
+    .notif-row-text {
+      font-family: var(--font-body); font-size: 12px; color: var(--on-surface);
+      line-height: 1.4; margin: 0;
+    }
+    .notif-row-text .actor { font-weight: 600; }
+    .notif-row-text .target-id { font-family: var(--font-headlines); color: var(--primary); font-weight: 500; }
+    .notif-row-time {
+      font-family: var(--font-body); font-size: 11px; color: var(--outline);
+      margin-top: 3px; display: block;
+    }
+
+    .notif-dropdown-footer {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+    .notif-view-all {
+      font-family: var(--font-body); font-size: 13px; color: var(--primary);
+      font-weight: 500; text-decoration: none; display: inline-flex;
+      align-items: center; gap: 4px;
+    }
+    .notif-view-all:hover { text-decoration: underline; }
+
+    /* ── Page Content ── */
+    .page-content {
+      padding: 28px 32px 64px 32px;
+      max-width: 1200px; width: 100%; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    /* ── Page Header ── */
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .page-header-text {}
+
+    /* ── Filter Toolbar ── */
+    .filter-toolbar {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px; padding: 16px;
+      display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; }
+    .filter-label {
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--outline);
+    }
+    .filter-select {
+      height: 36px; width: 180px; padding: 0 32px 0 12px;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 2px;
+      font-family: var(--font-body); font-size: 13px; color: var(--on-surface);
+      appearance: none; outline: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%23737686'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .filter-select:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+
+    .filter-input-wrap { position: relative; display: flex; align-items: center; }
+    .filter-input-wrap .material-symbols-outlined {
+      position: absolute; left: 10px; font-size: 18px; color: var(--outline); pointer-events: none;
+    }
+    .filter-input {
+      height: 36px; padding: 0 12px 0 34px;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 2px;
+      font-family: var(--font-body); font-size: 13px; color: var(--on-surface);
+      outline: none; transition: border-color .15s, box-shadow .15s;
+    }
+    .filter-input::placeholder { color: var(--outline); }
+    .filter-input:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+    .filter-input.date-field { width: 220px; }
+    .filter-input.user-field { width: 200px; }
+
+    .filter-actions { display: flex; align-items: flex-end; gap: 8px; margin-left: auto; }
+    .btn-clear-filter {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      color: #BA1A1A; padding: 8px 6px; height: 36px;
+      transition: opacity .15s;
+    }
+    .btn-clear-filter:hover { opacity: 0.75; }
+
+    /* ── Stats Strip ── */
+    .stats-strip {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+    }
+    .stat-chip {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 4px;
+      padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+    }
+    .stat-chip-icon {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .stat-chip-icon .material-symbols-outlined { font-size: 16px; }
+    .stat-chip-text {}
+    .stat-chip-count {
+      font-family: var(--font-headlines); font-size: 18px; font-weight: 700;
+      color: var(--on-surface); line-height: 1.1; margin: 0;
+    }
+    .stat-chip-label {
+      font-family: var(--font-body); font-size: 11px; color: var(--outline);
+      margin: 0;
+    }
+
+    /* ── Log Feed Card ── */
+    .log-feed-card {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 4px;
+      overflow: hidden;
+    }
+    .log-feed-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .log-feed-title {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--data-ink);
+      margin: 0;
+    }
+    .log-count-badge {
+      background-color: var(--surface-muted); color: var(--data-ink);
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 9999px;
+    }
+
+    /* ── Individual Log Entry ── */
+    .log-entry {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);
+      transition: background-color 0.15s; min-height: 56px;
+      position: relative; cursor: default;
+    }
+    .log-entry:last-of-type { border-bottom: none; }
+    .log-entry:hover { background-color: #FAFBFC; }
+    .log-entry.expandable { cursor: pointer; }
+
+    /* Event icon circle */
+    .event-icon-circle {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .event-icon-circle .material-symbols-outlined {
+      font-size: 20px; font-variation-settings: 'FILL' 1;
+    }
+
+    /* Color variants */
+    .icon-created    { background-color: rgba(1, 84, 204, 0.10); }
+    .icon-created    .material-symbols-outlined { color: #0154CC; }
+    .icon-approved   { background-color: rgba(16, 185, 129, 0.10); }
+    .icon-approved   .material-symbols-outlined { color: #10B981; }
+    .icon-rejected   { background-color: rgba(186, 26, 26, 0.10); }
+    .icon-rejected   .material-symbols-outlined { color: #BA1A1A; }
+    .icon-updated    { background-color: rgba(180, 83, 9, 0.10); }
+    .icon-updated    .material-symbols-outlined { color: #B45309; }
+    .icon-auto       { background-color: rgba(83, 78, 195, 0.10); }
+    .icon-auto       .material-symbols-outlined { color: #534EC3; }
+    .icon-uploaded   { background-color: rgba(79, 70, 229, 0.10); }
+    .icon-uploaded   .material-symbols-outlined { color: #4F46E5; }
+    .icon-deleted    { background-color: rgba(186, 26, 26, 0.10); }
+    .icon-deleted    .material-symbols-outlined { color: #BA1A1A; }
+
+    /* Entry body */
+    .entry-body { flex: 1; min-width: 0; }
+    .entry-main {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px;
+    }
+    .entry-action {
+      font-family: var(--font-body); font-size: 13px;
+      color: var(--on-surface); line-height: 1.5; margin: 0;
+      flex: 1; min-width: 0;
+    }
+    .entry-action .actor { font-weight: 600; }
+    .entry-action .action-verb { color: var(--on-surface-variant); }
+    .entry-action .target-id {
+      font-family: var(--font-headlines); color: var(--primary);
+      font-weight: 500; font-size: 13px;
+    }
+    .entry-action .target-id.green { color: #10B981; }
+    .entry-action .target-id.amber { color: #B45309; }
+    .entry-action .target-id.indigo { color: #4F46E5; }
+    .entry-action .target-id.secondary { color: #534EC3; }
+    .entry-action .target-id.red { color: #BA1A1A; }
+
+    /* Timestamp + expand row */
+    .entry-meta {
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .entry-timestamp {
+      font-family: var(--font-body); font-size: 12px; color: var(--outline);
+      white-space: nowrap;
+    }
+    .expand-chevron {
+      color: var(--outline); font-size: 16px;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .expand-chevron.open { transform: rotate(180deg); }
+
+    /* Sub-detail (collapsible) */
+    .entry-subdetail {
+      font-family: var(--font-body); font-size: 12px;
+      color: var(--on-surface-variant); margin: 5px 0 0 0;
+      line-height: 1.5; overflow: hidden;
+      max-height: 0; opacity: 0;
+      transition: max-height 0.25s ease, opacity 0.2s ease;
+    }
+    .entry-subdetail.show { max-height: 80px; opacity: 1; }
+    .entry-subdetail-always { /* always visible sub-detail */
+      font-family: var(--font-body); font-size: 12px;
+      color: var(--on-surface-variant); margin: 4px 0 0 0;
+    }
+
+    /* ── Action Type Tag Pills ── */
+    .action-tag {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 9999px; flex-shrink: 0;
+    }
+    .tag-created  { background: rgba(1,84,204,.1);  color: #0154CC; }
+    .tag-approved { background: rgba(16,185,129,.1); color: #065F46; }
+    .tag-updated  { background: rgba(180,83,9,.1);   color: #B45309; }
+    .tag-auto     { background: rgba(83,78,195,.1);  color: #534EC3; }
+    .tag-uploaded { background: rgba(79,70,229,.1);  color: #4F46E5; }
+    .tag-rejected { background: rgba(186,26,26,.1);  color: #BA1A1A; }
+
+    /* ── Divider label (date grouping) ── */
+    .date-divider {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 20px; background-color: var(--surface-muted);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .date-divider-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--outline);
+      white-space: nowrap;
+    }
+    .date-divider-line {
+      flex: 1; height: 1px; background-color: var(--border-subtle);
+    }
+
+    /* ── Load More Footer ── */
+    .load-more-footer {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0; border-top: 1px solid var(--border-subtle);
+    }
+    .btn-load-more {
+      width: 100%; height: 44px;
+      background-color: var(--surface-container-lowest);
+      border: none; cursor: pointer;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      color: var(--data-ink);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background-color 0.15s;
+    }
+    .btn-load-more:hover { background-color: var(--surface-muted); }
+    .btn-load-more .material-symbols-outlined { font-size: 20px; color: var(--outline); }
+
+    /* ── Export Button ── */
+    .btn-export {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 36px; padding: 0 14px; border-radius: 4px;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      color: var(--data-ink); cursor: pointer; white-space: nowrap;
+      transition: background-color .15s, border-color .15s;
+    }
+    .btn-export:hover { background-color: var(--surface-muted); border-color: var(--outline-variant); }
+    .btn-export .material-symbols-outlined { font-size: 16px; color: var(--outline); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background-color: var(--on-surface); color: #FFFFFF;
+      border-radius: 4px; padding: 12px 20px;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18); z-index: 999;
+      transform: translateY(80px); opacity: 0;
+      transition: transform .3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity .25s ease;
+      pointer-events: none; min-width: 240px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .toast.success { background-color: var(--success); }
+
+    /* ── Spin animation for loading ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin .7s linear infinite; display: inline-block; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .stats-strip { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1024px) {
+      .main-container { margin-left: 0; }
+      .sidebar { display: none !important; }
+      .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+    }
+    @media (max-width: 768px) {
+      .page-content { padding: 16px 16px 48px; }
+      .topbar { padding: 16px 20px; }
+      .filter-toolbar { flex-direction: column; align-items: stretch; }
+      .filter-actions { margin-left: 0; }
+      .filter-select, .filter-input { width: 100% !important; }
+      .stats-strip { grid-template-columns: 1fr 1fr; }
+      .sidebar {
+        position: fixed; left: -260px; top: 0; bottom: 0;
+        width: 260px; z-index: 100;
+        transition: left .3s cubic-bezier(.4,0,.2,1);
+        box-shadow: 4px 0 10px rgba(0,0,0,.1);
+      }
+      .sidebar-open .sidebar { left: 0; }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background-color: rgba(0,0,0,.4); z-index: 90;
+      }
+      .sidebar-open .sidebar-overlay { display: block; }
+    }
+  </style>
+</head>
+<body class="sidebar-closed">
+
+  <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
+  <!-- ══════════════════════════════════════
+       Sidebar
+  ══════════════════════════════════════ -->
+  <aside class="sidebar" style="width:260px;background-color:var(--surface-muted);border-right:1px solid var(--border-subtle);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:50;">
+    <div style="padding:24px 16px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-subtle);">
+      <div style="width:36px;height:36px;border-radius:4px;background-color:#003FB1;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;">
+        <span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'FILL' 1;">account_tree</span>
+      </div>
+      <div>
+        <h2 class="headline-sm" style="color:var(--data-ink);font-weight:700;margin:0;line-height:1.1;font-size:15px;">VendorBridge</h2>
+        <span class="label-caps" style="color:var(--outline);font-size:9px;margin-top:2px;display:block;font-weight:700;">Enterprise ERP</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <a href="vendors.html" class="nav-item">
+        <span class="material-symbols-outlined">storefront</span>
+        Vendors
+      </a>
+      <a href="create_rfq.html" class="nav-item">
+        <span class="material-symbols-outlined">request_quote</span>
+        RFQs
+      </a>
+      <a href="submit_quote.html" class="nav-item">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Quotations
+      </a>
+      <a href="compare_quotes.html" class="nav-item">
+        <span class="material-symbols-outlined">compare_arrows</span>
+        Comparison
+      </a>
+      <a href="approval.html" class="nav-item">
+        <span class="material-symbols-outlined">fact_check</span>
+        Approvals
+      </a>
+      <a href="purchase_order.html" class="nav-item">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        Purchase Orders
+      </a>
+      <a href="invoices.html" class="nav-item">
+        <span class="material-symbols-outlined">description</span>
+        Invoices
+      </a>
+      <a href="reports_analytics.html" class="nav-item">
+        <span class="material-symbols-outlined">assessment</span>
+        Reports
+      </a>
+      <a href="activity_logs.html" class="nav-item active">
+        <span class="material-symbols-outlined">history</span>
+        Activity
+      </a>
+      <a href="user_management.html" class="nav-item">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        User Management
+      </a>
+    </nav>
+    <div style="padding:16px;margin-top:auto;border-top:1px solid var(--border-subtle);">
+      <button class="btn btn-success" onclick="window.location.href='vendors.html#add-vendor'" style="width:100%;height:40px;border-radius:4px;font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase;">
+        <span class="material-symbols-outlined" style="font-size:18px;">add</span>Add New
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════
+       Main Container
+  ══════════════════════════════════════ -->
+  <div class="main-container">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle navigation">
+          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
+        </button>
+        <h1 class="headline-md" style="color:var(--on-surface);">Activity</h1>
+      </div>
+
+      <div style="background-color:#F0EDEC;border-radius:9999px;display:flex;align-items:center;padding:6px 16px;width:380px;gap:8px;">
+        <span class="material-symbols-outlined" style="color:var(--outline);font-size:20px;">search</span>
+        <input type="text" id="global-search" style="background:none;border:none;outline:none;font-family:var(--font-body);font-size:14px;color:var(--on-surface);width:100%;" placeholder="Search logs, users, or event IDs…"/>
+      </div>
+
+      <div class="topbar-right" style="position:relative;">
+        <!-- Notification Bell -->
+        <div class="notif-bell-wrapper icon-btn" id="notif-bell-wrapper" role="button" aria-label="Notifications" tabindex="0" onclick="toggleNotifDropdown()" onkeydown="if(event.key==='Enter')toggleNotifDropdown()">
+          <button class="icon-btn" style="pointer-events:none;" aria-label="Notifications">
+            <span class="material-symbols-outlined" style="font-size:22px;">notifications</span>
+          </button>
+          <div class="notif-badge" id="notif-badge" aria-label="Unread notifications"></div>
+        </div>
+
+        <!-- Notification Dropdown -->
+        <div class="notif-dropdown" id="notif-dropdown" role="dialog" aria-label="Notifications panel">
+          <div class="notif-dropdown-header">
+            <h3 class="notif-dropdown-title">Notifications</h3>
+            <button class="mark-all-read" onclick="markAllRead()" id="mark-all-btn">Mark all as read</button>
+          </div>
+          <ul class="notif-list" id="notif-list">
+            <li class="notif-row unread" onclick="markRead(this)">
+              <div class="notif-icon-circle icon-created" style="width:30px;height:30px;">
+                <span class="material-symbols-outlined" style="font-size:15px;color:#0154CC;font-variation-settings:'FILL' 1;">add_circle</span>
+              </div>
+              <div class="notif-row-body">
+                <p class="notif-row-text"><span class="actor">John Doe</span> created new RFQ <span class="target-id">#RFQ-2023-881</span></p>
+                <span class="notif-row-time">1 min ago</span>
+              </div>
+              <div style="width:6px;height:6px;border-radius:50%;background:#0154CC;flex-shrink:0;margin-top:6px;"></div>
+            </li>
+            <li class="notif-row unread" onclick="markRead(this)">
+              <div class="notif-icon-circle icon-approved" style="width:30px;height:30px;">
+                <span class="material-symbols-outlined" style="font-size:15px;color:#10B981;font-variation-settings:'FILL' 1;">check_circle</span>
+              </div>
+              <div class="notif-row-body">
+                <p class="notif-row-text"><span class="actor">Jane Smith</span> approved Quotation <span class="target-id" style="color:#10B981;">#QT-992-B</span></p>
+                <span class="notif-row-time">5 mins ago</span>
+              </div>
+              <div style="width:6px;height:6px;border-radius:50%;background:#0154CC;flex-shrink:0;margin-top:6px;"></div>
+            </li>
+            <li class="notif-row" onclick="markRead(this)">
+              <div class="notif-icon-circle icon-auto" style="width:30px;height:30px;">
+                <span class="material-symbols-outlined" style="font-size:15px;color:#534EC3;font-variation-settings:'FILL' 1;">auto_awesome</span>
+              </div>
+              <div class="notif-row-body">
+                <p class="notif-row-text"><span class="actor">System</span> generated PO <span class="target-id" style="color:#534EC3;">#PO-5501-XT</span></p>
+                <span class="notif-row-time">12 mins ago</span>
+              </div>
+            </li>
+            <li class="notif-row" onclick="markRead(this)">
+              <div class="notif-icon-circle icon-updated" style="width:30px;height:30px;">
+                <span class="material-symbols-outlined" style="font-size:15px;color:#B45309;font-variation-settings:'FILL' 1;">edit_document</span>
+              </div>
+              <div class="notif-row-body">
+                <p class="notif-row-text"><span class="actor">Michael Chen</span> updated <span class="target-id" style="color:#B45309;">Apex Manufacturing</span></p>
+                <span class="notif-row-time">1 hour ago</span>
+              </div>
+            </li>
+            <li class="notif-row" onclick="markRead(this)">
+              <div class="notif-icon-circle icon-uploaded" style="width:30px;height:30px;">
+                <span class="material-symbols-outlined" style="font-size:15px;color:#4F46E5;font-variation-settings:'FILL' 1;">upload_file</span>
+              </div>
+              <div class="notif-row-body">
+                <p class="notif-row-text"><span class="actor">Sarah Jenkins</span> uploaded <span class="target-id" style="color:#4F46E5;">#INV-2023-08-11</span></p>
+                <span class="notif-row-time">3 hours ago</span>
+              </div>
+            </li>
+          </ul>
+          <div class="notif-dropdown-footer">
+            <a href="activity_logs.html" class="notif-view-all">
+              View all activity
+              <span class="material-symbols-outlined" style="font-size:15px;">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size:22px;">help_outline</span></button>
+        <button class="icon-btn" aria-label="Settings"><span class="material-symbols-outlined" style="font-size:22px;">settings</span></button>
+        <div class="avatar-jd">JD</div>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════
+         Page Content
+    ══════════════════════════════════════ -->
+    <main class="page-content">
+
+      <!-- 9.1 — Page Header -->
+      <div class="page-header">
+        <div class="page-header-text">
+          <h2 class="headline-md" style="color:var(--on-surface);margin:0 0 4px 0;">System Activity &amp; Logs</h2>
+          <p class="body-sm" style="color:var(--outline);margin:0;">Comprehensive audit trail of all organizational transactions and state changes.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="btn-export" onclick="handleExport()">
+            <span class="material-symbols-outlined">download</span>
+            Export CSV
+          </button>
+          <button class="btn-export" onclick="handleExport('pdf')">
+            <span class="material-symbols-outlined" style="color:#BA1A1A;">picture_as_pdf</span>
+            Export PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- 9.2 — Filter & Search Toolbar -->
+      <div class="filter-toolbar" role="search" aria-label="Activity log filters">
+
+        <!-- Action Type -->
+        <div class="filter-group">
+          <span class="filter-label">Action Type</span>
+          <select class="filter-select" id="filter-action" aria-label="Filter by action type" onchange="applyFilters()">
+            <option value="">All Actions</option>
+            <option value="created">Created</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="updated">Updated</option>
+            <option value="deleted">Deleted</option>
+            <option value="uploaded">Uploaded</option>
+            <option value="auto">Auto-Generated</option>
+          </select>
+        </div>
+
+        <!-- User -->
+        <div class="filter-group">
+          <span class="filter-label">User</span>
+          <div class="filter-input-wrap">
+            <span class="material-symbols-outlined">person_search</span>
+            <input type="text" id="filter-user" class="filter-input user-field" placeholder="Search users…" aria-label="Filter by user" oninput="applyFilters()"/>
+          </div>
+        </div>
+
+        <!-- Date Range -->
+        <div class="filter-group">
+          <span class="filter-label">Date Range</span>
+          <div class="filter-input-wrap">
+            <span class="material-symbols-outlined">calendar_today</span>
+            <input type="text" id="filter-date-from" class="filter-input" style="width:105px;" placeholder="From" aria-label="Date from" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"/>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label" style="visibility:hidden;">To</span>
+          <div class="filter-input-wrap">
+            <span class="material-symbols-outlined">calendar_today</span>
+            <input type="text" id="filter-date-to" class="filter-input" style="width:105px;" placeholder="To" aria-label="Date to" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"/>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="filter-actions">
+          <button class="btn-clear-filter" onclick="clearFilters()">Clear</button>
+          <button class="btn btn-primary" onclick="applyFilters()" style="height:36px;padding:0 16px;font-size:13px;font-weight:600;background-color:var(--primary);border-radius:4px;display:inline-flex;align-items:center;gap:6px;">
+            <span class="material-symbols-outlined" style="font-size:16px;">filter_list</span>
+            Apply Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Strip -->
+      <div class="stats-strip" role="region" aria-label="Activity summary">
+        <div class="stat-chip">
+          <div class="stat-chip-icon icon-created"><span class="material-symbols-outlined">add_circle</span></div>
+          <div class="stat-chip-text">
+            <p class="stat-chip-count">24</p>
+            <p class="stat-chip-label">Created Today</p>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-chip-icon icon-approved"><span class="material-symbols-outlined">check_circle</span></div>
+          <div class="stat-chip-text">
+            <p class="stat-chip-count">11</p>
+            <p class="stat-chip-label">Approved</p>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-chip-icon icon-rejected"><span class="material-symbols-outlined">cancel</span></div>
+          <div class="stat-chip-text">
+            <p class="stat-chip-count">3</p>
+            <p class="stat-chip-label">Rejected</p>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-chip-icon icon-updated"><span class="material-symbols-outlined">edit_document</span></div>
+          <div class="stat-chip-text">
+            <p class="stat-chip-count">9</p>
+            <p class="stat-chip-label">Updated</p>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-chip-icon icon-auto"><span class="material-symbols-outlined">auto_awesome</span></div>
+          <div class="stat-chip-text">
+            <p class="stat-chip-count">5</p>
+            <p class="stat-chip-label">Auto-Generated</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9.3 — Log Feed -->
+      <div class="log-feed-card" id="log-feed">
+
+        <!-- Feed header -->
+        <div class="log-feed-header">
+          <p class="log-feed-title">Activity Feed</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="log-count-badge" id="log-count-badge">52 events today</span>
+            <!-- Live indicator -->
+            <div style="display:flex;align-items:center;gap:5px;">
+              <span style="width:6px;height:6px;border-radius:50%;background-color:var(--success);display:inline-block;animation:pulse 2s infinite;"></span>
+              <span style="font-family:var(--font-body);font-size:11px;color:var(--success);font-weight:600;">Live</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Date Group: Today ── -->
+        <div class="date-divider">
+          <span class="date-divider-label">Today — Oct 24, 2023</span>
+          <div class="date-divider-line"></div>
+        </div>
+
+        <!-- ── Entry 1: Created (newest) ── -->
+        <div class="log-entry" data-action="created" data-user="john doe" role="listitem">
+          <div class="event-icon-circle icon-created" aria-hidden="true">
+            <span class="material-symbols-outlined">add_circle</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">John Doe</span>
+                <span class="action-verb"> created new RFQ </span>
+                <span class="target-id">#RFQ-2023-881</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-created">Created</span>
+                <span class="entry-timestamp">1 min ago</span>
+              </div>
+            </div>
+            <p class="entry-subdetail-always">Target Vendor: Global Tech Supplies Inc.</p>
+          </div>
+        </div>
+
+        <!-- ── Entry 2: Approved ── -->
+        <div class="log-entry" data-action="approved" data-user="jane smith" role="listitem">
+          <div class="event-icon-circle icon-approved" aria-hidden="true">
+            <span class="material-symbols-outlined">check_circle</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">Jane Smith</span>
+                <span class="action-verb"> approved Quotation </span>
+                <span class="target-id green">#QT-992-B</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-approved">Approved</span>
+                <span class="entry-timestamp">5 mins ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Entry 3: Auto-Generated ── -->
+        <div class="log-entry" data-action="auto" data-user="system" role="listitem">
+          <div class="event-icon-circle icon-auto" aria-hidden="true">
+            <span class="material-symbols-outlined">auto_awesome</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">System</span>
+                <span class="action-verb"> Auto generated Purchase Order </span>
+                <span class="target-id secondary">#PO-5501-XT</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-auto">Auto</span>
+                <span class="entry-timestamp">12 mins ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Entry 4: Updated (expandable) ── -->
+        <div class="log-entry expandable" data-action="updated" data-user="michael chen" role="listitem" onclick="toggleExpand(this)" aria-expanded="true">
+          <div class="event-icon-circle icon-updated" aria-hidden="true">
+            <span class="material-symbols-outlined">edit_document</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">Michael Chen</span>
+                <span class="action-verb"> updated Vendor Profile: </span>
+                <span class="target-id amber">Apex Manufacturing</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-updated">Updated</span>
+                <span class="entry-timestamp">1 hour ago</span>
+                <span class="material-symbols-outlined expand-chevron open" aria-hidden="true">expand_more</span>
+              </div>
+            </div>
+            <!-- Sub-detail (expanded by default for Entry 4) -->
+            <p class="entry-subdetail show">Changed billing address and updated tax identification number. Fields modified: billing_address, tax_id_number. Previous values archived in audit trail.</p>
+          </div>
+        </div>
+
+        <!-- ── Entry 5: Uploaded ── -->
+        <div class="log-entry" data-action="uploaded" data-user="sarah jenkins" role="listitem">
+          <div class="event-icon-circle icon-uploaded" aria-hidden="true">
+            <span class="material-symbols-outlined">upload_file</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">Sarah Jenkins</span>
+                <span class="action-verb"> uploaded Invoice </span>
+                <span class="target-id indigo">#INV-2023-08-11</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-uploaded">Uploaded</span>
+                <span class="entry-timestamp">3 hours ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Entry 6: Rejected ── -->
+        <div class="log-entry expandable" data-action="rejected" data-user="james wilson" role="listitem" onclick="toggleExpand(this)" aria-expanded="false">
+          <div class="event-icon-circle icon-rejected" aria-hidden="true">
+            <span class="material-symbols-outlined">cancel</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">James Wilson</span>
+                <span class="action-verb"> rejected Requisition </span>
+                <span class="target-id red">#REQ-1039</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-rejected">Rejected</span>
+                <span class="entry-timestamp">4 hours ago</span>
+                <span class="material-symbols-outlined expand-chevron" aria-hidden="true">expand_more</span>
+              </div>
+            </div>
+            <p class="entry-subdetail">Reason: Budget exceeded Q4 departmental allocation. Requested amount $18,500 exceeded approved limit of $15,000 by 23.3%.</p>
+          </div>
+        </div>
+
+        <!-- ── Entry 7: Created ── -->
+        <div class="log-entry" data-action="created" data-user="priya sharma" role="listitem">
+          <div class="event-icon-circle icon-created" aria-hidden="true">
+            <span class="material-symbols-outlined">add_circle</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">Priya Sharma</span>
+                <span class="action-verb"> created new Vendor profile for </span>
+                <span class="target-id">Nexus Logistics Pvt. Ltd.</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-created">Created</span>
+                <span class="entry-timestamp">5 hours ago</span>
+              </div>
+            </div>
+            <p class="entry-subdetail-always">Category: Logistics &amp; Freight · Country: India · GSTIN verified</p>
+          </div>
+        </div>
+
+        <!-- ── Date Group: Yesterday ── -->
+        <div class="date-divider">
+          <span class="date-divider-label">Yesterday — Oct 23, 2023</span>
+          <div class="date-divider-line"></div>
+        </div>
+
+        <!-- ── Entry 8 ── -->
+        <div class="log-entry" data-action="approved" data-user="robert chen" role="listitem">
+          <div class="event-icon-circle icon-approved" aria-hidden="true">
+            <span class="material-symbols-outlined">check_circle</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">Robert Chen</span>
+                <span class="action-verb"> approved Requisition </span>
+                <span class="target-id green">#REQ-2023-1042</span>
+                <span class="action-verb"> — Department Head stage</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-approved">Approved</span>
+                <span class="entry-timestamp">Oct 23, 11:30 AM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Entry 9 ── -->
+        <div class="log-entry" data-action="auto" data-user="system" role="listitem">
+          <div class="event-icon-circle icon-auto" aria-hidden="true">
+            <span class="material-symbols-outlined">auto_awesome</span>
+          </div>
+          <div class="entry-body">
+            <div class="entry-main">
+              <p class="entry-action">
+                <span class="actor">System</span>
+                <span class="action-verb"> dispatched email notification to </span>
+                <span class="target-id secondary">3 vendors</span>
+                <span class="action-verb"> for RFQ </span>
+                <span class="target-id secondary">#RFQ-2023-089</span>
+              </p>
+              <div class="entry-meta">
+                <span class="action-tag tag-auto">Auto</span>
+                <span class="entry-timestamp">Oct 23, 09:45 AM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9.5 — Load More Footer -->
+        <div class="load-more-footer">
+          <button class="btn-load-more" id="load-more-btn" onclick="loadMoreLogs()" aria-label="Load older log entries">
+            <span class="material-symbols-outlined">expand_more</span>
+            Load Older Logs
+          </button>
+        </div>
+
+      </div><!-- /log-feed-card -->
+
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast-notification" role="alert" aria-live="assertive">
+    <span class="material-symbols-outlined" id="toast-icon" style="font-size:20px;">check_circle</span>
+    <span id="toast-message">Done.</span>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       JavaScript
+  ══════════════════════════════════════ -->
+  <script>
+    /* ── Notification Dropdown ── */
+    let notifOpen = false;
+    let unreadCount = 2;
+
+    function toggleNotifDropdown() {
+      notifOpen = !notifOpen;
+      document.getElementById('notif-dropdown').classList.toggle('open', notifOpen);
+    }
+
+    function markRead(row) {
+      if (row.classList.contains('unread')) {
+        row.classList.remove('unread');
+        const dot = row.querySelector('[style*="border-radius:50%;background:#0154CC"]');
+        if (dot) dot.remove();
+        unreadCount = Math.max(0, unreadCount - 1);
+        updateBadge();
+      }
+    }
+
+    function markAllRead() {
+      document.querySelectorAll('.notif-row.unread').forEach(r => markRead(r));
+      document.getElementById('mark-all-btn').textContent = 'All read ✓';
+      setTimeout(() => { document.getElementById('mark-all-btn').textContent = 'Mark all as read'; }, 2000);
+    }
+
+    function updateBadge() {
+      const badge = document.getElementById('notif-badge');
+      badge.classList.toggle('hidden', unreadCount === 0);
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(e) {
+      const wrapper = document.getElementById('notif-bell-wrapper');
+      const dropdown = document.getElementById('notif-dropdown');
+      if (!wrapper.contains(e.target) && !dropdown.contains(e.target)) {
+        notifOpen = false;
+        dropdown.classList.remove('open');
+      }
+    });
+
+    /* ── Expand/Collapse Log Entry ── */
+    function toggleExpand(entry) {
+      const subdetail = entry.querySelector('.entry-subdetail');
+      const chevron   = entry.querySelector('.expand-chevron');
+      if (!subdetail) return;
+
+      const isOpen = subdetail.classList.contains('show');
+      subdetail.classList.toggle('show', !isOpen);
+      chevron.classList.toggle('open', !isOpen);
+      entry.setAttribute('aria-expanded', String(!isOpen));
+    }
+
+    /* ── Filter Logic ── */
+    function applyFilters() {
+      const actionVal = document.getElementById('filter-action').value.toLowerCase();
+      const userVal   = document.getElementById('filter-user').value.toLowerCase();
+
+      const entries = document.querySelectorAll('.log-entry');
+      let visible = 0;
+      entries.forEach(entry => {
+        const entryAction = (entry.dataset.action || '').toLowerCase();
+        const entryUser   = (entry.dataset.user || '').toLowerCase();
+        const matchAction = !actionVal || entryAction === actionVal;
+        const matchUser   = !userVal   || entryUser.includes(userVal);
+        const show = matchAction && matchUser;
+        entry.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      // Show/hide date dividers
+      document.querySelectorAll('.date-divider').forEach(div => {
+        let next = div.nextElementSibling;
+        let hasVisible = false;
+        while (next && !next.classList.contains('date-divider') && !next.classList.contains('load-more-footer')) {
+          if (next.style.display !== 'none') hasVisible = true;
+          next = next.nextElementSibling;
+        }
+        div.style.display = hasVisible ? '' : 'none';
+      });
+
+      document.getElementById('log-count-badge').textContent = `${visible} event${visible !== 1 ? 's' : ''} shown`;
+      showToast(`Showing ${visible} matching event${visible !== 1 ? 's' : ''}`, '', 'filter_list');
+    }
+
+    function clearFilters() {
+      document.getElementById('filter-action').value = '';
+      document.getElementById('filter-user').value = '';
+      document.getElementById('filter-date-from').value = '';
+      document.getElementById('filter-date-to').value = '';
+      document.querySelectorAll('.log-entry').forEach(e => e.style.display = '');
+      document.querySelectorAll('.date-divider').forEach(d => d.style.display = '');
+      document.getElementById('log-count-badge').textContent = '52 events today';
+    }
+
+    /* ── Load More ── */
+    let loadCount = 0;
+    const extraLogs = [
+      { action: 'created', user: 'admin', icon: 'add_circle', cls: 'icon-created', tag: 'tag-created', tagLabel: 'Created', actor: 'Admin User', verb: ' published RFQ ', id: '#RFQ-2023-075', idCls: '', time: 'Oct 22, 3:20 PM', sub: 'Deadline: Nov 5, 2023 · 5 invited vendors' },
+      { action: 'uploaded', user: 'lisa ray', icon: 'upload_file', cls: 'icon-uploaded', tag: 'tag-uploaded', tagLabel: 'Uploaded', actor: 'Lisa Ray', verb: ' uploaded Compliance Certificate for ', id: 'Pinnacle Exports', idCls: 'indigo', time: 'Oct 22, 1:05 PM', sub: '' },
+      { action: 'approved', user: 'dan foster', icon: 'check_circle', cls: 'icon-approved', tag: 'tag-approved', tagLabel: 'Approved', actor: 'Dan Foster', verb: ' approved PO ', id: '#PO-2023-2301', idCls: 'green', time: 'Oct 22, 11:10 AM', sub: '' },
+    ];
+
+    function loadMoreLogs() {
+      const btn = document.getElementById('load-more-btn');
+      btn.innerHTML = `<span class="material-symbols-outlined spin">autorenew</span> Loading…`;
+      btn.disabled = true;
+
+      setTimeout(() => {
+        const feed = document.getElementById('log-feed');
+        const footer = feed.querySelector('.load-more-footer');
+
+        // Add date divider
+        if (loadCount === 0) {
+          const div = document.createElement('div');
+          div.className = 'date-divider';
+          div.innerHTML = `<span class="date-divider-label">Oct 22, 2023</span><div class="date-divider-line"></div>`;
+          feed.insertBefore(div, footer);
+        }
+
+        // Add entries
+        const logsToAdd = extraLogs.slice(loadCount * 3, loadCount * 3 + 3);
+        logsToAdd.forEach(log => {
+          const entry = document.createElement('div');
+          entry.className = 'log-entry';
+          entry.dataset.action = log.action;
+          entry.dataset.user = log.user;
+          entry.setAttribute('role', 'listitem');
+          entry.style.opacity = '0';
+          entry.style.transition = 'opacity .3s ease';
+          entry.innerHTML = `
+            <div class="event-icon-circle ${log.cls}" aria-hidden="true">
+              <span class="material-symbols-outlined">${log.icon}</span>
+            </div>
+            <div class="entry-body">
+              <div class="entry-main">
+                <p class="entry-action">
+                  <span class="actor">${log.actor}</span>
+                  <span class="action-verb">${log.verb}</span>
+                  <span class="target-id ${log.idCls}">${log.id}</span>
+                </p>
+                <div class="entry-meta">
+                  <span class="action-tag ${log.tag}">${log.tagLabel}</span>
+                  <span class="entry-timestamp">${log.time}</span>
+                </div>
+              </div>
+              ${log.sub ? `<p class="entry-subdetail-always">${log.sub}</p>` : ''}
+            </div>
+          `;
+          feed.insertBefore(entry, footer);
+          setTimeout(() => entry.style.opacity = '1', 60);
+        });
+
+        loadCount++;
+        btn.disabled = false;
+
+        if (loadCount >= 2) {
+          btn.innerHTML = `<span class="material-symbols-outlined" style="color:var(--outline);">check</span> All logs loaded`;
+          btn.disabled = true;
+          btn.style.color = 'var(--outline)';
+        } else {
+          btn.innerHTML = `<span class="material-symbols-outlined">expand_more</span> Load Older Logs`;
+        }
+
+        document.getElementById('log-count-badge').textContent = `${52 + loadCount * 3} events shown`;
+      }, 900);
+    }
+
+    /* ── Export ── */
+    function handleExport(type = 'csv') {
+      showToast(`Preparing ${type.toUpperCase()} export…`, '', 'download');
+    }
+
+    /* ── Toast ── */
+    function showToast(message, type = '', icon = 'info') {
+      const toast  = document.getElementById('toast-notification');
+      const msgEl  = document.getElementById('toast-message');
+      const iconEl = document.getElementById('toast-icon');
+      toast.className = 'toast' + (type ? ' ' + type : '');
+      msgEl.textContent = message;
+      iconEl.textContent = icon;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    /* ── Mobile Sidebar ── */
+    function toggleMobileSidebar() { document.body.classList.toggle('sidebar-open'); }
+
+    /* ── Pulse animation for live dot ── */
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.85); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    /* ── Live feed: append new entry every 30s (demo) ── */
+    const liveActors = ['Emma Wright', 'Tom Hayes', 'Sarah Lee'];
+    const liveEvents = [
+      { icon: 'add_circle', cls: 'icon-created', tag: 'tag-created', tagLabel: 'Created', verb: ' submitted Quotation ', id: '#QT-2023-' + Math.floor(Math.random()*999) },
+      { icon: 'check_circle', cls: 'icon-approved', tag: 'tag-approved', tagLabel: 'Approved', verb: ' approved RFQ ', id: '#RFQ-' + Math.floor(Math.random()*9999) },
+    ];
+    function injectLiveEvent() {
+      const actor = liveActors[Math.floor(Math.random() * liveActors.length)];
+      const ev    = liveEvents[Math.floor(Math.random() * liveEvents.length)];
+      const feed  = document.getElementById('log-feed');
+      const firstEntry = feed.querySelector('.log-entry');
+      if (!firstEntry) return;
+
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.dataset.action = ev.tagLabel.toLowerCase();
+      entry.dataset.user = actor.toLowerCase();
+      entry.setAttribute('role', 'listitem');
+      entry.style.cssText = 'opacity:0;transform:translateY(-8px);transition:opacity .4s ease,transform .4s ease;background-color:#F0F9FF;';
+      entry.innerHTML = `
+        <div class="event-icon-circle ${ev.cls}">
+          <span class="material-symbols-outlined">${ev.icon}</span>
+        </div>
+        <div class="entry-body">
+          <div class="entry-main">
+            <p class="entry-action">
+              <span class="actor">${actor}</span>
+              <span class="action-verb">${ev.verb}</span>
+              <span class="target-id">${ev.id}</span>
+            </p>
+            <div class="entry-meta">
+              <span class="action-tag ${ev.tag}">${ev.tagLabel}</span>
+              <span class="entry-timestamp">just now</span>
+            </div>
+          </div>
+        </div>
+      `;
+      // Insert after date-divider row
+      const dateDivider = feed.querySelector('.date-divider');
+      feed.insertBefore(entry, dateDivider ? dateDivider.nextSibling : firstEntry);
+      setTimeout(() => {
+        entry.style.opacity = '1';
+        entry.style.transform = 'translateY(0)';
+        setTimeout(() => entry.style.backgroundColor = '', 2000);
+      }, 50);
+    }
+    // Demo: fire live event after 20s
+    setTimeout(injectLiveEvent, 20000);
+
+    /* ── Global search ── */
+    document.getElementById('global-search').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.log-entry').forEach(entry => {
+        const text = entry.textContent.toLowerCase();
+        entry.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>

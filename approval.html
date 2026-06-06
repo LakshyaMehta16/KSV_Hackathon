@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>VendorBridge ERP - Approval Workflow</title>
+  <meta name="description" content="Review and action procurement approval request REQ-2023-1042 for Office Furniture Procurement. Approve, reject, or request clarification."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet"/>
+  <link href="css/style.css" rel="stylesheet"/>
+
+  <style>
+    /* ============================================================
+       Screen 7 — Approval Workflow
+       Executive Precision Design System
+    ============================================================ */
+
+    body { background-color: var(--surface-background); min-height: 100vh; margin: 0; }
+
+    /* ── Sidebar ── */
+    .sidebar-nav { display: flex; flex-direction: column; gap: 4px; padding: 24px 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      text-decoration: none; color: var(--data-ink); font-family: var(--font-body);
+      font-size: 14px; font-weight: 500; border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover { background-color: #F0EDEC; color: var(--on-surface); }
+    .nav-item.active {
+      border-left-color: var(--primary) !important;
+      background-color: var(--surface-muted) !important;
+      color: var(--primary) !important; font-weight: 600;
+    }
+    .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: var(--primary); }
+    .nav-item .material-symbols-outlined { font-size: 20px; color: var(--outline); }
+
+    /* ── Shell ── */
+    .main-container {
+      margin-left: 260px; min-height: 100vh;
+      display: flex; flex-direction: column;
+      background-color: var(--surface-background);
+    }
+    .topbar {
+      background-color: var(--surface-container-lowest);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px; display: flex; align-items: center;
+      justify-content: space-between; height: 70px;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .mobile-menu-btn {
+      display: none; background: none; border: none;
+      cursor: pointer; color: var(--data-ink); padding: 0; margin-right: 12px;
+    }
+    .avatar-jd {
+      width: 36px; height: 36px; border-radius: 50%; background-color: #003FB1;
+      color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 13px; letter-spacing: 0.05em;
+    }
+
+    /* ── Page ── */
+    .page-content {
+      padding: 0 32px 48px 32px; max-width: 1440px;
+      width: 100%; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .page-header-strip {
+      padding: 24px 0 0 0;
+    }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 4px;
+      color: var(--outline); margin-bottom: 12px;
+    }
+    .breadcrumb a { color: var(--outline); text-decoration: none; transition: color .15s; }
+    .breadcrumb a:hover { color: var(--primary); }
+
+    /* ── Request Identity Banner ── */
+    .identity-banner {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .banner-left { display: flex; flex-direction: column; gap: 6px; }
+    .banner-id-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .req-id-chip {
+      font-family: var(--font-headlines);
+      font-size: 14px; font-weight: 500;
+      color: var(--primary); letter-spacing: -0.01em;
+    }
+    .status-pill-amber {
+      background-color: #FEF3C7;
+      color: #B45309;
+      font-family: var(--font-body); font-size: 12px; font-weight: 600;
+      letter-spacing: 0.03em; padding: 3px 10px; border-radius: 4px;
+      white-space: nowrap;
+    }
+    .banner-right { text-align: right; flex-shrink: 0; }
+    .banner-right .total-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--outline);
+      margin-bottom: 4px;
+    }
+    .banner-right .total-value {
+      font-family: var(--font-headlines); font-size: 24px; font-weight: 600;
+      color: var(--primary); letter-spacing: -0.02em; line-height: 1;
+    }
+
+    /* ── Three-Column Main Layout ── */
+    .approval-layout {
+      display: grid;
+      grid-template-columns: 40fr 35fr 25fr;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    /* ── Card base ── */
+    .card {
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 24px;
+    }
+    .card-header {
+      font-family: var(--font-headlines);
+      font-size: 18px; font-weight: 600;
+      color: var(--on-surface); margin: 0 0 20px 0;
+    }
+
+    /* ── Metadata Grid ── */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 24px;
+      margin-bottom: 0;
+    }
+    .meta-cell {}
+    .meta-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--outline); margin-bottom: 4px; display: block;
+    }
+    .meta-value {
+      font-family: var(--font-body); font-size: 14px; font-weight: 400;
+      color: var(--on-surface); line-height: 1.4;
+    }
+    .meta-value.mono {
+      font-family: var(--font-headlines); font-weight: 500;
+    }
+
+    /* User avatar inline */
+    .user-with-avatar {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .mini-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background-color: var(--primary); color: #FFFFFF;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-body); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.05em; flex-shrink: 0;
+    }
+
+    /* Priority badge */
+    .priority-pill-high {
+      display: inline-flex; align-items: center; gap: 4px;
+      background-color: #FFDAD6; color: #BA1A1A;
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px;
+    }
+    .priority-pill-high .material-symbols-outlined { font-size: 13px; font-variation-settings: 'FILL' 1; }
+
+    /* ── Section Divider ── */
+    .section-divider {
+      border: none; border-top: 1px solid var(--border-subtle);
+      margin: 20px 0;
+    }
+
+    /* ── Line Items Sub-table ── */
+    .line-items-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--data-ink); margin-bottom: 12px; display: block;
+    }
+    .line-items-tbl {
+      width: 100%; border-collapse: collapse;
+    }
+    .line-items-tbl thead th {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--outline); padding: 8px 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      background-color: var(--surface-muted);
+    }
+    .line-items-tbl thead th:not(:first-child) { text-align: right; }
+    .line-items-tbl tbody td {
+      padding: 12px 10px; font-family: var(--font-body);
+      font-size: 13px; color: var(--on-surface);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .line-items-tbl tbody td:not(:first-child) { text-align: right; }
+    .line-items-tbl tbody tr:hover { background-color: #F8FAFC; }
+    .line-items-tbl tbody tr:last-child td { border-bottom: none; }
+    .sku-code {
+      font-family: var(--font-headlines); font-size: 12px;
+      color: var(--outline); display: block; margin-top: 2px;
+    }
+
+    /* Total row */
+    .total-footer-row td {
+      border-top: 2px solid var(--border-subtle) !important;
+      border-bottom: none !important;
+      padding: 14px 10px !important;
+      background-color: var(--surface-muted);
+    }
+    .total-footer-label {
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      color: var(--data-ink);
+    }
+    .total-footer-value {
+      font-family: var(--font-headlines); font-size: 18px; font-weight: 600;
+      color: var(--primary); letter-spacing: -0.01em;
+    }
+
+    /* ── Approval Timeline Stepper ── */
+    .timeline-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--data-ink); margin: 0 0 20px 0;
+    }
+    .timeline-list {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .timeline-step {
+      display: flex; gap: 14px; position: relative;
+    }
+
+    /* Left rail: circle + line */
+    .step-rail {
+      display: flex; flex-direction: column; align-items: center;
+      flex-shrink: 0;
+    }
+    .step-circle {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; z-index: 1;
+    }
+    .step-circle.done {
+      background-color: var(--success);
+    }
+    .step-circle.done .material-symbols-outlined {
+      font-size: 14px; color: #FFFFFF; font-variation-settings: 'FILL' 1;
+    }
+    .step-circle.active {
+      background-color: #FFFFFF;
+      border: 2px solid var(--primary);
+      position: relative;
+    }
+    .step-circle.active::after {
+      content: '';
+      width: 8px; height: 8px; border-radius: 50%;
+      background-color: var(--primary);
+    }
+    .step-circle.future {
+      background-color: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+    }
+    .step-circle.future span {
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      color: var(--outline);
+    }
+
+    /* Connecting vertical line */
+    .step-connector {
+      width: 2px; flex-grow: 1; min-height: 24px;
+      margin: 2px 0;
+    }
+    .step-connector.done { background-color: var(--success); }
+    .step-connector.active { background-color: var(--primary); }
+    .step-connector.future { background-color: var(--border-subtle); }
+
+    /* Step content */
+    .step-content {
+      padding-bottom: 24px; flex: 1;
+    }
+    .step-content.active-step {
+      background-color: #EFF6FF;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 4px 4px 0;
+      padding: 12px 12px 12px 12px;
+      margin-bottom: 0;
+    }
+    .step-title {
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      color: var(--on-surface); margin: 0 0 4px 0;
+    }
+    .step-title.future-title { color: var(--on-surface-variant); font-weight: 400; }
+    .step-meta {
+      font-family: var(--font-body); font-size: 12px; color: var(--outline);
+      margin: 0;
+    }
+    .step-meta.active-meta { color: var(--primary); font-weight: 500; }
+
+    /* ── Action Panel Tabs ── */
+    .tab-bar {
+      display: flex; gap: 0; border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      color: var(--outline); padding: 10px 14px;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--on-surface); }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Remarks Textarea ── */
+    .remarks-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--data-ink); margin-bottom: 6px; display: flex;
+      align-items: center; gap: 4px;
+    }
+    .req-star { color: var(--error); font-size: 13px; }
+    .remarks-textarea {
+      width: 100%;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      padding: 10px 12px;
+      font-family: var(--font-body); font-size: 14px;
+      color: var(--on-surface); outline: none; resize: vertical;
+      min-height: 96px; line-height: 1.5;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .remarks-textarea::placeholder { color: var(--outline); }
+    .remarks-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+    .remarks-error {
+      font-family: var(--font-body); font-size: 12px; color: var(--error);
+      display: none; margin-top: 4px;
+    }
+    .remarks-error.show { display: block; }
+
+    /* ── Action Buttons ── */
+    .action-buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+
+    .btn-approve {
+      width: 100%; height: 48px;
+      background-color: var(--success); color: #FFFFFF;
+      border: none; border-radius: 4px;
+      font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      letter-spacing: 0.02em; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      transition: opacity .2s, background-color .2s;
+    }
+    .btn-approve:hover { opacity: 0.9; }
+    .btn-approve:active { background-color: #059669; }
+
+    .btn-reject {
+      width: 100%; height: 40px;
+      background-color: var(--error); color: #FFFFFF;
+      border: none; border-radius: 4px;
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background-color .2s;
+    }
+    .btn-reject:hover { background-color: #991B1B; }
+
+    .btn-clarify {
+      width: 100%; height: 40px;
+      background-color: var(--surface-container-lowest); color: var(--data-ink);
+      border: 1px solid var(--border-subtle); border-radius: 4px;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background-color .15s, border-color .15s;
+    }
+    .btn-clarify:hover { background-color: var(--surface-muted); border-color: var(--outline-variant); }
+
+    /* Disabled state post-action */
+    .btn-approve:disabled, .btn-reject:disabled, .btn-clarify:disabled {
+      opacity: 0.45; cursor: not-allowed;
+    }
+
+    /* ── Action Log ── */
+    .action-log-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--data-ink); margin: 0 0 12px 0;
+    }
+    .log-entry {
+      display: flex; flex-direction: column; gap: 3px;
+      padding: 10px 0; border-bottom: 1px solid var(--border-subtle);
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-header {
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .log-header .material-symbols-outlined {
+      font-size: 18px; flex-shrink: 0; margin-top: 1px;
+    }
+    .log-icon-done { color: var(--success); font-variation-settings: 'FILL' 1; }
+    .log-icon-upload { color: var(--outline); }
+    .log-body { padding-left: 26px; }
+    .log-name {
+      font-family: var(--font-body); font-size: 12px; font-weight: 600;
+      color: var(--on-surface); display: inline;
+    }
+    .log-timestamp {
+      font-family: var(--font-body); font-size: 11px; color: var(--outline);
+      display: block; margin-top: 2px;
+    }
+    .log-quote {
+      font-family: var(--font-body); font-size: 12px; font-style: italic;
+      color: var(--on-surface-variant); margin-top: 4px;
+    }
+
+    /* ── Notes Tab ── */
+    .notes-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .note-card {
+      background-color: var(--surface-muted); border-radius: 4px;
+      padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .note-card-header { display: flex; align-items: center; gap: 8px; }
+    .note-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background-color: var(--primary); color: #FFFFFF;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; flex-shrink: 0;
+    }
+    .note-avatar.green { background-color: var(--success); }
+    .note-author {
+      font-family: var(--font-body); font-size: 12px; font-weight: 600;
+      color: var(--on-surface);
+    }
+    .note-time {
+      font-family: var(--font-body); font-size: 11px;
+      color: var(--outline); margin-left: auto;
+    }
+    .note-text {
+      font-family: var(--font-body); font-size: 13px;
+      color: var(--on-surface-variant); line-height: 1.5;
+      margin: 0; padding-left: 32px;
+    }
+    .note-input {
+      width: 100%; background-color: var(--surface-container-lowest);
+      border: 1px solid var(--border-subtle); border-radius: 2px;
+      padding: 10px 12px; font-family: var(--font-body); font-size: 13px;
+      color: var(--on-surface); outline: none; resize: vertical;
+      min-height: 70px; line-height: 1.5;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .note-input::placeholder { color: var(--outline); }
+    .note-input:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+
+    /* ── History Tab ── */
+    .history-entry {
+      display: flex; flex-direction: column; gap: 4px;
+      padding: 12px 0; border-bottom: 1px solid var(--border-subtle);
+    }
+    .history-entry:last-child { border-bottom: none; }
+    .history-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 9999px;
+      width: fit-content;
+    }
+    .history-pill.approved { background-color: #DCFCE7; color: #065F46; }
+    .history-pill.submitted { background-color: #EFF6FF; color: var(--primary); }
+
+    /* ── Confirmation Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background-color: rgba(0,0,0,0.45);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background-color: #FFFFFF; border-radius: 8px; padding: 32px;
+      width: 100%; max-width: 440px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+    .modal-icon-ring {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .modal-icon-ring .material-symbols-outlined {
+      font-size: 26px; font-variation-settings: 'FILL' 1;
+    }
+    .modal-actions { display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background-color: var(--on-surface); color: #FFFFFF;
+      border-radius: 4px; padding: 12px 20px;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18); z-index: 999;
+      transform: translateY(80px); opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+      pointer-events: none; min-width: 260px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .toast.success { background-color: var(--success); }
+    .toast.error   { background-color: var(--error); }
+    .toast.warn    { background-color: #B45309; }
+
+    /* ── Approved/Rejected overlay state ── */
+    .decision-banner {
+      border-radius: 4px; padding: 12px 16px;
+      display: none; align-items: center; gap: 10px;
+      margin-bottom: 14px; font-family: var(--font-body);
+      font-size: 13px; font-weight: 600;
+    }
+    .decision-banner.show { display: flex; }
+    .decision-banner.approved { background-color: #DCFCE7; color: #065F46; }
+    .decision-banner.rejected { background-color: #FEE2E2; color: #991B1B; }
+    .decision-banner.clarify  { background-color: #EFF6FF; color: var(--primary); }
+
+    /* ── Sticky Action Panel ── */
+    .action-panel-sticky { position: sticky; top: 90px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1200px) {
+      .approval-layout { grid-template-columns: 1fr 1fr; }
+      .action-panel-sticky { position: static; grid-column: 1 / -1; }
+    }
+    @media (max-width: 1024px) {
+      .main-container { margin-left: 0; }
+      .sidebar { display: none !important; }
+      .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+    }
+    @media (max-width: 768px) {
+      .approval-layout { grid-template-columns: 1fr; }
+      .page-content { padding: 0 16px 48px 16px; }
+      .topbar { padding: 16px 20px; }
+      .meta-grid { grid-template-columns: 1fr; }
+      .identity-banner { flex-direction: column; align-items: flex-start; }
+      .banner-right { text-align: left; }
+      .sidebar {
+        position: fixed; left: -260px; top: 0; bottom: 0;
+        width: 260px; z-index: 100;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+      }
+      .sidebar-open .sidebar { left: 0; }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background-color: rgba(0,0,0,0.4); z-index: 90;
+      }
+      .sidebar-open .sidebar-overlay { display: block; }
+    }
+  </style>
+</head>
+<body class="sidebar-closed">
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
+  <!-- ══════════════════════════════════════
+       Sidebar
+  ══════════════════════════════════════ -->
+  <aside class="sidebar" style="width:260px;background-color:var(--surface-muted);border-right:1px solid var(--border-subtle);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:50;">
+    <div style="padding:24px 16px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-subtle);">
+      <div style="width:36px;height:36px;border-radius:4px;background-color:#003FB1;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;">
+        <span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'FILL' 1;">account_tree</span>
+      </div>
+      <div>
+        <h2 class="headline-sm" style="color:var(--data-ink);font-weight:700;margin:0;line-height:1.1;font-size:15px;">VendorBridge</h2>
+        <span class="label-caps" style="color:var(--outline);font-size:9px;margin-top:2px;display:block;font-weight:700;">Enterprise ERP</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">
+        <span class="material-symbols-outlined">dashboard</span>
+        Dashboard
+      </a>
+      <a href="vendors.html" class="nav-item">
+        <span class="material-symbols-outlined">storefront</span>
+        Vendors
+      </a>
+      <a href="create_rfq.html" class="nav-item">
+        <span class="material-symbols-outlined">request_quote</span>
+        RFQs
+      </a>
+      <a href="submit_quote.html" class="nav-item">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Quotations
+      </a>
+      <a href="compare_quotes.html" class="nav-item">
+        <span class="material-symbols-outlined">compare_arrows</span>
+        Comparison
+      </a>
+      <a href="approval.html" class="nav-item active">
+        <span class="material-symbols-outlined">fact_check</span>
+        Approvals
+      </a>
+      <a href="purchase_order.html" class="nav-item">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        Purchase Orders
+      </a>
+      <a href="invoices.html" class="nav-item">
+        <span class="material-symbols-outlined">description</span>
+        Invoices
+      </a>
+      <a href="reports_analytics.html" class="nav-item">
+        <span class="material-symbols-outlined">assessment</span>
+        Reports
+      </a>
+      <a href="activity_logs.html" class="nav-item">
+        <span class="material-symbols-outlined">history</span>
+        Activity
+      </a>
+      <a href="user_management.html" class="nav-item">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        User Management
+      </a>
+    </nav>
+    <div style="padding:16px;margin-top:auto;border-top:1px solid var(--border-subtle);">
+      <button class="btn btn-success" onclick="window.location.href='vendors.html#add-vendor'" style="width:100%;height:40px;border-radius:4px;font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase;">
+        <span class="material-symbols-outlined" style="font-size:18px;">add</span>Add New
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════
+       Main Container
+  ══════════════════════════════════════ -->
+  <div class="main-container">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle navigation">
+          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
+        </button>
+        <h1 class="headline-md" style="color:var(--on-surface);">Approvals</h1>
+      </div>
+      <div style="background-color:#F0EDEC;border-radius:9999px;display:flex;align-items:center;padding:6px 16px;width:380px;gap:8px;">
+        <span class="material-symbols-outlined" style="color:var(--outline);font-size:20px;">search</span>
+        <input type="text" style="background:none;border:none;outline:none;font-family:var(--font-body);font-size:14px;color:var(--on-surface);width:100%;" placeholder="Search approval requests…"/>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Notifications"><span class="material-symbols-outlined" style="font-size:22px;">notifications</span></button>
+        <button class="icon-btn" aria-label="Help"><span class="material-symbols-outlined" style="font-size:22px;">help_outline</span></button>
+        <button class="icon-btn" aria-label="Settings"><span class="material-symbols-outlined" style="font-size:22px;">settings</span></button>
+        <div class="avatar-jd">JD</div>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════
+         Page Content
+    ══════════════════════════════════════ -->
+    <main class="page-content">
+
+      <!-- 7.1 — Page Header Strip -->
+      <section class="page-header-strip">
+        <div class="breadcrumb body-md">
+          <a href="#">Approvals</a>
+          <span class="material-symbols-outlined" style="font-size:16px;">chevron_right</span>
+          <span style="color:var(--on-surface);">REQ-2023-1042</span>
+        </div>
+
+        <!-- Request Identity Banner -->
+        <div class="identity-banner" role="banner" aria-label="Request identity and status">
+          <div class="banner-left">
+            <div class="banner-id-row">
+              <span class="req-id-chip">REQ-2023-1042</span>
+              <span class="status-pill-amber" id="status-badge">Pending Manager Approval</span>
+            </div>
+            <h2 class="headline-md" style="color:var(--on-surface);margin:0;">Approval for 'Office Furniture Procurement'</h2>
+          </div>
+          <div class="banner-right">
+            <p class="total-label">Total Value</p>
+            <p class="total-value">$12,400.00</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════
+           7.2 — Three-Column Main Layout
+      ══════════════════════════════════════ -->
+      <div class="approval-layout">
+
+        <!-- ╔═══════════════════════════╗
+             ║  LEFT (40%)              ║
+             ║  Request Details Card    ║
+             ╚═══════════════════════════╝ -->
+        <div class="card">
+          <h3 class="card-header">Request Details</h3>
+
+          <!-- Metadata Grid -->
+          <div class="meta-grid">
+            <div class="meta-cell">
+              <span class="meta-label">Vendor</span>
+              <span class="meta-value">Vendor Alpha Inc.</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Requested By</span>
+              <div class="user-with-avatar">
+                <div class="mini-avatar" aria-label="User initials JD">JD</div>
+                <span class="meta-value">Jane Doe</span>
+              </div>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Department</span>
+              <span class="meta-value">Operations</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Date Submitted</span>
+              <span class="meta-value mono">Oct 24, 2023</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Cost Center</span>
+              <span class="meta-value mono">CC-8921-OP</span>
+            </div>
+            <div class="meta-cell">
+              <span class="meta-label">Priority</span>
+              <span class="priority-pill-high">
+                <span class="material-symbols-outlined">priority_high</span>HIGH
+              </span>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <hr class="section-divider"/>
+
+          <!-- Line Items Sub-table -->
+          <span class="line-items-label">Line Items</span>
+          <div style="overflow-x:auto;">
+            <table class="line-items-tbl" aria-label="Requisition line items">
+              <thead>
+                <tr>
+                  <th style="text-align:left;">Item Description</th>
+                  <th>SKU Code</th>
+                  <th>Qty</th>
+                  <th>Unit Price</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Ergonomic Office Chair — Model X
+                    <span class="sku-code">CH-9021</span>
+                  </td>
+                  <td style="text-align:right;font-family:var(--font-headlines);font-size:12px;color:var(--outline);">CH-9021</td>
+                  <td style="text-align:right;font-family:var(--font-headlines);font-size:13px;color:var(--data-ink);">12</td>
+                  <td style="text-align:right;font-family:var(--font-headlines);font-size:13px;color:var(--data-ink);">$450.00</td>
+                  <td style="text-align:right;font-family:var(--font-headlines);font-size:13px;font-weight:600;color:var(--on-surface);">$5,400.00</td>
+                </tr>
+                <tr>
+                  <td>
+                    Height Adjustable Standing Desk
+                    <span class="sku-code">DK-5542</span>
+                  </td>
+                  <td style="text-align:right;font-family:var(--font-headlines);font-size:12px;color:var(--outline);">DK-5542</td>
+                  <td style="text-align:right;font-family:var(--font-headlines);font-size:13px;color:var(--data-ink);">10</td>
+                  <td style="text-align:right;font-family:var(--font-headlines);font-size:13px;color:var(--data-ink);">$700.00</td>
+                  <td style="text-align:right;font-family:var(--font-headlines);font-size:13px;font-weight:600;color:var(--on-surface);">$7,000.00</td>
+                </tr>
+                <tr class="total-footer-row">
+                  <td colspan="4" class="total-footer-label" style="text-align:right;">Total Requisition Amount</td>
+                  <td class="total-footer-value" style="text-align:right;">$12,400.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Supporting Documents -->
+          <hr class="section-divider" style="margin-top:20px;"/>
+          <span class="line-items-label">Supporting Documents</span>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background-color:var(--surface-muted);border:1px solid var(--border-subtle);border-radius:4px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+              <span class="material-symbols-outlined" style="font-size:20px;color:var(--primary);font-variation-settings:'FILL' 1;">picture_as_pdf</span>
+              <div style="flex:1;">
+                <p style="font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--on-surface);margin:0;">Purchase_Requisition_REQ1042.pdf</p>
+                <p style="font-family:var(--font-body);font-size:11px;color:var(--outline);margin:0;">Submitted Oct 24, 2023 · 1.8 MB</p>
+              </div>
+              <button class="btn btn-secondary" style="height:28px;padding:0 10px;font-size:12px;border-radius:3px;display:inline-flex;align-items:center;gap:4px;">
+                <span class="material-symbols-outlined" style="font-size:14px;">download</span>View
+              </button>
+            </div>
+            <div style="background-color:var(--surface-muted);border:1px solid var(--border-subtle);border-radius:4px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+              <span class="material-symbols-outlined" style="font-size:20px;color:var(--success);font-variation-settings:'FILL' 1;">table_chart</span>
+              <div style="flex:1;">
+                <p style="font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--on-surface);margin:0;">Budget_Justification_Q4.xlsx</p>
+                <p style="font-family:var(--font-body);font-size:11px;color:var(--outline);margin:0;">Submitted Oct 24, 2023 · 650 KB</p>
+              </div>
+              <button class="btn btn-secondary" style="height:28px;padding:0 10px;font-size:12px;border-radius:3px;display:inline-flex;align-items:center;gap:4px;">
+                <span class="material-symbols-outlined" style="font-size:14px;">download</span>View
+              </button>
+            </div>
+          </div>
+        </div><!-- /left card -->
+
+        <!-- ╔═══════════════════════════╗
+             ║  CENTER (35%)            ║
+             ║  Approval Timeline       ║
+             ╚═══════════════════════════╝ -->
+        <div class="card">
+          <p class="timeline-label">Approval Timeline</p>
+
+          <div class="timeline-list" role="list" aria-label="Approval workflow steps">
+
+            <!-- Step 1: Submitted — DONE -->
+            <div class="timeline-step" role="listitem">
+              <div class="step-rail">
+                <div class="step-circle done" aria-label="Completed">
+                  <span class="material-symbols-outlined">check</span>
+                </div>
+                <div class="step-connector done"></div>
+              </div>
+              <div class="step-content">
+                <p class="step-title">Requisition Submitted</p>
+                <p class="step-meta">Jane Doe &nbsp;·&nbsp; Oct 24, 09:15 AM</p>
+              </div>
+            </div>
+
+            <!-- Step 2: Dept Head — DONE -->
+            <div class="timeline-step" role="listitem">
+              <div class="step-rail">
+                <div class="step-circle done" aria-label="Completed">
+                  <span class="material-symbols-outlined">check</span>
+                </div>
+                <div class="step-connector active"></div>
+              </div>
+              <div class="step-content">
+                <p class="step-title">Department Head Review</p>
+                <p class="step-meta">Approved by Robert Chen &nbsp;·&nbsp; Oct 24, 11:30 AM</p>
+              </div>
+            </div>
+
+            <!-- Step 3: Finance Manager — ACTIVE -->
+            <div class="timeline-step" role="listitem">
+              <div class="step-rail">
+                <div class="step-circle active" aria-label="Current step — awaiting action"></div>
+                <div class="step-connector future"></div>
+              </div>
+              <div class="step-content active-step">
+                <p class="step-title" id="active-step-title">Finance Manager Approval</p>
+                <p class="step-meta active-meta" id="active-step-meta">Pending your review</p>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+                  <span class="material-symbols-outlined" style="font-size:14px;color:var(--primary);">person</span>
+                  <span style="font-family:var(--font-body);font-size:11px;color:var(--primary);font-weight:500;">Assigned to: You (Finance Manager)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Procurement — FUTURE -->
+            <div class="timeline-step" role="listitem">
+              <div class="step-rail">
+                <div class="step-circle future" aria-label="Future step">
+                  <span style="font-family:var(--font-body);font-size:11px;font-weight:600;color:var(--outline);">4</span>
+                </div>
+                <!-- no connector after last step -->
+              </div>
+              <div class="step-content">
+                <p class="step-title future-title">Final Procurement Processing</p>
+                <p class="step-meta">Awaiting preceding steps</p>
+              </div>
+            </div>
+
+          </div><!-- /timeline-list -->
+
+          <!-- Budget Snapshot -->
+          <hr class="section-divider"/>
+          <span class="line-items-label">Budget Snapshot</span>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+              <span style="font-family:var(--font-body);font-size:12px;color:var(--outline);">Q4 Approved Budget</span>
+              <span style="font-family:var(--font-headlines);font-size:13px;font-weight:500;color:var(--on-surface);">$50,000.00</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+              <span style="font-family:var(--font-body);font-size:12px;color:var(--outline);">Spent YTD</span>
+              <span style="font-family:var(--font-headlines);font-size:13px;font-weight:500;color:var(--on-surface);">$31,200.00</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-subtle);">
+              <span style="font-family:var(--font-body);font-size:12px;color:var(--outline);">This Request</span>
+              <span style="font-family:var(--font-headlines);font-size:13px;font-weight:600;color:var(--primary);">$12,400.00</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+              <span style="font-family:var(--font-body);font-size:12px;font-weight:600;color:var(--data-ink);">Remaining After Approval</span>
+              <span style="font-family:var(--font-headlines);font-size:13px;font-weight:600;color:var(--success);">$6,400.00</span>
+            </div>
+          </div>
+
+          <!-- Utilization bar -->
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-family:var(--font-body);font-size:11px;color:var(--outline);">Budget utilization if approved</span>
+              <span style="font-family:var(--font-headlines);font-size:11px;color:var(--data-ink);font-weight:600;">87.2%</span>
+            </div>
+            <div style="width:100%;height:6px;background-color:var(--border-subtle);border-radius:9999px;overflow:hidden;">
+              <div style="height:100%;width:87.2%;background: linear-gradient(to right, var(--success), #B45309);border-radius:9999px;transition:width 0.5s ease;"></div>
+            </div>
+          </div>
+        </div><!-- /center card -->
+
+        <!-- ╔═══════════════════════════╗
+             ║  RIGHT (25%)             ║
+             ║  Action Panel            ║
+             ╚═══════════════════════════╝ -->
+        <div class="action-panel-sticky">
+          <div class="card">
+
+            <!-- Tab Bar -->
+            <div class="tab-bar" role="tablist" aria-label="Action panel tabs">
+              <button class="tab-btn active" id="tab-action" role="tab" aria-selected="true" aria-controls="panel-action" onclick="switchTab('action')">Action</button>
+              <button class="tab-btn" id="tab-history" role="tab" aria-selected="false" aria-controls="panel-history" onclick="switchTab('history')">History</button>
+              <button class="tab-btn" id="tab-notes" role="tab" aria-selected="false" aria-controls="panel-notes" onclick="switchTab('notes')">Notes <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background-color:var(--surface-muted);color:var(--primary);font-size:10px;font-weight:700;margin-left:3px;">2</span></button>
+            </div>
+
+            <!-- ── Action Tab ── -->
+            <div class="tab-panel active" id="panel-action" role="tabpanel" aria-labelledby="tab-action">
+
+              <!-- Decision banner (shown after action) -->
+              <div class="decision-banner" id="decision-banner">
+                <span class="material-symbols-outlined" id="decision-icon" style="font-size:20px;font-variation-settings:'FILL' 1;"></span>
+                <span id="decision-text"></span>
+              </div>
+
+              <!-- Remarks -->
+              <div style="margin-bottom:4px;">
+                <label for="remarks-input" class="remarks-label">
+                  Remarks / Justification
+                  <span class="req-star" title="Required when rejecting">*</span>
+                </label>
+                <textarea
+                  id="remarks-input"
+                  class="remarks-textarea"
+                  rows="4"
+                  placeholder="Remarks are required if rejecting the request."
+                  aria-label="Remarks or justification for decision"
+                ></textarea>
+                <p class="remarks-error" id="remarks-error">
+                  <span class="material-symbols-outlined" style="font-size:13px;vertical-align:-2px;">error</span>
+                  Remarks are required when rejecting a request.
+                </p>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <button class="btn-approve" id="btn-approve" onclick="openConfirmModal('approve')" aria-label="Approve requisition">
+                  <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1;">check_circle</span>
+                  Approve Requisition
+                </button>
+                <button class="btn-reject" id="btn-reject" onclick="handleReject()" aria-label="Reject request">
+                  <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1;">cancel</span>
+                  Reject Request
+                </button>
+                <button class="btn-clarify" id="btn-clarify" onclick="handleClarify()" aria-label="Request clarification">
+                  <span class="material-symbols-outlined" style="font-size:18px;">help_outline</span>
+                  Request Clarification
+                </button>
+              </div>
+
+              <!-- Divider -->
+              <hr class="section-divider" style="margin:20px 0 14px 0;"/>
+
+              <!-- Action Log -->
+              <p class="action-log-label">Action Log</p>
+              <div id="action-log-list">
+                <div class="log-entry">
+                  <div class="log-header">
+                    <span class="material-symbols-outlined log-icon-done">verified</span>
+                    <span class="log-name">Approved by Robert Chen</span>
+                  </div>
+                  <div class="log-body">
+                    <span class="log-timestamp">Oct 24, 2023 — 11:30 AM</span>
+                    <p class="log-quote">"Budget verified for Q4 operational expenses."</p>
+                  </div>
+                </div>
+                <div class="log-entry">
+                  <div class="log-header">
+                    <span class="material-symbols-outlined log-icon-upload">upload_file</span>
+                    <span class="log-name">Submitted by Jane Doe</span>
+                  </div>
+                  <div class="log-body">
+                    <span class="log-timestamp">Oct 24, 2023 — 09:15 AM</span>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /panel-action -->
+
+            <!-- ── History Tab ── -->
+            <div class="tab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
+              <p class="action-log-label" style="margin-bottom:14px;">Full Approval History</p>
+              <div class="history-entry">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;">
+                  <span class="history-pill approved">
+                    <span class="material-symbols-outlined" style="font-size:13px;font-variation-settings:'FILL' 1;">check_circle</span>
+                    Approved
+                  </span>
+                  <span style="font-family:var(--font-body);font-size:11px;color:var(--outline);">Oct 24, 11:30 AM</span>
+                </div>
+                <p style="font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--on-surface);margin:0 0 2px 0;">Robert Chen</p>
+                <p style="font-family:var(--font-body);font-size:12px;color:var(--outline);margin:0;">Department Head Review · Stage 2</p>
+                <p style="font-family:var(--font-body);font-size:12px;font-style:italic;color:var(--on-surface-variant);margin:6px 0 0 0;">"Budget verified for Q4 operational expenses."</p>
+              </div>
+              <div class="history-entry">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;">
+                  <span class="history-pill submitted">
+                    <span class="material-symbols-outlined" style="font-size:13px;">upload_file</span>
+                    Submitted
+                  </span>
+                  <span style="font-family:var(--font-body);font-size:11px;color:var(--outline);">Oct 24, 09:15 AM</span>
+                </div>
+                <p style="font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--on-surface);margin:0 0 2px 0;">Jane Doe</p>
+                <p style="font-family:var(--font-body);font-size:12px;color:var(--outline);margin:0;">Requisition Submitted · Stage 1</p>
+              </div>
+            </div><!-- /panel-history -->
+
+            <!-- ── Notes Tab ── -->
+            <div class="tab-panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes">
+              <p class="action-log-label" style="margin-bottom:12px;">Internal Notes</p>
+
+              <!-- Existing notes -->
+              <div class="notes-list" id="notes-list">
+                <div class="note-card">
+                  <div class="note-card-header">
+                    <div class="note-avatar">RC</div>
+                    <span class="note-author">Robert Chen</span>
+                    <span class="note-time">Oct 24, 10:55 AM</span>
+                  </div>
+                  <p class="note-text">Verified with procurement team. Unit prices are within approved vendor contract rates for Q4.</p>
+                </div>
+                <div class="note-card">
+                  <div class="note-card-header">
+                    <div class="note-avatar green">JD</div>
+                    <span class="note-author">Jane Doe</span>
+                    <span class="note-time">Oct 24, 09:30 AM</span>
+                  </div>
+                  <p class="note-text">Urgent — office chairs needed before Nov 1 team expansion. Standing desks are part of the ergonomics initiative approved in Sep board meeting.</p>
+                </div>
+              </div>
+
+              <!-- Add note -->
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <textarea id="new-note-input" class="note-input" placeholder="Add an internal note…" aria-label="New internal note"></textarea>
+                <button class="btn btn-primary" onclick="addNote()" style="height:36px;padding:0 16px;font-size:13px;font-weight:600;background-color:var(--primary);display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:4px;width:100%;">
+                  <span class="material-symbols-outlined" style="font-size:16px;">add_comment</span>
+                  Add Note
+                </button>
+              </div>
+            </div><!-- /panel-notes -->
+
+          </div><!-- /card -->
+        </div><!-- /right column -->
+
+      </div><!-- /approval-layout -->
+
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       Approve Confirmation Modal
+  ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+    <div class="modal-box">
+      <div class="modal-icon-ring" id="modal-icon-ring" style="background-color:#DCFCE7;">
+        <span class="material-symbols-outlined" id="modal-icon" style="color:#065F46;">check_circle</span>
+      </div>
+      <h3 id="confirm-modal-title" class="headline-sm" style="margin:0 0 8px 0;color:var(--on-surface);">Confirm Approval</h3>
+      <p id="modal-body-text" class="body-md" style="color:var(--on-surface-variant);margin:0;">
+        You are about to <strong>approve</strong> requisition <strong>REQ-2023-1042</strong> for <strong>$12,400.00</strong>. This will advance the request to Final Procurement Processing.
+      </p>
+      <div style="background-color:var(--surface-muted);border:1px solid var(--border-subtle);border-radius:4px;padding:12px 16px;margin-top:14px;display:flex;gap:20px;flex-wrap:wrap;">
+        <div>
+          <p class="label-caps" style="color:var(--outline);margin:0 0 2px 0;">Request ID</p>
+          <p class="data-mono" style="color:var(--on-surface);margin:0;">REQ-2023-1042</p>
+        </div>
+        <div>
+          <p class="label-caps" style="color:var(--outline);margin:0 0 2px 0;">Amount</p>
+          <p class="data-mono" style="color:var(--primary);font-weight:600;margin:0;">$12,400.00</p>
+        </div>
+        <div>
+          <p class="label-caps" style="color:var(--outline);margin:0 0 2px 0;">Vendor</p>
+          <p class="data-mono" style="color:var(--on-surface);margin:0;">Vendor Alpha Inc.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeConfirmModal()" style="height:36px;padding:0 16px;font-size:13px;border-radius:4px;">Cancel</button>
+        <button class="btn" id="modal-confirm-btn" onclick="executeAction()" style="height:36px;padding:0 16px;font-size:13px;font-weight:600;border-radius:4px;display:inline-flex;align-items:center;gap:6px;">
+          <span class="material-symbols-outlined" id="modal-confirm-icon" style="font-size:16px;font-variation-settings:'FILL' 1;">check_circle</span>
+          <span id="modal-confirm-label">Approve</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast-notification" role="alert" aria-live="assertive">
+    <span class="material-symbols-outlined" id="toast-icon" style="font-size:20px;">check_circle</span>
+    <span id="toast-message">Done.</span>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       JavaScript
+  ══════════════════════════════════════ -->
+  <script>
+    let pendingAction = null;
+
+    /* ── Tab Switching ── */
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+      document.getElementById('tab-' + tabName).classList.add('active');
+      document.getElementById('tab-' + tabName).setAttribute('aria-selected', 'true');
+      document.getElementById('panel-' + tabName).classList.add('active');
+    }
+
+    /* ── Open Approve Confirm Modal ── */
+    function openConfirmModal(action) {
+      pendingAction = action;
+      const modal   = document.getElementById('confirm-modal');
+      const ring    = document.getElementById('modal-icon-ring');
+      const icon    = document.getElementById('modal-icon');
+      const title   = document.getElementById('confirm-modal-title');
+      const body    = document.getElementById('modal-body-text');
+      const btnEl   = document.getElementById('modal-confirm-btn');
+      const btnIcon = document.getElementById('modal-confirm-icon');
+      const btnLbl  = document.getElementById('modal-confirm-label');
+
+      if (action === 'approve') {
+        ring.style.backgroundColor = '#DCFCE7';
+        icon.textContent = 'check_circle';
+        icon.style.color = '#065F46';
+        title.textContent = 'Confirm Approval';
+        body.innerHTML = `You are about to <strong>approve</strong> requisition <strong>REQ-2023-1042</strong> for <strong>$12,400.00</strong>. This will advance the request to Final Procurement Processing.`;
+        btnEl.style.backgroundColor = 'var(--success)';
+        btnEl.style.color = '#FFFFFF';
+        btnEl.style.border = 'none';
+        btnIcon.textContent = 'check_circle';
+        btnLbl.textContent = 'Approve';
+      }
+
+      modal.classList.add('open');
+      document.getElementById('modal-confirm-btn').focus();
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirm-modal').classList.remove('open');
+    }
+
+    /* ── Execute Approve ── */
+    function executeAction() {
+      closeConfirmModal();
+
+      // Lock all action buttons
+      ['btn-approve','btn-reject','btn-clarify'].forEach(id => {
+        const btn = document.getElementById(id);
+        btn.disabled = true;
+        btn.style.opacity = '0.45';
+        btn.style.cursor = 'not-allowed';
+      });
+
+      // Update status badge
+      const badge = document.getElementById('status-badge');
+      badge.textContent = 'Approved';
+      badge.style.backgroundColor = '#DCFCE7';
+      badge.style.color = '#065F46';
+
+      // Show decision banner
+      const banner = document.getElementById('decision-banner');
+      banner.className = 'decision-banner approved show';
+      document.getElementById('decision-icon').textContent = 'check_circle';
+      document.getElementById('decision-text').textContent = 'Requisition approved. Advancing to Procurement Processing.';
+
+      // Update active step in timeline
+      document.getElementById('active-step-title').textContent = 'Finance Manager Approval';
+      document.getElementById('active-step-meta').textContent = 'Approved by You · ' + new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+
+      // Add log entry
+      addActionLog('Approved by You (Finance Manager)', new Date().toLocaleString(), 'Approved requisition and advanced to procurement.');
+
+      showToast('Requisition REQ-2023-1042 approved successfully!', 'success', 'check_circle');
+    }
+
+    /* ── Reject ── */
+    function handleReject() {
+      const remarks = document.getElementById('remarks-input').value.trim();
+      const errorEl = document.getElementById('remarks-error');
+
+      if (!remarks) {
+        errorEl.classList.add('show');
+        document.getElementById('remarks-input').focus();
+        document.getElementById('remarks-input').style.borderColor = 'var(--error)';
+        return;
+      }
+      errorEl.classList.remove('show');
+      document.getElementById('remarks-input').style.borderColor = '';
+
+      // Lock buttons
+      ['btn-approve','btn-reject','btn-clarify'].forEach(id => {
+        const btn = document.getElementById(id);
+        btn.disabled = true;
+        btn.style.opacity = '0.45';
+        btn.style.cursor = 'not-allowed';
+      });
+
+      // Update badge
+      const badge = document.getElementById('status-badge');
+      badge.textContent = 'Rejected';
+      badge.style.backgroundColor = '#FFDAD6';
+      badge.style.color = '#BA1A1A';
+
+      // Decision banner
+      const banner = document.getElementById('decision-banner');
+      banner.className = 'decision-banner rejected show';
+      document.getElementById('decision-icon').textContent = 'cancel';
+      document.getElementById('decision-text').textContent = 'Request rejected. Vendor has been notified.';
+
+      addActionLog('Rejected by You (Finance Manager)', new Date().toLocaleString(), `"${remarks}"`);
+      showToast('Request REQ-2023-1042 has been rejected.', 'error', 'cancel');
+    }
+
+    /* ── Clarify ── */
+    function handleClarify() {
+      const remarks = document.getElementById('remarks-input').value.trim();
+
+      // Update badge
+      const badge = document.getElementById('status-badge');
+      badge.textContent = 'Clarification Requested';
+      badge.style.backgroundColor = '#EFF6FF';
+      badge.style.color = 'var(--primary)';
+
+      const banner = document.getElementById('decision-banner');
+      banner.className = 'decision-banner clarify show';
+      document.getElementById('decision-icon').textContent = 'help_outline';
+      document.getElementById('decision-text').textContent = 'Clarification requested from Jane Doe.';
+
+      addActionLog('Clarification requested by You', new Date().toLocaleString(), remarks || 'Additional details requested.');
+      showToast('Clarification request sent to Jane Doe.', 'warn', 'help_outline');
+    }
+
+    /* ── Add Log Entry ── */
+    function addActionLog(name, timestamp, quote) {
+      const logList = document.getElementById('action-log-list');
+      const entry   = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.style.cssText = 'opacity:0;transform:translateY(-6px);transition:all .3s ease;';
+      entry.innerHTML = `
+        <div class="log-header">
+          <span class="material-symbols-outlined log-icon-done">verified</span>
+          <span class="log-name">${name}</span>
+        </div>
+        <div class="log-body">
+          <span class="log-timestamp">${timestamp}</span>
+          ${quote ? `<p class="log-quote">${quote}</p>` : ''}
+        </div>
+      `;
+      logList.prepend(entry);
+      setTimeout(() => { entry.style.opacity = '1'; entry.style.transform = 'translateY(0)'; }, 50);
+    }
+
+    /* ── Add Note ── */
+    function addNote() {
+      const input   = document.getElementById('new-note-input');
+      const text    = input.value.trim();
+      if (!text) {
+        input.style.borderColor = 'var(--error)';
+        input.focus();
+        return;
+      }
+      input.style.borderColor = '';
+
+      const notesList = document.getElementById('notes-list');
+      const now = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+
+      const noteEl = document.createElement('div');
+      noteEl.className = 'note-card';
+      noteEl.style.cssText = 'opacity:0;transform:translateY(-6px);transition:all .3s ease;';
+      noteEl.innerHTML = `
+        <div class="note-card-header">
+          <div class="note-avatar" style="background-color:#003FB1;">JD</div>
+          <span class="note-author">You (Finance Manager)</span>
+          <span class="note-time">${now}</span>
+        </div>
+        <p class="note-text">${text}</p>
+      `;
+      notesList.prepend(noteEl);
+      setTimeout(() => { noteEl.style.opacity = '1'; noteEl.style.transform = 'translateY(0)'; }, 50);
+      input.value = '';
+      showToast('Note added.', '', 'add_comment');
+    }
+
+    /* ── Toast ── */
+    function showToast(message, type = '', icon = 'info') {
+      const toast  = document.getElementById('toast-notification');
+      const msgEl  = document.getElementById('toast-message');
+      const iconEl = document.getElementById('toast-icon');
+
+      toast.className = 'toast' + (type ? ' ' + type : '');
+      msgEl.textContent = message;
+      iconEl.textContent = icon;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3800);
+    }
+
+    /* ── Mobile Sidebar ── */
+    function toggleMobileSidebar() { document.body.classList.toggle('sidebar-open'); }
+
+    /* ── Close modal on overlay click & Escape ── */
+    document.getElementById('confirm-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeConfirmModal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeConfirmModal(); });
+
+    /* ── Clear remarks error on type ── */
+    document.getElementById('remarks-input').addEventListener('input', function() {
+      document.getElementById('remarks-error').classList.remove('show');
+      this.style.borderColor = '';
+    });
+  </script>
+</body>
+</html>

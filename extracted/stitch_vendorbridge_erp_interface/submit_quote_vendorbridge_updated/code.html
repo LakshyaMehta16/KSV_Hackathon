@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VendorBridge - Submit Quotations</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-bright": "#fcf9f8",
+                "on-secondary": "#ffffff",
+                "on-error": "#ffffff",
+                "tertiary-fixed": "#ffdbcf",
+                "surface-dim": "#dcd9d9",
+                "border-subtle": "#E2E8F0",
+                "surface-container-low": "#f6f3f2",
+                "on-surface": "#1c1b1b",
+                "surface-container-high": "#ebe7e7",
+                "surface-tint": "#1353d8",
+                "primary-fixed-dim": "#b5c4ff",
+                "on-tertiary-container": "#ffd4c5",
+                "data-ink": "#334155",
+                "secondary": "#534ec3",
+                "on-tertiary-fixed-variant": "#802a00",
+                "secondary-fixed": "#e2dfff",
+                "on-primary-container": "#d4dcff",
+                "primary": "#003fb1",
+                "secondary-fixed-dim": "#c3c0ff",
+                "surface-muted": "#F4F7FF",
+                "surface-container-lowest": "#ffffff",
+                "tertiary-container": "#ad3b00",
+                "on-primary-fixed": "#00174d",
+                "surface-container": "#f0edec",
+                "on-tertiary-fixed": "#380d00",
+                "primary-container": "#1a56db",
+                "on-secondary-fixed-variant": "#3a33ab",
+                "inverse-on-surface": "#f3f0ef",
+                "surface-container-highest": "#e5e2e1",
+                "on-secondary-fixed": "#0f0069",
+                "secondary-container": "#8985fd",
+                "success-accent": "#10B981",
+                "inverse-surface": "#313030",
+                "on-secondary-container": "#1d0a91",
+                "on-primary-fixed-variant": "#003dab",
+                "surface-variant": "#e5e2e1",
+                "on-primary": "#ffffff",
+                "error": "#ba1a1a",
+                "on-error-container": "#93000a",
+                "outline": "#737686",
+                "tertiary-fixed-dim": "#ffb59a",
+                "on-background": "#1c1b1b",
+                "tertiary": "#852b00",
+                "inverse-primary": "#b5c4ff",
+                "primary-fixed": "#dbe1ff",
+                "error-container": "#ffdad6",
+                "background": "#fcf9f8",
+                "outline-variant": "#c3c5d7",
+                "surface": "#fcf9f8",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#434654"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "container-max": "1440px",
+                "gutter": "24px",
+                "baseline": "4px",
+                "margin-page": "32px",
+                "sidebar-width": "260px",
+                "density-compact": "8px",
+                "density-comfortable": "16px"
+        },
+        "fontFamily": {
+                "headline-sm": [
+                        "Hanken Grotesk"
+                ],
+                "label-bold": [
+                        "Hanken Grotesk"
+                ],
+                "body-md": [
+                        "Hanken Grotesk"
+                ],
+                "display-lg": [
+                        "Hanken Grotesk"
+                ],
+                "data-mono": [
+                        "Hanken Grotesk"
+                ],
+                "headline-md": [
+                        "Hanken Grotesk"
+                ],
+                "body-sm": [
+                        "Hanken Grotesk"
+                ],
+                "label-caps": [
+                        "Hanken Grotesk"
+                ],
+                "body-lg": [
+                        "Hanken Grotesk"
+                ]
+        },
+        "fontSize": {
+                "headline-sm": [
+                        "18px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-bold": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "36px",
+                        {
+                                "lineHeight": "44px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "data-mono": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-sm": [
+                        "13px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "11px",
+                        {
+                                "lineHeight": "14px",
+                                "letterSpacing": "0.08em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+</head>
+<body class="bg-surface-muted min-h-screen text-on-surface font-body-md selection:bg-primary/20">
+<div class="flex h-full w-full">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-surface-container-low fixed left-0 top-0 h-screen w-sidebar-width border-r border-border-subtle dark:border-outline-variant hidden md:block z-50">
+<div class="flex flex-col h-full py-baseline">
+<!-- Header -->
+<div class="px-6 py-4 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight">VendorBridge</h1>
+<p class="font-label-caps text-label-caps text-outline uppercase">Enterprise ERP</p>
+</div>
+</div>
+</div>
+<!-- Navigation Links -->
+<ul class="flex-1 flex flex-col gap-1 px-2 overflow-y-auto">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:bg-surface-muted dark:hover:bg-surface-container-highest transition-colors duration-200 rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined opacity-70">dashboard</span>
+                            Dashboard
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:bg-surface-muted dark:hover:bg-surface-container-highest transition-colors duration-200 rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined opacity-70">storefront</span>
+                            Vendors
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:bg-surface-muted dark:hover:bg-surface-container-highest transition-colors duration-200 rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined opacity-70">request_quote</span>
+                            RFQs
+                        </a>
+</li>
+<li>
+<!-- Active State: Quotations -->
+<a class="flex items-center gap-3 px-4 py-2 bg-surface-muted dark:bg-surface-container-high border-l-4 border-primary text-primary font-bold opacity-90 scale-[0.99] rounded-r-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+                            Quotations
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:bg-surface-muted dark:hover:bg-surface-container-highest transition-colors duration-200 rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined opacity-70">fact_check</span>
+                            Approvals
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:bg-surface-muted dark:hover:bg-surface-container-highest transition-colors duration-200 rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined opacity-70">shopping_cart</span>
+                            Purchase Orders
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:bg-surface-muted dark:hover:bg-surface-container-highest transition-colors duration-200 rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined opacity-70">description</span>
+                            Invoices
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:bg-surface-muted dark:hover:bg-surface-container-highest transition-colors duration-200 rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined opacity-70">assessment</span>
+                            Reports
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:bg-surface-muted dark:hover:bg-surface-container-highest transition-colors duration-200 rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined opacity-70">history</span>
+                            Activity
+                        </a>
+</li>
+</ul>
+<!-- CTA -->
+<div class="p-4 mt-auto">
+<button class="w-full bg-primary text-on-primary font-label-bold text-label-bold py-2 rounded-full hover:bg-primary-container transition-colors shadow-sm">
+                        + Add New
+                    </button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<div class="flex-1 md:ml-[260px] flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface-bright dark:bg-surface-dim fixed top-0 right-0 w-full md:w-[calc(100%-260px)] h-16 border-b border-border-subtle dark:border-outline-variant z-40">
+<div class="flex items-center justify-between px-margin-page h-full z-40">
+<!-- Brand/Product Name (Mobile context fallback, left side) -->
+<div class="flex items-center gap-4">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface dark:text-on-surface tracking-tight">VendorBridge</span>
+</div>
+<!-- Actions (Right side) -->
+<div class="flex items-center gap-6">
+<!-- Search Bar -->
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="pl-9 pr-4 py-1.5 bg-surface-container-low border border-border-subtle rounded-full font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 outline-none w-64 transition-all" placeholder="Search..." type="text"/>
+</div>
+<!-- Icons -->
+<div class="flex items-center gap-4 text-data-ink">
+<button class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded-full p-1 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded-full p-1">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<button class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded-full p-1">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<!-- Profile -->
+<button class="focus:outline-none focus:ring-2 focus:ring-primary/20 rounded-full">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center border border-border-subtle overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user, neutral lighting, minimalist background, suitable for an enterprise software profile avatar." src="https://lh3.googleusercontent.com/aida/AP1WRLv3q-gVEXLRFQp1fglexXQYN9kRstjsb36vms2sTR1kxSmOLY22sHIAIA8R0MWv7TWu7zzQsLziFUAe0gco-MzH6beUB4eRkNRdsfrnE0HRQOV7DrWgtGzA1wQC5NKPU9H9KImGIExRuJPkEixj6mzZBWeRb_gTW1ZF6Usr3pTOK3gNEzpeuORIiXjDf4eSBd-gPCGRjCK74krII_E9twiH76hWeQ8gOf-Va2ZmxqVV3PGn2JTrvWyX9M8"/>
+</div>
+</button>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 mt-16 p-margin-page max-w-container-max mx-auto w-full flex flex-col gap-gutter">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+<div>
+<p class="font-label-caps text-label-caps text-outline uppercase mb-1">RFQ #OFP-2023-089</p>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Submit Quotations</h2>
+<p class="font-body-md text-body-md text-data-ink mt-1">RFQ: Office Furniture Procurement</p>
+</div>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-data-ink bg-surface-container-low px-3 py-1.5 rounded-full border border-border-subtle">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                        Closing in: <span class="font-data-mono text-data-mono font-medium ml-1">2d 14h 30m</span>
+</div>
+</div>
+<!-- Main Work Area: Quotation Entry Table -->
+<div class="bg-surface-bright border border-border-subtle rounded-xl overflow-hidden flex flex-col">
+<div class="p-density-comfortable border-b border-border-subtle bg-surface-bright flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Line Items &amp; Pricing</h3>
+<span class="font-body-sm text-body-sm text-outline">Currency: USD</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr>
+<th class="font-label-caps text-label-caps text-data-ink bg-surface-muted p-density-compact border-b border-border-subtle font-bold uppercase w-12 text-center">#</th>
+<th class="font-label-caps text-label-caps text-data-ink bg-surface-muted p-density-compact border-b border-border-subtle font-bold uppercase w-1/4">Item Requirement</th>
+<th class="font-label-caps text-label-caps text-data-ink bg-surface-muted p-density-compact border-b border-border-subtle font-bold uppercase text-right w-24">Qty</th>
+<th class="font-label-caps text-label-caps text-data-ink bg-surface-muted p-density-compact border-b border-border-subtle font-bold uppercase w-24">UOM</th>
+<th class="font-label-caps text-label-caps text-data-ink bg-surface-muted p-density-compact border-b border-border-subtle font-bold uppercase text-right w-32">Expected Price</th>
+<th class="font-label-caps text-label-caps text-primary bg-surface-muted p-density-compact border-b border-border-subtle font-bold uppercase text-right w-48">Submitted Unit Price *</th>
+<th class="font-label-caps text-label-caps text-data-ink bg-surface-muted p-density-compact border-b border-border-subtle font-bold uppercase text-right w-32">Total Line Price</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="p-density-compact border-b border-border-subtle text-center text-outline">1</td>
+<td class="p-density-compact border-b border-border-subtle">
+<div class="font-medium text-on-surface">Ergonomic Task Chair</div>
+<div class="text-outline text-[12px] mt-0.5">Mesh back, adjustable lumbar support, 3D armrests.</div>
+</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono">50</td>
+<td class="p-density-compact border-b border-border-subtle text-data-ink">EA</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono text-outline">250.00</td>
+<td class="p-density-compact border-b border-border-subtle text-right">
+<div class="relative inline-flex items-center">
+<span class="absolute left-3 text-outline font-data-mono text-[13px]">$</span>
+<input class="w-32 pl-7 pr-3 py-1.5 border border-border-subtle rounded-full text-right font-data-mono text-data-mono text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow bg-surface-bright" step="0.01" type="number" value="235.50"/>
+</div>
+</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono font-medium text-on-surface bg-surface-muted/30 rounded-r-xl">11,775.00</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="p-density-compact border-b border-border-subtle text-center text-outline">2</td>
+<td class="p-density-compact border-b border-border-subtle">
+<div class="font-medium text-on-surface">Height-Adjustable Desk</div>
+<div class="text-outline text-[12px] mt-0.5">Electric sit-stand, 60x30 inch surface, dual motor.</div>
+</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono">50</td>
+<td class="p-density-compact border-b border-border-subtle text-data-ink">EA</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono text-outline">450.00</td>
+<td class="p-density-compact border-b border-border-subtle text-right">
+<div class="relative inline-flex items-center">
+<span class="absolute left-3 text-outline font-data-mono text-[13px]">$</span>
+<input class="w-32 pl-7 pr-3 py-1.5 border border-border-subtle rounded-full text-right font-data-mono text-data-mono text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow bg-surface-bright" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono font-medium text-outline bg-surface-muted/30 rounded-r-xl">0.00</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="p-density-compact border-b border-border-subtle text-center text-outline">3</td>
+<td class="p-density-compact border-b border-border-subtle">
+<div class="font-medium text-on-surface">Mobile File Pedestal</div>
+<div class="text-outline text-[12px] mt-0.5">3-drawer, locking, metal construction, casters.</div>
+</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono">50</td>
+<td class="p-density-compact border-b border-border-subtle text-data-ink">EA</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono text-outline">120.00</td>
+<td class="p-density-compact border-b border-border-subtle text-right">
+<div class="relative inline-flex items-center">
+<span class="absolute left-3 text-outline font-data-mono text-[13px]">$</span>
+<input class="w-32 pl-7 pr-3 py-1.5 border border-border-subtle rounded-full text-right font-data-mono text-data-mono text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow bg-surface-bright" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</td>
+<td class="p-density-compact border-b border-border-subtle text-right font-data-mono text-data-mono font-medium text-outline bg-surface-muted/30 rounded-r-xl">0.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Terms and Summary Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Form Details (Left 2 cols) -->
+<div class="lg:col-span-2 bg-surface-bright border border-border-subtle rounded-xl p-density-comfortable flex flex-col gap-4">
+<h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface border-b border-border-subtle pb-2">Terms &amp; Conditions</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Deliver by Date -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-label-bold text-data-ink">Deliver by Date *</label>
+<div class="relative">
+<input class="w-full px-4 py-2 border border-border-subtle rounded-full font-body-sm text-body-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-bright" type="date"/>
+</div>
+</div>
+<!-- Validity Period -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-bold text-label-bold text-data-ink">Quote Validity Period *</label>
+<div class="relative">
+<select class="w-full px-4 py-2 border border-border-subtle rounded-full font-body-sm text-body-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-bright appearance-none">
+<option>30 Days</option>
+<option>60 Days</option>
+<option>90 Days</option>
+<option>Custom</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Delivery Conditions -->
+<div class="flex flex-col gap-1.5 mt-2">
+<label class="font-label-bold text-label-bold text-data-ink">Delivery Conditions &amp; Notes</label>
+<textarea class="w-full px-4 py-3 border border-border-subtle rounded-xl font-body-sm text-body-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-bright resize-y" placeholder="Specify any delivery requirements, lead times, or exceptions to the RFQ terms..." rows="3"></textarea>
+</div>
+</div>
+<!-- Summary & Action (Right 1 col) -->
+<div class="bg-surface-bright border border-border-subtle rounded-xl p-density-comfortable flex flex-col justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface border-b border-border-subtle pb-2 mb-4">Quotation Summary</h3>
+<div class="flex flex-col gap-3 font-body-sm text-body-sm">
+<div class="flex justify-between items-center text-data-ink">
+<span>Subtotal (1 item quoted)</span>
+<span class="font-data-mono text-data-mono">$11,775.00</span>
+</div>
+<div class="flex justify-between items-center text-data-ink">
+<span>Estimated Tax (8%)</span>
+<span class="font-data-mono text-data-mono">$942.00</span>
+</div>
+<div class="flex justify-between items-center text-data-ink">
+<span>Shipping / Freight</span>
+<span class="font-data-mono text-data-mono">TBD</span>
+</div>
+<div class="border-t border-border-subtle mt-2 pt-3 flex justify-between items-end">
+<span class="font-label-bold text-label-bold text-on-surface uppercase">Total Price</span>
+<span class="font-headline-md text-headline-md font-semibold text-primary font-data-mono">$12,717.00</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-3">
+<button class="w-full bg-success-accent text-on-primary font-label-bold text-label-bold py-3 rounded-full hover:bg-success-accent/90 transition-colors shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                                Submit Quote
+                            </button>
+<button class="w-full bg-surface-bright border border-border-subtle text-data-ink font-label-bold text-label-bold py-2 rounded-full hover:bg-surface-container-low transition-colors">
+                                Save as Draft
+                            </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>
