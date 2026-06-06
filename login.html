@@ -96,7 +96,7 @@
     </div>
 
     <!-- Login/Reset Form -->
-    <form id="authForm" style="display: flex; flex-direction: column; gap: 20px;" onsubmit="handleFormSubmit(event)">
+    <form onsubmit="event.preventDefault(); window.location.href=\'dashboard.html\';">
       
       <!-- Field 1: Corporate ID or Email -->
       <div class="form-group">
@@ -268,5 +268,6 @@
       }
     }
   </script>
+  <script src="js/global-ui.js"></script>
 </body>
 </html>

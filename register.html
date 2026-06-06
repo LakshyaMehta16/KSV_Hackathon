@@ -134,7 +134,7 @@
         </div>
 
         <!-- Onboarding Form -->
-        <form class="form-row" onsubmit="handleRegistrationSubmit(event)">
+        <form onsubmit="event.preventDefault(); window.location.href=\'dashboard.html\';">
           
           <!-- Company Logo Upload -->
           <div class="logo-upload-container">
@@ -265,5 +265,6 @@
       window.location.href = 'login.html';
     }
   </script>
+  <script src="js/global-ui.js"></script>
 </body>
 </html>
